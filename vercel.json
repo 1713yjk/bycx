@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/lxwm",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/gywm",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/djzs",
+      "destination": "/tech",
+      "permanent": true
+    }
+  ]
+}
