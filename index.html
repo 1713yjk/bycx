@@ -93,6 +93,7 @@ var _hmt = _hmt || [];
             --oura-light-gray: #666666;
             --oura-white: #ffffff;
             --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
             --oura-blue: #4a90e2;
             --oura-green: #7ed321;
         }
@@ -141,6 +142,31 @@ var _hmt = _hmt || [];
             font-weight: 600;
             color: var(--oura-white);
             text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .oura-logo img {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        
+        .oura-logo:hover img {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .oura-logo img {
+                height: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .oura-logo img {
+                height: 24px;
+            }
         }
         
         .oura-nav-links {
@@ -409,8 +435,8 @@ var _hmt = _hmt || [];
         
         .oura-footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 60px;
             margin-bottom: 40px;
         }
         
@@ -583,6 +609,10 @@ var _hmt = _hmt || [];
             #products .fade-in:last-child > div > div > div:first-child {
                 font-size: 24px !important;
             }
+            
+            .oura-footer-content {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 480px) {
@@ -645,6 +675,22 @@ var _hmt = _hmt || [];
             .language-switcher {
                 display: none !important;
             }
+            
+            /* 添加手指尺寸测量部分的移动端样式 */
+            .oura-card div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            .oura-card table {
+                font-size: 12px !important;
+            }
+            
+            .oura-card table th,
+            .oura-card table td {
+                padding: 6px 4px !important;
+                font-size: 12px !important;
+            }
         }
     </style>
 </head>
@@ -653,8 +699,8 @@ var _hmt = _hmt || [];
     <nav class="oura-nav">
         <div class="oura-container">
             <div class="oura-nav-content">
-                <a href="#" class="oura-logo" data-zh="深圳佰屹创新" data-en="Shenzhen Baiyi Innovation" data-tw="深圳佰屹創新">
-                    <i class="fas fa-ring" style="margin-right: 8px;"></i>深圳佰屹创新
+                <a href="#" class="oura-logo">
+                    <img src="产品资料与图片/logo.png" alt="深圳佰屹创新">
                 </a>
                 
                 <ul class="oura-nav-links">
@@ -714,26 +760,7 @@ var _hmt = _hmt || [];
                             <a href="#about" class="oura-button-outline" data-zh="了解更多" data-en="Learn More" data-tw="了解更多">了解更多</a>
                         </div>
                         
-                        <!-- App Download Section -->
-                        <div class="app-download-section" style="margin-top: 40px;">
-                            <p style="color: var(--oura-light-gray); font-size: 16px; margin-bottom: 20px;" data-zh="下载AZ Ring APP，开启智能健康之旅" data-en="Download AZ Ring APP to start your smart health journey" data-tw="下載AZ Ring APP，開啟智能健康之旅">下载AZ Ring APP，开启智能健康之旅</p>
-                            <div class="app-download-buttons" style="display: flex; gap: 16px; flex-wrap: wrap;">
-                                <a href="#" class="app-download-btn" style="display: flex; align-items: center; padding: 12px 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; min-width: 160px;" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)'">
-                                    <i class="fab fa-apple" style="font-size: 24px; margin-right: 12px;"></i>
-                                    <div>
-                                        <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Download on" data-tw="下載於">下载于</div>
-                                        <div style="font-size: 16px; font-weight: 500;" data-zh="App Store" data-en="App Store" data-tw="App Store">App Store</div>
-                                    </div>
-                                </a>
-                                <a href="#" class="app-download-btn" style="display: flex; align-items: center; padding: 12px 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; min-width: 160px;" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)'">
-                                    <i class="fab fa-google-play" style="font-size: 24px; margin-right: 12px;"></i>
-                                    <div>
-                                        <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Get it on" data-tw="下載於">下载于</div>
-                                        <div style="font-size: 16px; font-weight: 500;" data-zh="Google Play" data-en="Google Play" data-tw="Google Play">Google Play</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+
                     </div>
                     
                     <div class="fade-in" style="text-align: center;">
@@ -837,29 +864,13 @@ var _hmt = _hmt || [];
                                 了解详情
                                 <i class="fas fa-arrow-right" style="margin-left: 8px; font-size: 14px;"></i>
                             </a>
-                            <a href="#" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: transparent; color: var(--oura-white); border: 2px solid rgba(255,255,255,0.2); border-radius: 50px; text-decoration: none; transition: all 0.3s ease;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.backgroundColor='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.backgroundColor='transparent'">
-                                技术规格
+                            <a href="https://3.cn/2mlZRa-U?jkl=@Q8PbPDKjrGx@" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%); color: var(--oura-white); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,107,53,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,53,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,53,0.3)'">
+                                <i class="fas fa-shopping-cart" style="margin-right: 8px; font-size: 14px;"></i>
+                                立即购买
                             </a>
                         </div>
                         
-                        <!-- App Download for Product Section -->
-                        <div style="padding: 24px; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
-                            <h4 style="color: var(--oura-white); font-size: 18px; margin-bottom: 16px; display: flex; align-items: center;">
-                                <i class="fas fa-mobile-alt" style="margin-right: 12px; color: var(--oura-accent);"></i>
-                                <span data-zh="配套APP下载" data-en="Companion App Download" data-tw="配套APP下載">配套APP下载</span>
-                            </h4>
-                            <p style="color: var(--oura-light-gray); font-size: 14px; margin-bottom: 20px;" data-zh="通过AZ Ring APP解锁更多功能，获得完整的健康管理体验" data-en="Unlock more features through AZ Ring APP for a complete health management experience" data-tw="通過AZ Ring APP解鎖更多功能，獲得完整的健康管理體驗">通过AZ Ring APP解锁更多功能，获得完整的健康管理体验</p>
-                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                <a href="#" style="display: flex; align-items: center; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                    <i class="fab fa-apple" style="font-size: 18px; margin-right: 8px;"></i>
-                                    <span data-zh="iOS下载" data-en="iOS Download" data-tw="iOS下載">iOS下载</span>
-                                </a>
-                                <a href="#" style="display: flex; align-items: center; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                                    <i class="fab fa-google-play" style="font-size: 18px; margin-right: 8px;"></i>
-                                    <span data-zh="Android下载" data-en="Android Download" data-tw="Android下載">Android下载</span>
-                                </a>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -1106,27 +1117,7 @@ var _hmt = _hmt || [];
                             </div>
                         </div>
                         
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring支持哪些手机系统？" data-en="Which mobile systems does AZ Ring support?" data-tw="AZ Ring支持哪些手機系統？">AZ Ring支持哪些手机系统？</h4>
-                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0 0 20px 0;" data-zh="AZ Ring兼容iOS 12.0及以上版本和Android 8.0及以上版本。通过蓝牙5.0连接，确保稳定的数据传输。我们的APP在App Store和Google Play均可下载。" data-en="AZ Ring is compatible with iOS 12.0+ and Android 8.0+. It connects via Bluetooth 5.0 for stable data transmission. Our app is available on both App Store and Google Play." data-tw="AZ Ring兼容iOS 12.0及以上版本和Android 8.0及以上版本。通過藍牙5.0連接，確保穩定的數據傳輸。我們的APP在App Store和Google Play均可下載。">AZ Ring兼容iOS 12.0及以上版本和Android 8.0及以上版本。通过蓝牙5.0连接，确保稳定的数据传输。我们的APP在App Store和Google Play均可下载。</p>
-                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                                        <a href="#" style="display: inline-flex; align-items: center; padding: 8px 16px; background: var(--oura-accent); color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(255,107,53,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                                            <i class="fab fa-apple" style="margin-right: 8px;"></i>
-                                            <span data-zh="立即下载 iOS" data-en="Download iOS" data-tw="立即下載 iOS">立即下载 iOS</span>
-                                        </a>
-                                        <a href="#" style="display: inline-flex; align-items: center; padding: 8px 16px; background: var(--oura-green); color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(126,211,33,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                                            <i class="fab fa-google-play" style="margin-right: 8px;"></i>
-                                            <span data-zh="立即下载 Android" data-en="Download Android" data-tw="立即下載 Android">立即下载 Android</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                         <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
                             <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
@@ -1140,17 +1131,7 @@ var _hmt = _hmt || [];
                             </div>
                         </div>
                         
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring的保修政策是什么？" data-en="What is the warranty policy for AZ Ring?" data-tw="AZ Ring的保修政策是什麼？">AZ Ring的保修政策是什么？</h4>
-                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring提供2年有限保修，覆盖制造缺陷和硬件故障。人为损坏、进水损坏（超出防水等级）不在保修范围内。我们还提供30天无理由退货服务。" data-en="AZ Ring comes with a 2-year limited warranty covering manufacturing defects and hardware failures. Physical damage and water damage (beyond water resistance rating) are not covered. We also offer a 30-day no-questions-asked return policy." data-tw="AZ Ring提供2年有限保修，覆蓋製造缺陷和硬件故障。人為損壞、進水損壞（超出防水等級）不在保修範圍內。我們還提供30天無理由退貨服務。">AZ Ring提供2年有限保修，覆盖制造缺陷和硬件故障。人为损坏、进水损坏（超出防水等级）不在保修范围内。我们还提供30天无理由退货服务。</p>
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                         <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
                             <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
@@ -1290,14 +1271,14 @@ var _hmt = _hmt || [];
                 <div class="oura-footer-section">
                     <h4 data-zh="下载APP" data-en="Download App" data-tw="下載APP">下载APP</h4>
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
-                        <a href="#" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                        <a href="#" id="app-store-btn" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
                             <i class="fab fa-apple" style="font-size: 20px; margin-right: 12px;"></i>
                             <div>
                                 <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Download on" data-tw="下載於">下载于</div>
                                 <div style="font-size: 14px; font-weight: 500;" data-zh="App Store" data-en="App Store" data-tw="App Store">App Store</div>
                             </div>
                         </a>
-                        <a href="#" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                        <a href="#" id="google-play-btn" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
                             <i class="fab fa-google-play" style="font-size: 20px; margin-right: 12px;"></i>
                             <div>
                                 <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Get it on" data-tw="下載於">下载于</div>
@@ -1306,6 +1287,7 @@ var _hmt = _hmt || [];
                         </a>
                     </div>
                 </div>
+               
             </div>
             
             <div class="oura-footer-bottom">
@@ -1321,6 +1303,16 @@ var _hmt = _hmt || [];
             <h3 data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</h3>
             <p data-zh="请扫描下方二维码联系我们的客服" data-en="Please scan the QR code below to contact our customer service" data-tw="請掃描下方二維碼聯繫我們的客服">请扫描下方二维码联系我们的客服</p>
             <img src="wechat-qr.png" alt="WeChat QR Code" style="width: 200px; height: 200px; margin: 20px auto; display: block;">
+        </div>
+    </div>
+
+    <!-- App Download Modal -->
+    <div id="app-download-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal-app">&times;</span>
+            <h3 data-zh="下载APP" data-en="Download App" data-tw="下載APP">下载APP</h3>
+            <p data-zh="请扫描下方二维码下载我们的APP" data-en="Please scan the QR code below to download our APP" data-tw="請掃描下方二維碼下載我們的APP">请扫描下方二维码下载我们的APP</p>
+            <img src="产品资料与图片/下载.png" alt="App Download QR Code" style="width: 200px; height: 200px; margin: 20px auto; display: block;">
         </div>
     </div>
 
@@ -1350,7 +1342,8 @@ var _hmt = _hmt || [];
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .close-modal {
+        .close-modal,
+        .close-modal-app {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -1360,7 +1353,8 @@ var _hmt = _hmt || [];
             color: var(--oura-light-gray);
         }
 
-        .close-modal:hover {
+        .close-modal:hover,
+        .close-modal-app:hover {
             color: var(--oura-white);
         }
     </style>
@@ -1412,6 +1406,43 @@ var _hmt = _hmt || [];
             afterSalesModal.addEventListener('click', (e) => {
                 if (e.target === afterSalesModal) {
                     afterSalesModal.style.display = 'none';
+                }
+            });
+        }
+
+        // App download modal logic
+        const appDownloadModal = document.getElementById('app-download-modal');
+        const closeModalApp = document.querySelector('.close-modal-app');
+        const appStoreBtn = document.getElementById('app-store-btn');
+        const googlePlayBtn = document.getElementById('google-play-btn');
+
+        // Show modal when clicking app download buttons
+        if (appStoreBtn) {
+            appStoreBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                appDownloadModal.style.display = 'flex';
+            });
+        }
+
+        if (googlePlayBtn) {
+            googlePlayBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                appDownloadModal.style.display = 'flex';
+            });
+        }
+
+        // Close modal when clicking the close button
+        if (closeModalApp) {
+            closeModalApp.addEventListener('click', () => {
+                appDownloadModal.style.display = 'none';
+            });
+        }
+
+        // Close modal when clicking outside the modal content
+        if (appDownloadModal) {
+            appDownloadModal.addEventListener('click', (e) => {
+                if (e.target === appDownloadModal) {
+                    appDownloadModal.style.display = 'none';
                 }
             });
         }
