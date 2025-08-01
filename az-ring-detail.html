@@ -93,38 +93,6 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        :root {
-            --oura-black: #0a0a0a;
-            --oura-dark: #1a1a1a;
-            --oura-gray: #2a2a2a;
-            --oura-light-gray: #a0a0a0;
-            --oura-white: #ffffff;
-            --oura-accent: #ff6b35;
-            --oura-accent-light: #ff8a65;
-            --oura-blue: #4a90e2;
-            --oura-green: #7ed321;
-            --oura-purple: #9013fe;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--oura-black);
-            color: var(--oura-white);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
         
         /* Navigation */
         .oura-nav {
@@ -158,6 +126,17 @@
             text-decoration: none;
             display: flex;
             align-items: center;
+        }
+        
+        .oura-logo img {
+            height: 32px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        
+        .oura-logo:hover img {
+            transform: scale(1.05);
         }
         
         .oura-nav-links {
@@ -222,6 +201,10 @@
             display: none;
             padding: 20px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .oura-mobile-menu.active {
+            display: block;
         }
         
         /* Hero Section */
@@ -577,7 +560,7 @@
             background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%);
             color: var(--oura-white);
             border: none;
-            padding: 16px 32px;
+            padding: 14px 30px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 16px;
@@ -620,7 +603,7 @@
         
         .oura-footer-content {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
             gap: 60px;
             margin-bottom: 40px;
         }
@@ -712,8 +695,12 @@
                 gap: 15px;
             }
             
-            .nav-links {
+            .oura-nav-links {
                 display: none;
+            }
+            
+            .oura-mobile-toggle {
+                display: block;
             }
             
             .language-switcher {
@@ -776,6 +763,10 @@
             
             .section-subtitle {
                 font-size: 18px;
+            }
+            
+            .oura-logo img {
+                height: 28px;
             }
         }
         
@@ -857,6 +848,10 @@
             .showcase-panel img {
                 max-width: 100%;
             }
+            
+            .oura-logo img {
+                height: 24px;
+            }
         }
         
         @media (max-width: 360px) {
@@ -877,6 +872,45 @@
             .feature-specs li {
                 text-align: center;
             }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--oura-gray);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            position: relative;
+            color: var(--oura-white);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--oura-light-gray);
+        }
+
+        .close-modal:hover {
+            color: var(--oura-white);
         }
 
         .ring-container {
@@ -909,8 +943,8 @@
             transition: border-color 0.3s ease;
             position: relative;
         }
-        .color-option[data-color="Brushed Silver"] {
-            background-color: #c0c0c0; /* Silver */
+        .color-option[data-color="Elegant Gold"] {
+            background-color: #F5E6A3;
         }
         .color-option[data-color="Stealth Black"] {
             background-color: #333; /* Black */
@@ -952,21 +986,22 @@
         }
 
         .showcase-nav li {
-            margin: 0 30px;
-            padding: 20px 0;
+            margin: 0 40px;
+            padding: 25px 0;
             cursor: pointer;
             color: var(--oura-light-gray);
             border-bottom: 2px solid transparent;
             transition: all 0.3s ease;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            white-space: nowrap;
         }
 
         .showcase-nav li i {
-            font-size: 20px;
+            font-size: 24px;
             color: var(--oura-accent);
             transition: color 0.3s ease;
         }
@@ -981,7 +1016,7 @@
         }
 
         .showcase-content {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -997,46 +1032,102 @@
         }
 
         .showcase-panel-images {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 20px;
-            justify-content: center;
-            align-items: flex-start;
-            flex-wrap: wrap;
+            align-items: start;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .image-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 300px;
         }
 
-        .image-item img {
-            width: 100%;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        .image-item:first-child {
+            grid-column: 1;
+        }
+
+        .image-item:not(:first-child) {
+            grid-column: span 1;
+        }
+
+        .image-item {
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
             margin-bottom: 12px;
         }
-
-        .image-item img:hover {
-            transform: scale(1.05);
+        
+        .image-item:first-child img {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .image-item:not(:first-child) img {
+            width: 300px;
+            height: 225px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .image-item img {
+            height: auto !important;
         }
 
         .image-description {
             color: var(--oura-light-gray);
-            font-size: 14px;
-            text-align: center;
-            line-height: 1.4;
+            font-size: 12px;
+            text-align: left;
+            line-height: 1.5;
             margin: 0;
-            padding: 0 10px;
+            padding: 8px 0;
+        }
+
+        .image-item:not(:first-child) .image-description {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .image-item:not(:first-child) .image-description::before {
+            content: attr(data-title);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--oura-white);
+            margin-bottom: 4px;
+        }
+
+        .image-item:first-child .image-description {
+            display: none;
+        }
+
+        /* Showcase section bottom border */
+        #product-showcase {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
             .showcase-panel-images {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 gap: 15px;
                 align-items: center;
+            }
+            
+            .image-item:first-child img {
+                height: 300px;
+            }
+            
+            .image-item:not(:first-child) img {
+                height: 220px;
             }
             
             .image-item {
@@ -1083,6 +1174,11 @@
             object-fit: contain;
             transition: opacity 0.5s ease-in-out;
         }
+        /* Stealth Black scale effect */
+        #ring-image.stealth-black-scale {
+            transform: scale(1.35);
+            transition: opacity 0.5s ease-in-out, transform 0.3s ease;
+        }
         .color-selector {
             display: flex;
             gap: 15px;
@@ -1105,8 +1201,8 @@
             background-position: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-        .color-option[data-color="Brushed Silver"] {
-            background-color: #c0c0c0;
+        .color-option[data-color="Elegant Gold"] {
+            background-color: #F5E6A3;
         }
         .color-option[data-color="Stealth Black"] {
             background-color: #333;
@@ -1151,6 +1247,11 @@
                 max-width: 90%;
                 max-height: 90%;
             }
+            /* Stealth Black scale effect for mobile */
+            #ring-image.stealth-black-scale {
+                transform: scale(1.35);
+                transition: opacity 0.5s ease-in-out, transform 0.3s ease;
+            }
             .color-selector {
                 padding: 10px 16px;
             }
@@ -1166,16 +1267,18 @@
     <nav class="oura-nav">
         <div class="oura-container">
             <div class="oura-nav-content">
-                <a href="index.html" class="oura-logo" data-zh="深圳佰屹创新" data-en="Shenzhen Baiyi Innovation" data-tw="深圳佰屹創新">
-                    <i class="fas fa-ring" style="margin-right: 8px;"></i>深圳佰屹创新
+                <a href="index.html" class="oura-logo">
+                    <img src="产品资料与图片/logo.png" alt="深圳佰屹创新">
                 </a>
                 
                 <ul class="oura-nav-links">
                     <li><a href="index.html" class="oura-nav-link" data-zh="首页" data-en="Home" data-tw="首頁">首页</a></li>
-                    <li><a href="#features" class="oura-nav-link" data-zh="功能特性" data-en="Features" data-tw="功能特性">功能特性</a></li>
-                    <li><a href="#gallery" class="oura-nav-link" data-zh="产品图片" data-en="Gallery" data-tw="產品圖片">产品图片</a></li>
-                    <li><a href="#specs" class="oura-nav-link" data-zh="技术规格" data-en="Specifications" data-tw="技術規格">技术规格</a></li>
-                    <li><a href="#contact" class="oura-nav-link" data-zh="联系我们" data-en="Contact" data-tw="聯繫我們">联系我们</a></li>
+                    <li><a href="#products" class="oura-nav-link" data-zh="产品" data-en="Products" data-tw="產品">产品</a></li>
+                    <li><a href="#technology" class="oura-nav-link" data-zh="技术" data-en="Technology" data-tw="技術">技术</a></li>
+                    <li><a href="#about" class="oura-nav-link" data-zh="关于" data-en="About" data-tw="關於">关于</a></li>
+                    <li><a href="#faq" class="oura-nav-link" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a></li>
+                    <li><a href="#contact" class="oura-nav-link" data-zh="联系" data-en="Contact" data-tw="聯繫">联系</a></li>
+                    <li><a href="#" id="after-sales-link-nav" class="oura-nav-link" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
                 </ul>
                 
                 <!-- Language Switcher -->
@@ -1192,10 +1295,12 @@
             
             <div class="oura-mobile-menu" id="mobile-menu">
                 <a href="index.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="首页" data-en="Home" data-tw="首頁">首页</a>
-                <a href="#features" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="功能特性" data-en="Features" data-tw="功能特性">功能特性</a>
-                <a href="#gallery" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="产品图片" data-en="Gallery" data-tw="產品圖片">产品图片</a>
-                <a href="#specs" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="技术规格" data-en="Specifications" data-tw="技術規格">技术规格</a>
-                <a href="#contact" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="联系我们" data-en="Contact" data-tw="聯繫我們">联系我们</a>
+                <a href="#products" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="产品" data-en="Products" data-tw="產品">产品</a>
+                <a href="#technology" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="技术" data-en="Technology" data-tw="技術">技术</a>
+                <a href="#about" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="关于" data-en="About" data-tw="關於">关于</a>
+                <a href="#faq" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a>
+                <a href="#contact" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="联系" data-en="Contact" data-tw="聯繫">联系</a>
+                <a href="#" id="after-sales-link-mobile" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a>
                 <div class="mobile-lang-switcher" style="padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 12px;">
                     <button class="lang-btn active" onclick="switchLanguage('zh')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid var(--oura-accent); background: var(--oura-accent); color: var(--oura-dark); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">中文</button>
                     <button class="lang-btn" onclick="switchLanguage('en')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">English</button>
@@ -1248,23 +1353,30 @@
     <section id="features" class="features">
         <div class="container">
             <h2 class="section-title fade-in" data-zh="核心功能" data-en="Core Features" data-tw="核心功能">核心功能</h2>
-            <p class="section-subtitle fade-in" data-zh="先进的传感器技术，全方位健康监测" data-en="Advanced sensor technology for comprehensive health monitoring" data-tw="先進的傳感器技術，全方位健康監測">先进的传感器技术，全方位健康监测</p>
+            <p class="section-subtitle fade-in" data-zh="精准睡眠监测，先进算法分析
+、人工智能驱动数据交互与健康管理" data-en="Advanced sensor technology for comprehensive health monitoring" data-tw="先進的傳感器技術，全方位健康監測">精准睡眠监测，先进算法分析
+、人工智能驱动数据交互与健康管理</p>
             
             <div class="features-grid">
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-heartbeat"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3 class="feature-title">24小时心率监测</h3>
+                    <h3 class="feature-title">每日状态评估</h3>
                     <p class="feature-description">
-                        采用光学心率传感器，实时监测静息心率、运动心率和心率变异性，
-                        帮助您了解心血管健康状况。
+                        每日状态评估
+综合8项核心指标，驱动DeepSeel
+与中医大模型为用户提供每日状态
+评估，并用AI智能体进行状态趋势
+为用户提供精准的健康改善
+管理，
+建议
                     </p>
                     <ul class="feature-specs">
-                        <li>高精度PPG传感器</li>
-                        <li>实时心率警报</li>
-                        <li>心率变异性分析</li>
-                        <li>运动心率区间</li>
+                        <li>睡眠数据影响因子</li>
+                        <li>活动数据影影响因子</li>
+                        <li>饮食数据影响因子</li>
+                        <li>情绪数据影响因子</li>
                     </ul>
                 </div>
                 
@@ -1287,18 +1399,20 @@
                 
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
-                        <i class="fas fa-thermometer-half"></i>
+                        <i class="fas fa-robot"></i>
                     </div>
-                    <h3 class="feature-title">体温血氧监测</h3>
+                    <h3 class="feature-title">小A健康管家</h3>
                     <p class="feature-description">
-                        连续监测体温变化和血氧饱和度，及时发现健康异常，
-                        为疾病预防提供重要参考数据。
+                        基于DeepSeek与多项健康医
+疗大模型训练的人工智能体
+在APP中提供全方位和立体式
+的健康管家服务。
                     </p>
                     <ul class="feature-specs">
-                        <li>连续体温监测</li>
-                        <li>血氧饱和度检测</li>
-                        <li>异常数据警报</li>
-                        <li>健康趋势分析</li>
+                        <li>异常数据标注与提醒</li>
+                        <li>个性化健康行动建议</li>
+                        <li>智能动态跟踪改善行动</li>
+                        <li>健康咨询对话与情绪疏导</li>
                     </ul>
                 </div>
                 
@@ -1326,112 +1440,117 @@
     <section id="product-showcase" class="container">
         <nav class="showcase-nav">
             <ul>
-                <li class="active" data-target="sleep"><i class="fas fa-moon"></i>睡眠</li>
-                <li data-target="activity"><i class="fas fa-running"></i>运动健康</li>
-                <!-- 将电池图标替换为正念相关的spa图标 -->
-                <li data-target="readiness"><i class="fas fa-spa"></i>正念</li>
-                <li data-target="stress"><i class="fas fa-brain"></i>压力</li>
-                <li data-target="heart"><i class="fas fa-heartbeat"></i>心脏健康</li>
-                <li data-target="women"><i class="fas fa-venus"></i>女性健康</li>
+                <li class="active" data-target="sleep"><i class="fas fa-moon"></i>睡眠监测</li>
+                <li data-target="activity"><i class="fas fa-robot"></i>人工智能</li>
+                <li data-target="readiness"><i class="fas fa-spa"></i>减压助眠</li>
+                <li data-target="heart"><i class="fas fa-star"></i>健康积分系统</li>
+                <li data-target="women-health"><i class="fas fa-venus"></i>女性健康</li>
           </ul>
         </nav>
         <div class="showcase-content">
             <div id="sleep" class="showcase-panel active">
                 <div class="showcase-panel-images">
                     <div class="image-item">
-                        <img src="产品资料与图片/app图片/睡眠/睡眠1.png" alt="睡眠数据1">
+                        <img src="产品资料与图片/app图片/睡眠/睡眠.png" alt="睡眠数据1">
                         <p class="image-description">深度睡眠监测，精准识别睡眠阶段</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/app图片/睡眠/睡眠2.png" alt="睡眠数据2">
-                        <p class="image-description">睡眠质量评分，个性化睡眠建议</p>
+                        <img src="产品资料与图片/app图片/睡眠/睡觉.jpg" alt="睡眠数据2">
+                        <p class="image-description" data-title="睡眠质量评分">基于深度睡眠、REM睡眠和睡眠效率的综合评分，提供个性化睡眠改善建议</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/app图片/睡眠/睡眠3.png" alt="睡眠数据3">
-                        <p class="image-description">智能闹钟，在最佳时机唤醒</p>
+                        <img src="产品资料与图片/app图片/睡眠/睡眠活动状态.jpg" alt="睡眠数据3">
+                        <p class="image-description" data-title="睡眠分析">在最佳睡眠周期结束时机唤醒，避免睡眠惯性，让您精神饱满地开始新的一天</p>
+                    </div>
+                    <div class="image-item">
+                        <img src="产品资料与图片/app图片/睡眠/睡眠质量评分.jpg" alt="睡眠数据4">
+                        <p class="image-description" data-title="睡眠趋势分析">长期监测睡眠模式变化，识别健康趋势，为您的睡眠健康提供科学指导</p>
                     </div>
                 </div>
             </div>
             <div id="activity" class="showcase-panel">
                 <div class="showcase-panel-images">
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0002.jpg" alt="运动健康数据1">
-                        <p class="image-description">全天活动追踪，步数卡路里监测</p>
+                        <img src="产品资料与图片/app图片/人工智能/人工智能.png" alt="人工智能数据1">
+                        <p class="image-description" data-title="AI智能分析">采用先进的深度学习算法，实时分析您的健康数据，提供精准的健康洞察</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0008.jpg" alt="运动健康数据2">
-                        <p class="image-description">运动模式识别，精准记录运动数据</p>
+                        <img src="产品资料与图片/app图片/人工智能/身体评分.jpg" alt="人工智能数据2">
+                        <p class="image-description" data-title="智能预测">基于历史数据和机器学习模型，预测健康趋势，提前发现潜在健康风险</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0014.jpg" alt="运动健康数据3">
-                        <p class="image-description">恢复指导，优化训练计划</p>
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0014.jpg" alt="人工智能数据3">
+                        <p class="image-description" data-title="机器学习">系统持续学习您的健康模式，不断优化算法，提供越来越精准的个性化建议</p>
+                    </div>
+                    <div class="image-item">
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0002.jpg" alt="人工智能数据4">
+                        <p class="image-description" data-title="智能算法">结合多种健康指标，运用智能算法进行综合分析，为您提供全面的健康评估</p>
                     </div>
                 </div>
             </div>
             <div id="readiness" class="showcase-panel">
                 <div class="showcase-panel-images">
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0003.jpg" alt="准备度数据1">
-                        <p class="image-description">身体准备度评估，科学安排活动</p>
+                        <img src="产品资料与图片/app图片/减压助眠/减压冥想.png" alt="减压助眠数据1">
+                        <p class="image-description" data-title="放松引导">通过专业的放松技巧指导，帮助您缓解日常压力，恢复身心平衡</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0009.jpg" alt="准备度数据2">
-                        <p class="image-description">恢复状态监测，避免过度训练</p>
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0009.jpg" alt="减压助眠数据2">
+                        <p class="image-description" data-title="助眠功能">结合睡眠科学，提供个性化的助眠方案，帮助您快速入睡并提高睡眠质量</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0015.jpg" alt="准备度数据3">
-                        <p class="image-description">个性化建议，提升身体表现</p>
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0015.jpg" alt="减压助眠数据3">
+                        <p class="image-description" data-title="呼吸练习">科学的呼吸练习指导，帮助您调节呼吸节奏，促进深度放松和冥想状态</p>
+                    </div>
+                    <div class="image-item">
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0003.jpg" alt="减压助眠数据4">
+                        <p class="image-description" data-title="冥想指导">提供专业的冥想指导，帮助您培养正念意识，提升心理健康和情绪管理能力</p>
                     </div>
                 </div>
             </div>
-            <div id="stress" class="showcase-panel">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0004.jpg" alt="压力数据1">
-                        <p class="image-description">压力水平监测，实时了解身心状态</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0010.jpg" alt="压力数据2">
-                        <p class="image-description">呼吸引导，帮助缓解压力</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0016.jpg" alt="压力数据3">
-                        <p class="image-description">放松提醒，维持身心平衡</p>
-                    </div>
-                </div>
-            </div>
+
             <div id="heart" class="showcase-panel">
                 <div class="showcase-panel-images">
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0005.jpg" alt="心脏健康数据1">
-                        <p class="image-description">24小时心率监测，守护心脏健康</p>
+                        <img src="产品资料与图片/app图片/健康积分系统/健康积分系统.png" alt="健康积分系统数据1">
+                        <p class="image-description" data-title="积分奖励机制">通过科学的积分系统，激励您保持健康的生活方式，让健康管理变得更有趣</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0011.jpg" alt="心脏健康数据2">
-                        <p class="image-description">心率变异性分析，评估自主神经功能</p>
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0011.jpg" alt="健康积分系统数据2">
+                        <p class="image-description" data-title="成就系统">记录您的健康里程碑，通过成就徽章和等级系统，让健康进步可视化</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0017.jpg" alt="心脏健康数据3">
-                        <p class="image-description">异常心率警报，及时发现健康风险</p>
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0017.jpg" alt="健康积分系统数据3">
+                        <p class="image-description" data-title="排行榜功能">与朋友和家人进行健康竞赛，通过排行榜激发竞争意识，共同追求健康目标</p>
+                    </div>
+                    <div class="image-item">
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0005.jpg" alt="健康积分系统数据4">
+                        <p class="image-description" data-title="兑换奖励">使用健康积分兑换各种奖励，让您的健康努力得到实实在在的回报</p>
                     </div>
                 </div>
             </div>
-            <div id="women" class="showcase-panel">
+
+            <div id="women-health" class="showcase-panel">
                 <div class="showcase-panel-images">
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0006.jpg" alt="女性健康数据1">
-                        <p class="image-description">生理周期追踪，了解身体变化</p>
+                        <img src="产品资料与图片/app图片/女性健康/女性健康.png" alt="女性健康数据1">
+                        <p class="image-description" data-title="生理周期跟踪">智能记录和预测月经周期，提供个性化的生理期健康管理建议</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0012.jpg" alt="女性健康数据2">
-                        <p class="image-description">体温变化监测，预测排卵期</p>
+                        <img src="产品资料与图片/app图片/女性健康/生理周期.jpg" alt="女性健康数据2">
+                        <p class="image-description" data-title="体温监测">精准监测基础体温变化，帮助识别排卵期和生理周期规律</p>
                     </div>
                     <div class="image-item">
-                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0018.jpg" alt="女性健康数据3">
-                        <p class="image-description">个性化健康建议，关爱女性健康</p>
+                        <img src="产品资料与图片/app图片/女性健康/生理期预测.jpg" alt="女性健康数据3">
+                        <p class="image-description" data-title="健康指标分析">综合分析心率变异性、睡眠质量等指标，提供女性专属健康洞察</p>
+                    </div>
+                    <div class="image-item">
+                        <img src="产品资料与图片/AZ Rings 产品资料-中文/AZ Rings 产品资料-中文_page-0006.jpg" alt="女性健康数据4">
+                        <p class="image-description" data-title="隐私保护">采用端到端加密技术，确保女性健康数据的绝对隐私和安全</p>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -1441,10 +1560,9 @@
             <h2 class="section-title fade-in" data-zh="产品展示" data-en="Product Gallery" data-tw="產品展示">产品展示</h2>
             <div class="ring-container">
                 <div class="ring-display">
-                    <img id="ring-image" src="产品资料与图片/各个方向的戒指/az-ring-main.png" alt="AZ Ring Gold">
-                </div>
+<img id="ring-image" src="产品资料与图片/产品展示/jinse.png" alt="AZ Ring Gold">                </div>
                 <div class="color-selector">
-                    <span class="color-option active" data-image="产品资料与图片/产品展示/jinse.png" data-color="Brushed Silver"></span>
+                    <span class="color-option active" data-image="产品资料与图片/产品展示/jinse.png" data-color="Elegant Gold"></span>
                     <span class="color-option" data-image="产品资料与图片/产品展示/heise.png" data-color="Stealth Black"></span>
                 </div>
             </div>
@@ -1575,7 +1693,10 @@
             </p>
             
             <div class="cta-buttons fade-in">
-                <a href="#contact" class="btn-primary" data-zh="联系我们" data-en="Contact Us" data-tw="聯繫我們">联系我们</a>
+                <a href="https://3.cn/2mlZRa-U?jkl=@Q8PbPDKjrGx@" target="_blank" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 30px; background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%); box-shadow: 0 4px 15px rgba(255,107,53,0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,53,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,53,0.3)'" data-zh="购买" data-en="Buy Now" data-tw="購買">
+                    <i class="fas fa-shopping-cart" style="margin-right: 8px; font-size: 14px;"></i>
+                    购买
+                </a>
                 <a href="index.html" class="btn-secondary" data-zh="返回首页" data-en="Back to Home" data-tw="返回首頁">返回首页</a>
             </div>
         </div>
@@ -1614,7 +1735,28 @@
                         <li><a href="#" data-zh="帮助中心" data-en="Help Center" data-tw="幫助中心">帮助中心</a></li>
                         <li><a href="#" data-zh="隐私政策" data-en="Privacy Policy" data-tw="隱私政策">隐私政策</a></li>
                         <li><a href="#" data-zh="服务条款" data-en="Terms of Service" data-tw="服務條款">服务条款</a></li>
+                        <li><a href="#" id="after-sales-link-footer" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
                     </ul>
+                </div>
+                
+                <div class="oura-footer-section">
+                    <h4 data-zh="下载APP" data-en="Download App" data-tw="下載APP">下载APP</h4>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                        <a href="#" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="fab fa-apple" style="font-size: 20px; margin-right: 12px;"></i>
+                            <div>
+                                <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Download on" data-tw="下載於">下载于</div>
+                                <div style="font-size: 14px; font-weight: 500;" data-zh="App Store" data-en="App Store" data-tw="App Store">App Store</div>
+                            </div>
+                        </a>
+                        <a href="#" style="display: flex; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px; color: var(--oura-white); text-decoration: none; transition: all 0.3s ease; font-size: 14px;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                            <i class="fab fa-google-play" style="font-size: 20px; margin-right: 12px;"></i>
+                            <div>
+                                <div style="font-size: 12px; color: var(--oura-light-gray);" data-zh="下载于" data-en="Get it on" data-tw="下載於">下载于</div>
+                                <div style="font-size: 14px; font-weight: 500;" data-zh="Google Play" data-en="Google Play" data-tw="Google Play">Google Play</div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
             
@@ -1623,6 +1765,16 @@
             </div>
         </div>
     </footer>
+
+    <!-- After-sales Modal -->
+    <div id="after-sales-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</h3>
+            <p data-zh="请扫描下方二维码联系我们的客服" data-en="Please scan the QR code below to contact our customer service" data-tw="請掃描下方二維碼聯繫我們的客服">请扫描下方二维码联系我们的客服</p>
+            <img src="wechat-qr.png" alt="WeChat QR Code" style="width: 200px; height: 200px; margin: 20px auto; display: block;">
+        </div>
+    </div>
 
     <script>
         // Smooth scrolling
@@ -1646,6 +1798,12 @@
         if (mobileToggle && mobileMenu) {
             mobileToggle.addEventListener('click', () => {
                 mobileMenu.classList.toggle('active');
+                const icon = mobileToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
             });
         }
 
@@ -1730,10 +1888,20 @@
 
                         // Change image
                         const newImage = this.dataset.image;
+                        const colorName = this.dataset.color;
+                        
                         ringImage.style.opacity = 0;
                         setTimeout(() => {
                             ringImage.src = newImage;
-                            ringImage.alt = `AZ Ring ${this.dataset.color}`;
+                            ringImage.alt = `AZ Ring ${colorName}`;
+                            
+                            // Add or remove scale effect for Stealth Black
+                            if (colorName === 'Stealth Black') {
+                                ringImage.classList.add('stealth-black-scale');
+                            } else {
+                                ringImage.classList.remove('stealth-black-scale');
+                            }
+                            
                             ringImage.style.opacity = 1;
                         }, 500);
                     });
@@ -1777,6 +1945,38 @@
                 }
             });
         });
+
+        // After-sales modal logic
+        const afterSalesModal = document.getElementById('after-sales-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const afterSalesLinks = [
+            document.getElementById('after-sales-link-footer'),
+            document.getElementById('after-sales-link-nav'),
+            document.getElementById('after-sales-link-mobile')
+        ];
+
+        afterSalesLinks.forEach(link => {
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    afterSalesModal.style.display = 'flex';
+                });
+            }
+        });
+
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                afterSalesModal.style.display = 'none';
+            });
+        }
+
+        if (afterSalesModal) {
+            afterSalesModal.addEventListener('click', (e) => {
+                if (e.target === afterSalesModal) {
+                    afterSalesModal.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 </html>
