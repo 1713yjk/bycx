@@ -696,14 +696,17 @@ var _hmt = _hmt || [];
 </head>
 <body>
     <!-- 阿里百炼AI助手 -->
-    <script src="https://o.alicdn.com/appflow/chatbot/v1/AppflowChatSDK.js"></script>
-    <script>
-        window.APPFLOW_CHAT_SDK.init({
-            integrateId: 'cit-2b491bdcc9cf432ba115',
-            requestDomain: 'https://1679717400845537.appflow.aliyunnest.com',
-            draggable: true
-        });
-    </script>
+  <script src="https://o.alicdn.com/appflow/chatbot/v1/AppflowChatSDK.js"></script>
+<script>
+    window.APPFLOW_CHAT_SDK.init({
+    integrateConfig: {
+        integrateId: 'cit-2b491bdcc9cf432ba115',
+        domain: {
+            requestDomain: 'https://1679717400845537.appflow.aliyunnest.com'
+        }
+    }
+});
+</script>
 
     <!-- Navigation -->
     <nav class="oura-nav">
