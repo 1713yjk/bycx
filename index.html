@@ -696,7 +696,7 @@ var _hmt = _hmt || [];
 </head>
 <body>
     <!-- 阿里百炼AI助手 -->
-  <script src="https://o.alicdn.com/appflow/chatbot/v1/AppflowChatSDK.js"></script>
+ <script src="https://o.alicdn.com/appflow/chatbot/v1/AppflowChatSDK.js"></script>
 <script>
     window.APPFLOW_CHAT_SDK.init({
     integrateConfig: {
@@ -1278,6 +1278,7 @@ var _hmt = _hmt || [];
                         <li><a href="#" data-zh="隐私政策" data-en="Privacy Policy" data-tw="隱私政策">隐私政策</a></li>
                         <li><a href="#" data-zh="服务条款" data-en="Terms of Service" data-tw="服務條款">服务条款</a></li>
                         <li><a href="#" id="after-sales-link-footer" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
+                        <li><a href="#" id="jd-store-link-footer" data-zh="京东店铺" data-en="JD Store" data-tw="京東店鋪">京东店铺</a></li>
                     </ul>
                 </div>
                 
@@ -1329,6 +1330,16 @@ var _hmt = _hmt || [];
         </div>
     </div>
 
+    <!-- JD Store Modal -->
+    <div id="jd-store-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal-jd">&times;</span>
+            <h3 data-zh="京东店铺" data-en="JD Store" data-tw="京東店鋪">京东店铺</h3>
+            <p data-zh="请扫描下方二维码访问我们的京东店铺" data-en="Please scan the QR code below to visit our JD store" data-tw="請掃描下方二維碼訪問我們的京東店鋪">请扫描下方二维码访问我们的京东店铺</p>
+            <img src="产品资料与图片/jd二维码.png" alt="JD Store QR Code" style="width: 200px; height: 200px; margin: 20px auto; display: block;">
+        </div>
+    </div>
+
     <style>
         .modal-overlay {
             position: fixed;
@@ -1356,7 +1367,8 @@ var _hmt = _hmt || [];
         }
 
         .close-modal,
-        .close-modal-app {
+        .close-modal-app,
+        .close-modal-jd {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -1367,7 +1379,8 @@ var _hmt = _hmt || [];
         }
 
         .close-modal:hover,
-        .close-modal-app:hover {
+        .close-modal-app:hover,
+        .close-modal-jd:hover {
             color: var(--oura-white);
         }
     </style>
@@ -1408,6 +1421,32 @@ var _hmt = _hmt || [];
                 });
             }
         });
+
+        // JD Store modal logic
+        const jdStoreModal = document.getElementById('jd-store-modal');
+        const closeModalJd = document.querySelector('.close-modal-jd');
+        const jdStoreLink = document.getElementById('jd-store-link-footer');
+
+        if (jdStoreLink) {
+            jdStoreLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                jdStoreModal.style.display = 'flex';
+            });
+        }
+
+        if (closeModalJd) {
+            closeModalJd.addEventListener('click', () => {
+                jdStoreModal.style.display = 'none';
+            });
+        }
+
+        if (jdStoreModal) {
+            jdStoreModal.addEventListener('click', (e) => {
+                if (e.target === jdStoreModal) {
+                    jdStoreModal.style.display = 'none';
+                }
+            });
+        }
 
         if (closeModal) {
             closeModal.addEventListener('click', () => {
