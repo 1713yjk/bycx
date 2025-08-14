@@ -165,6 +165,16 @@ var _hmt = _hmt || [];
             padding: 0 24px;
         }
 
+        /* 仅放大英雄区容器，导航等其他区域保持 1200px */
+        .oura-hero > .oura-container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            flex: 0 0 auto;
+            box-sizing: border-box;
+        }
+
+
         .oura-nav {
             position: fixed;
             top: 0;
@@ -292,12 +302,328 @@ var _hmt = _hmt || [];
             min-height: 100vh;
             display: flex;
             align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
             position: relative;
             overflow: hidden;
         }
 
+        /* Modern Hero Carousel - 优化1920x800比例 */
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2.4; /* 1920/800 = 2.4 */
+            max-height: 900px;
+            margin: 40px auto;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            background: var(--oura-dark);
+        }
+
+        .hero-carousel .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-carousel .carousel-container .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .hero-carousel .carousel-container .carousel-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: scale(1.02);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .hero-carousel .carousel-container .carousel-slide.active {
+            opacity: 1;
+            transform: scale(1.0);
+            z-index: 1;
+            pointer-events: auto;
+        }
+
+        .hero-carousel .carousel-container .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            filter: saturate(1.1) contrast(1.05) brightness(1.02);
+            transition: transform 0.6s ease-out;
+            will-change: transform;
+        }
+
+        /* 悬停微动效果 */
+        .hero-carousel:hover .carousel-container .carousel-slide.active img {
+            transform: scale(1.03);
+        }
+
+        /* Ken Burns自动播放微动效果 */
+        .hero-carousel.playing .carousel-container .carousel-slide.active img {
+            animation: kenburns-subtle 6s ease-in-out infinite;
+        }
+
+        /* Ken Burns关键帧动画 */
+        @keyframes kenburns-subtle {
+            0%, 100% { transform: scale(1.00); }
+            50% { transform: scale(1.02); }
+        }
+
+
+
+        .hero-carousel .carousel-container .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            opacity: 0.85;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-carousel .carousel-container .carousel-nav:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-50%) scale(1.08);
+            opacity: 1;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .hero-carousel .carousel-container .carousel-nav:focus {
+            outline: 2px solid var(--oura-accent);
+            outline-offset: 2px;
+        }
+
+        .hero-carousel .carousel-container .carousel-nav.prev { left: 28px; }
+        .hero-carousel .carousel-container .carousel-nav.next { right: 28px; }
+
+        .hero-carousel .carousel-container .nav-icon {
+            width: 18px;
+            height: 18px;
+            fill: var(--oura-white);
+            transition: transform 0.2s ease;
+        }
+
+        .hero-carousel .carousel-container .carousel-nav:hover .nav-icon {
+            transform: scale(1.15);
+        }
+
+        .hero-carousel .carousel-container .carousel-indicators {
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hero-carousel .carousel-container .indicator {
+            position: relative;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .hero-carousel .carousel-container .indicator:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.15);
+        }
+
+        .hero-carousel .carousel-container .indicator:focus {
+            outline: 2px solid var(--oura-accent);
+            outline-offset: 2px;
+        }
+
+        .hero-carousel .carousel-container .indicator.active {
+            width: 24px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 3px;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .hero-carousel .carousel-container .indicator-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--oura-accent), var(--oura-green));
+            border-radius: 3px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .hero-carousel .carousel-container .indicator.active .indicator-progress {
+            transform: scaleX(1);
+        }
+
+        .hero-carousel .carousel-container .carousel-play-control {
+            position: absolute;
+            bottom: 32px;
+            right: 40px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 0.7;
+        }
+
+        .hero-carousel .carousel-container .carousel-play-control:hover {
+            background: rgba(255, 255, 255, 0.15);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .hero-carousel .carousel-container .play-icon,
+        .hero-carousel .carousel-container .pause-icon {
+            width: 16px;
+            height: 16px;
+            fill: var(--oura-white);
+            transition: opacity 0.2s ease;
+        }
+
+        .hero-carousel.playing .carousel-container .play-icon {
+            opacity: 0;
+        }
+
+        .hero-carousel.playing .carousel-container .pause-icon {
+            opacity: 1;
+        }
+
+        .hero-carousel:not(.playing) .carousel-container .play-icon {
+            opacity: 1;
+        }
+
+        .hero-carousel:not(.playing) .carousel-container .pause-icon {
+            opacity: 0;
+        }
+
+        /* 进度动画关键帧 */
+        @keyframes progressFill {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        /* 减少动效偏好支持 */
+        @media (prefers-reduced-motion: reduce) {
+            .hero-carousel .carousel-container .carousel-slide,
+            .hero-carousel .carousel-container .carousel-slide img,
+            .hero-carousel .carousel-container .carousel-nav,
+            .hero-carousel .carousel-container .nav-icon,
+            .hero-carousel .carousel-container .indicator,
+            .hero-carousel .carousel-container .indicator-progress {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        /* Responsive Design - 适配1920x800比例 */
+        @media (max-width: 1024px) {
+            .hero-carousel {
+                aspect-ratio: 2.4; /* 与主比例一致，避免断点跳变 */
+                max-height: 640px;
+                margin: 32px auto;
+            }
+            .hero-carousel .carousel-container .carousel-nav {
+                width: 44px;
+                height: 44px;
+            }
+            .hero-carousel .carousel-container .carousel-nav.prev { left: 24px; }
+            .hero-carousel .carousel-container .carousel-nav.next { right: 24px; }
+            .hero-carousel .carousel-container .nav-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-carousel {
+                aspect-ratio: 2.2; /* 移动端稍微方一点，但尽量与主比例接近 */
+                max-height: 480px;
+                border-radius: 20px;
+                margin: 24px auto;
+            }
+            .hero-carousel .carousel-container .carousel-nav {
+                width: 40px;
+                height: 40px;
+            }
+            .hero-carousel .carousel-container .carousel-nav.prev { left: 20px; }
+            .hero-carousel .carousel-container .carousel-nav.next { right: 20px; }
+            .hero-carousel .carousel-container .nav-icon {
+                width: 14px;
+                height: 14px;
+            }
+            .hero-carousel .carousel-container .carousel-indicators {
+                bottom: 24px;
+                gap: 12px;
+            }
+            .hero-carousel .carousel-container .indicator {
+                width: 6px;
+                height: 6px;
+            }
+            .hero-carousel .carousel-container .indicator.active {
+                width: 24px;
+            }
+            .hero-carousel .carousel-container .carousel-play-control {
+                bottom: 24px;
+                right: 24px;
+                width: 36px;
+                height: 36px;
+            }
+            .hero-carousel .carousel-container .play-icon,
+            .hero-carousel .carousel-container .pause-icon {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
         .oura-hero::before {
+
             content: '';
             position: absolute;
             top: 0;
@@ -330,6 +656,10 @@ var _hmt = _hmt || [];
             max-width: 600px;
         }
 
+
+
+
+
         .oura-card {
             background: var(--oura-dark);
             border-radius: 16px;
@@ -355,6 +685,9 @@ var _hmt = _hmt || [];
             background-repeat: no-repeat;
             background-position: center;
             transform: rotate(45deg);
+
+
+
         }
 
         .oura-ring-visual::before {
@@ -723,11 +1056,7 @@ var _hmt = _hmt || [];
                 display: none !important;
             }
 
-            /* 添加手指尺寸测量部分的移动端样式 */
-            .oura-card div[style*="grid-template-columns: 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                gap: 20px !important;
-            }
+            /* 移除与尺寸测量模块相关的无用样式 */
 
             .oura-card table {
                 font-size: 12px !important;
@@ -770,7 +1099,7 @@ var _hmt = _hmt || [];
                     <li><a href="#about" class="oura-nav-link" data-zh="关于" data-en="About" data-tw="關於">关于</a></li>
                     <li><a href="#faq" class="oura-nav-link" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a></li>
                     <li><a href="#contact" class="oura-nav-link" data-zh="联系" data-en="Contact" data-tw="聯繫">联系</a></li>
-                    <li><a href="#" id="after-sales-link-nav" class="oura-nav-link" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
+                    <li><a href="after-sales.html" class="oura-nav-link" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
                 </ul>
 
                 <!-- Language Switcher -->
@@ -793,7 +1122,7 @@ var _hmt = _hmt || [];
                 <a href="#about" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="关于" data-en="About" data-tw="關於">关于</a>
                 <a href="#faq" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a>
                 <a href="#contact" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="联系" data-en="Contact" data-tw="聯繫">联系</a>
-                <a href="#" id="after-sales-link-mobile" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a>
+                <a href="after-sales.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a>
                 <div class="mobile-lang-switcher" style="padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 12px;">
                     <button class="lang-btn active" onclick="switchLanguage('zh')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid var(--oura-accent); background: var(--oura-accent); color: var(--oura-dark); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">中文</button>
                     <button class="lang-btn" onclick="switchLanguage('en')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">English</button>
@@ -807,50 +1136,64 @@ var _hmt = _hmt || [];
     <section id="home" class="oura-hero">
         <div class="oura-container">
             <div class="oura-hero-content">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;" class="hero-grid">
-                    <div class="fade-in">
-                        <h1 class="oura-hero-title" data-zh="重新定义<br>智能健康" data-en="Redefining<br>Smart Health" data-tw="重新定義<br>智能健康">
-                            重新定义<br>
-                            智能健康
-                        </h1>
-                        <p class="oura-hero-subtitle" data-zh="深圳佰屹创新致力于打造下一代智能健康设备，通过先进的传感技术和人工智能，以数据驱动健康为使命，为用户提供全方位的数字化健康管理方案。" data-en="Shenzhen Baiyi Innovation is dedicated to creating next-generation smart health devices, providing comprehensive health monitoring solutions through advanced sensor technology and artificial intelligence." data-tw="深圳佰屹創新致力於打造下一代智能健康設備，通過先進的傳感技術和人工智能，為用戶提供全方位的健康監測解決方案。">
-                            深圳佰屹创新致力于打造下一代智能健康设备，通过先进的传感技术和人工智能，以数据驱动健康为使命，为用户提供全方位的数字化健康管理方案。
-                        </p>
-                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                            <a href="#products" class="oura-button" data-zh="探索产品" data-en="Explore Products" data-tw="探索產品">探索产品</a>
-                            <a href="#about" class="oura-button-outline" data-zh="了解更多" data-en="Learn More" data-tw="了解更多">了解更多</a>
+                <div class="hero-carousel playing" role="region" aria-label="产品展示轮播">
+                    <div class="carousel-container">
+                        <div class="carousel-track" aria-live="polite">
+                            <div class="carousel-slide active" data-index="0">
+                                <img src="产品资料与图片/轮播图/数据驱动健康1.jpg" alt="AZLG 智能戒指：数据驱动健康监测" loading="eager">
+                            </div>
+                            <div class="carousel-slide" data-index="1">
+                                <img src="产品资料与图片/轮播图/防水2.jpg" alt="AZLG 智能戒指：防水设计，运动无忧" loading="lazy">
+                            </div>
+                            <div class="carousel-slide" data-index="2">
+                                <img src="产品资料与图片/轮播图/睡眠3.jpg" alt="AZLG 智能戒指：精准睡眠监测" loading="lazy">
+                            </div>
+                            <div class="carousel-slide" data-index="3">
+                                <img src="产品资料与图片/轮播图/轮播图长续航1(1).jpg" alt="AZLG 智能戒指：超长续航体验" loading="lazy">
+                            </div>
                         </div>
 
+                        <!-- 导航按钮 -->
+                        <button class="carousel-nav prev" aria-label="查看上一张图片">
+                            <svg class="nav-icon" viewBox="0 0 24 24">
+                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                            </svg>
+                        </button>
+                        <button class="carousel-nav next" aria-label="查看下一张图片">
+                            <svg class="nav-icon" viewBox="0 0 24 24">
+                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                            </svg>
+                        </button>
 
-                    </div>
+                        <!-- 进度指示器 -->
+                        <div class="carousel-indicators" role="tablist">
+                            <button class="indicator active" role="tab" aria-selected="true" aria-label="第1张图片">
+                                <div class="indicator-progress"></div>
+                            </button>
+                            <button class="indicator" role="tab" aria-selected="false" aria-label="第2张图片">
+                                <div class="indicator-progress"></div>
+                            </button>
+                            <button class="indicator" role="tab" aria-selected="false" aria-label="第3张图片">
+                                <div class="indicator-progress"></div>
+                            </button>
+                            <button class="indicator" role="tab" aria-selected="false" aria-label="第4张图片">
+                                <div class="indicator-progress"></div>
+                            </button>
+                        </div>
 
-                    <div class="fade-in" style="text-align: center;">
-                        <div class="oura-ring-visual"></div>
+                        <!-- 播放控制 -->
+                        <button class="carousel-play-control" aria-label="暂停自动播放">
+                            <svg class="play-icon" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            <svg class="pause-icon" viewBox="0 0 24 24">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
-                <style>
-                    @media (max-width: 768px) {
-                        .hero-grid {
-                            grid-template-columns: 1fr !important;
-                            gap: 40px !important;
-                            text-align: center;
-                        }
 
-                        .app-download-buttons {
-                            justify-content: center !important;
-                        }
-
-                        .app-download-btn {
-                            min-width: 140px !important;
-                        }
-
-                        .oura-footer-content {
-                            grid-template-columns: 1fr !important;
-                            gap: 32px !important;
-                        }
-                    }
-                </style>
             </div>
         </div>
     </section>
@@ -1068,115 +1411,34 @@ var _hmt = _hmt || [];
             </div>
 
             <div style="max-width: 800px; margin: 0 auto;">
-                <!-- Size Guide -->
-                <div class="fade-in" style="margin-bottom: 60px;">
-                    <div class="oura-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                        <h3 style="font-size: 28px; font-weight: 500; margin-bottom: 24px; color: var(--oura-white); text-align: center;">
-                            <i class="fas fa-ruler" style="margin-right: 12px; color: var(--oura-accent);"></i>
-                            <span data-zh="如何测量手指尺寸" data-en="How to Measure Your Ring Size" data-tw="如何測量手指尺寸">如何测量手指尺寸</span>
-                        </h3>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 32px;">
-                            <div>
-                                <h4 style="color: var(--oura-white); font-size: 20px; margin-bottom: 16px;" data-zh="测量方法" data-en="Measurement Methods" data-tw="測量方法">测量方法</h4>
-                                <div style="display: grid; gap: 16px;">
-                                    <div style="display: flex; align-items: flex-start; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                                        <div style="width: 32px; height: 32px; background: var(--oura-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
-                                            <span style="color: white; font-weight: 600; font-size: 14px;">1</span>
-                                        </div>
-                                        <div>
-                                            <h5 style="color: var(--oura-white); font-size: 16px; margin-bottom: 4px;" data-zh="纸条测量法" data-en="Paper Strip Method" data-tw="紙條測量法">纸条测量法</h5>
-                                            <p style="color: var(--oura-light-gray); font-size: 14px; line-height: 1.5;" data-zh="用纸条绕手指一圈，标记重叠点，测量长度" data-en="Wrap a paper strip around your finger, mark the overlap, measure the length" data-tw="用紙條繞手指一圈，標記重疊點，測量長度">用纸条绕手指一圈，标记重叠点，测量长度</p>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: flex-start; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                                        <div style="width: 32px; height: 32px; background: var(--oura-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
-                                            <span style="color: white; font-weight: 600; font-size: 14px;">2</span>
-                                        </div>
-                                        <div>
-                                            <h5 style="color: var(--oura-white); font-size: 16px; margin-bottom: 4px;" data-zh="现有戒指测量" data-en="Existing Ring Method" data-tw="現有戒指測量">现有戒指测量</h5>
-                                            <p style="color: var(--oura-light-gray); font-size: 14px; line-height: 1.5;" data-zh="测量现有戒指的内径，对照尺寸表" data-en="Measure the inner diameter of an existing ring, refer to size chart" data-tw="測量現有戒指的內徑，對照尺寸表">测量现有戒指的内径，对照尺寸表</p>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: flex-start; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px;">
-                                        <div style="width: 32px; height: 32px; background: var(--oura-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
-                                            <span style="color: white; font-weight: 600; font-size: 14px;">3</span>
-                                        </div>
-                                        <div>
-                                            <h5 style="color: var(--oura-white); font-size: 16px; margin-bottom: 4px;" data-zh="专业测量工具" data-en="Professional Ring Sizer" data-tw="專業測量工具">专业测量工具</h5>
-                                            <p style="color: var(--oura-light-gray); font-size: 14px; line-height: 1.5;" data-zh="使用戒指尺寸测量器，最准确的方法" data-en="Use a professional ring sizer for the most accurate measurement" data-tw="使用戒指尺寸測量器，最準確的方法">使用戒指尺寸测量器，最准确的方法</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h4 style="color: var(--oura-white); font-size: 20px; margin-bottom: 16px;" data-zh="尺寸对照表" data-en="Size Chart" data-tw="尺寸對照表">尺寸对照表</h4>
-                                <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px;">
-                                    <table style="width: 100%; border-collapse: collapse; text-align: center;">
-                                        <thead>
-                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.2);">
-                                                <th style="color: var(--oura-white); padding: 12px 8px; font-size: 14px;" data-zh="美码" data-en="US Size" data-tw="美碼">美码</th>
-                                                <th style="color: var(--oura-white); padding: 12px 8px; font-size: 14px;" data-zh="欧码" data-en="EU Size" data-tw="歐碼">欧码</th>
-                                                <th style="color: var(--oura-white); padding: 12px 8px; font-size: 14px;" data-zh="日码" data-en="JP Size" data-tw="日碼">日码</th>
-                                                <th style="color: var(--oura-white); padding: 12px 8px; font-size: 14px;" data-zh="直径(内径)" data-en="Diameter (mm)" data-tw="直徑(內徑)">直径(内径)</th>
-                                                <th style="color: var(--oura-white); padding: 12px 8px; font-size: 14px;" data-zh="戒指周长(内周长)" data-en="Circumference (mm)" data-tw="戒指周長(內周長)">戒指周长(内周长)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#5</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#50</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#9</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">15.7mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">49.3mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#6</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#52</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#12</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">16.5mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">51.8mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#7</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#55</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#14</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">17.3mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">54.3mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#8</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#57</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#16</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">18.1mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">56.9mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#9</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#60</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#18</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">18.9mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">59.4mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#10</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#62</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#21</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">19.8mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">62.2mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#11</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#65</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#24</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">20.6mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">64.7mm</td></tr>
-                                            <tr><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#12</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#68</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">#26</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">21.4mm</td><td style="color: var(--oura-light-gray); padding: 8px; font-size: 14px;">67.2mm</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div style="margin-top: 16px; padding: 16px; background: rgba(255,107,53,0.1); border-radius: 12px; border-left: 4px solid var(--oura-accent);">
-                                    <p style="color: var(--oura-white); font-size: 14px; margin: 0;" data-zh="💡 建议：选择稍微宽松一点的尺寸，确保佩戴舒适" data-en="💡 Tip: Choose a slightly looser size for comfortable wearing" data-tw="💡 建議：選擇稍微寬鬆一點的尺寸，確保佩戴舒適">💡 建议：选择稍微宽松一点的尺寸，确保佩戴舒适</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="text-align: center;">
-                            <a href="#contact" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: var(--oura-accent); color: var(--oura-white); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,107,53,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,53,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,53,0.3)'">
-                                <i class="fas fa-download" style="margin-right: 8px;"></i>
-                                <span data-zh="下载尺寸测量指南" data-en="Download Size Guide" data-tw="下載尺寸測量指南">下载尺寸测量指南</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- FAQ Items -->
                 <div class="fade-in">
-                    <div style="display: grid; gap: 16px;">
+                                <div style="display: grid; gap: 16px;">
                         <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
                             <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
                                 <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring的电池续航时间是多久？" data-en="How long does the AZ Ring battery last?" data-tw="AZ Ring的電池續航時間是多久？">AZ Ring的电池续航时间是多久？</h4>
                                 <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
-                            </div>
+                                        </div>
                             <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
                                 <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                                     <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。" data-en="AZ Ring features an efficient lithium battery that lasts up to 7 days under normal usage. Actual battery life depends on usage frequency and enabled features. Full charge takes approximately 2 hours." data-tw="AZ Ring配備高效鋰電池，正常使用情況下可續航7天。具體續航時間取決於使用頻率和功能開啟情況。充電時間約2小時即可充滿。">AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。</p>
-                                </div>
-                            </div>
-                        </div>
+                                        </div>
+                                    </div>
+                                        </div>
 
                         <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
                             <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
                                 <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring防水吗？可以游泳时佩戴吗？" data-en="Is AZ Ring waterproof? Can I wear it while swimming?" data-tw="AZ Ring防水嗎？可以游泳時佩戴嗎？">AZ Ring防水吗？可以游泳时佩戴吗？</h4>
                                 <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
-                            </div>
+                                        </div>
                             <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
                                 <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                                     <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="是的，AZ Ring具有IPX8防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。" data-en="Yes, AZ Ring has IPX8 water resistance rating and can be worn while swimming and showering. However, avoid using it in hot tubs or saunas as high temperatures may affect device performance." data-tw="是的，AZ Ring具有IPX8防水等級，可以在游泳、洗澡時正常佩戴。但請避免在熱水浴缸或桑拿房中使用，高溫可能影響設備性能。">是的，AZ Ring具有IPX8防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
 
 
@@ -1202,6 +1464,54 @@ var _hmt = _hmt || [];
                             <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
                                 <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
                                     <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。" data-en="We use end-to-end encryption to protect your health data, with all transmissions secured by AES-256 encryption. Data is only stored on your device and our secure servers, and we never share personal health information with third parties." data-tw="我們採用端到端加密技術保護您的健康數據，所有數據傳輸均經過AES-256加密。數據僅存儲在您的設備和我們的安全服務器上，絕不會與第三方共享個人健康信息。">我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。</p>
+                        </div>
+                    </div>
+                </div>
+
+                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
+                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring支持哪些手机系统？" data-en="Which mobile systems does AZ Ring support?" data-tw="AZ Ring支持哪些手機系統？">AZ Ring支持哪些手机系统？</h4>
+                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
+                            </div>
+                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。" data-en="AZ Ring supports iOS 12.0 and above, and Android 8.0 and above. Our app is available on both App Store and Google Play Store, ensuring perfect compatibility with mainstream smartphones." data-tw="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我們的APP在App Store和Google Play商店均可下載，確保與主流智能手機完美兼容。">AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
+                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="如何选择适合的戒指尺寸？" data-en="How to choose the right ring size?" data-tw="如何選擇適合的戒指尺寸？">如何选择适合的戒指尺寸？</h4>
+                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
+                            </div>
+                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。" data-en="AZLG brand uses finger mold as the standard for size measurement. We provide professional finger mold measurement services to ensure you get the most accurate size. You can also contact our customer service team for detailed measurement guidance." data-tw="AZLG品牌尺寸測量方式以指模為準。我們提供專業的指模測量服務，確保您獲得最準確的尺寸。您也可以聯繫我們的客服團隊獲取詳細的測量指導。">AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
+                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring的保修政策是什么？" data-en="What is AZ Ring's warranty policy?" data-tw="AZ Ring的保修政策是什麼？">AZ Ring的保修政策是什么？</h4>
+                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
+                            </div>
+                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring提供12个月标准保修服务，涵盖制造缺陷和功能故障。我们还提供延长保修选项，让您享受更长期的保障。保修期内，我们提供免费维修或更换服务。" data-en="AZ Ring provides 12-month standard warranty covering manufacturing defects and functional failures. We also offer extended warranty options for longer protection. During the warranty period, we provide free repair or replacement services." data-tw="AZ Ring提供12個月標準保修服務，涵蓋製造缺陷和功能故障。我們還提供延長保修選項，讓您享受更長期的保障。保修期內，我們提供免費維修或更換服務。">AZ Ring提供12个月标准保修服务，涵盖制造缺陷和功能故障。我们还提供延长保修选项，让您享受更长期的保障。保修期内，我们提供免费维修或更换服务。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
+                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="如何联系售后服务？" data-en="How to contact after-sales service?" data-tw="如何聯繫售後服務？">如何联系售后服务？</h4>
+                                <i class="fas fa-chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease;"></i>
+                            </div>
+                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。" data-en="You can contact our after-sales service team through multiple channels: WeChat official account, customer service hotline, online customer service, etc. Our professional team will provide you with timely and professional technical support and solutions." data-tw="您可以通過多種方式聯繫我們的售後服務團隊：微信公眾號、客服熱線、在線客服等。我們的專業團隊將為您提供及時、專業的技術支持和解決方案。">您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。</p>
                                 </div>
                             </div>
                         </div>
@@ -1332,7 +1642,7 @@ var _hmt = _hmt || [];
                         <li><a href="#" data-zh="帮助中心" data-en="Help Center" data-tw="幫助中心">帮助中心</a></li>
                         <li><a href="#" data-zh="隐私政策" data-en="Privacy Policy" data-tw="隱私政策">隐私政策</a></li>
                         <li><a href="#" data-zh="服务条款" data-en="Terms of Service" data-tw="服務條款">服务条款</a></li>
-                        <li><a href="#" id="after-sales-link-footer" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
+                        <li><a href="after-sales.html" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
                     </ul>
                 </div>
 
@@ -1454,6 +1764,189 @@ var _hmt = _hmt || [];
             });
         });
 
+        // Modern Hero Carousel
+        (function initModernCarousel() {
+            const carousel = document.querySelector('.hero-carousel');
+            if (!carousel) return;
+
+            const track = carousel.querySelector('.carousel-track');
+            const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+            const prevBtn = carousel.querySelector('.carousel-nav.prev');
+            const nextBtn = carousel.querySelector('.carousel-nav.next');
+            const indicators = Array.from(carousel.querySelectorAll('.indicator'));
+            const playControl = carousel.querySelector('.carousel-play-control');
+
+            let currentIndex = 0;
+            let autoTimer = null;
+            let isPlaying = true;
+            const slideCount = slides.length;
+            const autoInterval = 7000; // 7秒
+
+            // 添加进度动画CSS
+            if (!document.getElementById('carousel-progress-style')) {
+                const style = document.createElement('style');
+                style.id = 'carousel-progress-style';
+                style.textContent = `
+                    @keyframes progressFill {
+                        from { transform: scaleX(0); }
+                        to { transform: scaleX(1); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            const goToSlide = (index) => {
+                currentIndex = (index + slideCount) % slideCount;
+
+                // 更新活跃状态 - 使用淡入淡出+缩放动画
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === currentIndex);
+                });
+
+                // 更新指示器
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('active', i === currentIndex);
+                    indicator.setAttribute('aria-selected', i === currentIndex);
+
+                    // 重置进度动画
+                    const progress = indicator.querySelector('.indicator-progress');
+                    if (progress) {
+                        progress.style.animation = 'none';
+                        progress.offsetHeight; // 触发重排
+                        if (i === currentIndex && isPlaying) {
+                            progress.style.animation = `progressFill ${autoInterval}ms linear`;
+                        }
+                    }
+                });
+
+                // 更新ARIA
+                carousel.setAttribute('aria-label', `第 ${currentIndex + 1} 张，共 ${slideCount} 张图片`);
+            };
+
+            const nextSlide = () => goToSlide(currentIndex + 1);
+            const prevSlide = () => goToSlide(currentIndex - 1);
+
+            const startAutoplay = () => {
+                if (isPlaying) {
+                    stopAutoplay();
+                    autoTimer = setInterval(nextSlide, autoInterval);
+                    carousel.classList.add('playing');
+                }
+            };
+
+            const stopAutoplay = () => {
+                if (autoTimer) {
+                    clearInterval(autoTimer);
+                    autoTimer = null;
+                }
+                carousel.classList.remove('playing');
+            };
+
+            const togglePlayPause = () => {
+                isPlaying = !isPlaying;
+                if (isPlaying) {
+                    startAutoplay();
+                    playControl?.setAttribute('aria-label', '暂停自动播放');
+                } else {
+                    stopAutoplay();
+                    playControl?.setAttribute('aria-label', '开始自动播放');
+                }
+                goToSlide(currentIndex); // 重新设置进度动画
+            };
+
+            // 绑定事件
+            prevBtn?.addEventListener('click', () => {
+                stopAutoplay();
+                prevSlide();
+                startAutoplay();
+            });
+
+            nextBtn?.addEventListener('click', () => {
+                stopAutoplay();
+                nextSlide();
+                startAutoplay();
+            });
+
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    stopAutoplay();
+                    goToSlide(index);
+                    startAutoplay();
+                });
+            });
+
+            playControl?.addEventListener('click', togglePlayPause);
+
+            // 悬停控制
+            carousel.addEventListener('mouseenter', stopAutoplay);
+            carousel.addEventListener('mouseleave', startAutoplay);
+
+            // 键盘导航
+            carousel.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        prevSlide();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        nextSlide();
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                }
+            });
+
+            // 触摸支持
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                stopAutoplay();
+            }, { passive: true });
+
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+
+                const deltaX = startX - currentX;
+                const threshold = 50;
+
+                if (Math.abs(deltaX) > threshold) {
+                    if (deltaX > 0) {
+                        nextSlide();
+                    } else {
+                        prevSlide();
+                    }
+                }
+
+                startAutoplay();
+            }, { passive: true });
+
+            // 页面可见性控制
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    stopAutoplay();
+                } else if (isPlaying) {
+                    startAutoplay();
+                }
+            });
+
+            // 初始化
+            goToSlide(0);
+            startAutoplay();
+        })();
+
         // Mobile menu toggle
         const mobileToggle = document.getElementById('mobile-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -1549,6 +2042,9 @@ var _hmt = _hmt || [];
             appDownloadModal.addEventListener('click', (e) => {
                 if (e.target === appDownloadModal) {
                     appDownloadModal.style.display = 'none';
+
+
+
                 }
             });
         }
