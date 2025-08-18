@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8">header-placeholder
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>技术博客 - AZ Ring智能健康戒指 | 智能穿戴设备技术解析</title>
     <meta name="description" content="探索智能健康戒指技术原理，了解AI健康监测、生物传感器、睡眠分析等前沿技术。深圳佰屹创新技术博客，深度解析智能穿戴设备技术。">
@@ -430,20 +430,7 @@
     <!-- JavaScript -->
     <script src="assets/blog-scripts.js"></script>
     <script>
-        // 加载header和footer
-        fetch('../components/header.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('header-placeholder').innerHTML = data;
-                initMobileMenu();
-                initLanguageSwitcher();
-            });
-
-        fetch('../components/footer.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('footer-placeholder').innerHTML = data;
-            });
+       
 
         // 语言切换功能
         let currentLanguage = 'zh';
