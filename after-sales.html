@@ -1,86 +1,753 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>售后服务 - AZLG</title>
-  <meta name="description" content="AZLG 售后服务：100天质量问题只换不修，特权激活可延长至1年换新，24小时7天全天候服务咨询。" />
-  <style>
-    :root{
-      --oura-black:#0b0f15; --oura-dark:#0f1620; --oura-gray:#151e2b; --oura-dark-blue:#101a28;
-      --oura-white:#ffffff; --oura-light-gray:#a0aec0; --oura-accent:#ff6b35; --oura-green:#7ed321; --oura-blue:#4a90e2;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后服务 - AZLG智能健康戒指 | 专业售后，无忧保障</title>
+    <meta name="description" content="AZLG智能健康戒指专业售后服务：100天质量问题只换不修，特权激活延长至1年，24/7全天候技术支持。扫码关注小程序，享受便捷售后服务。">
+    <meta name="keywords" content="AZLG售后服务,智能戒指保修,产品维修,技术支持,小程序售后">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="售后服务 - AZLG智能健康戒指">
+    <meta property="og:description" content="专业售后服务，100天只换不修，24/7全天候支持">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://azlg.com/after-sales">
+    <meta property="og:image" content="产品资料与图片/logo.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="售后服务 - AZLG智能健康戒指">
+    <meta name="twitter:description" content="专业售后服务，100天只换不修，24/7全天候支持">
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "AZLG",
+        "description": "智能健康戒指专业售后服务",
+        "url": "https://azlg.com",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": "Chinese"
+        },
+        "serviceType": "售后服务",
+        "areaServed": "CN"
     }
-    html,body{margin:0;padding:0;background:linear-gradient(135deg,var(--oura-black) 0%, var(--oura-dark) 100%);color:var(--oura-white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei',sans-serif;}
-    .container{max-width:1100px;margin:0 auto;padding:24px 16px 60px;}
-    header{padding:32px 0 12px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:24px;}
-    h1{font-size:32px;margin:0 0 8px 0;}
-    p.sub{color:var(--oura-light-gray);margin:0 0 24px 0;}
+    </script>
 
-    .card{background:var(--oura-gray);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px;margin-bottom:24px;}
-    .card h2{font-size:22px;margin:0 0 12px 0;color:var(--oura-white);} 
-    .card p{color:var(--oura-light-gray);line-height:1.7;margin:0 0 12px 0;}
+    <style>
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            --oura-success: #10b981;
+            --oura-warning: #f59e0b;
+        }
 
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-    .qr{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px;text-align:center;}
-    .qr img{width:240px;height:240px;max-width:100%;object-fit:contain;border-radius:12px;display:block;margin:0 auto;background:rgba(255,255,255,0.02);}
-    .qr h3{margin:12px 0 8px 0;font-size:18px;color:var(--oura-white);} 
-    .qr p{margin:0;color:var(--oura-light-gray);font-size:14px;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .actions{display:flex;gap:12px;margin-top:16px;}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:24px;text-decoration:none;border:none;cursor:pointer;font-weight:500;}
-    .btn-primary{background:var(--oura-accent);color:var(--oura-dark);} 
-    .btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.2);color:var(--oura-white);} 
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
+            color: var(--oura-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    footer{margin-top:40px;color:var(--oura-light-gray);font-size:13px;text-align:center;}
-    @media(max-width:768px){.grid{grid-template-columns:1fr;}}
-  </style>
+        /* 导航栏 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--oura-accent);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--oura-white);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--oura-white) 0%, var(--oura-accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--oura-light-gray);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--oura-accent);
+            font-weight: 500;
+        }
+
+        .hero-feature-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        /* 服务分类区域 */
+        .services {
+            padding: 80px 0;
+        }
+
+        .services-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .services-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--oura-light-gray);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            min-width: 260px;
+            max-width: 300px;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--oura-accent), var(--oura-accent-light));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 107, 53, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--oura-accent), var(--oura-accent-light));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--oura-white);
+        }
+
+        .service-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            color: var(--oura-light-gray);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .service-action {
+            color: var(--oura-accent);
+            font-weight: 500;
+            font-size: 13px;
+        }
+        /* 联系方式区域 */
+        .contact {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, transparent 100%);
+        }
+
+        .contact-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--oura-light-gray);
+            margin-bottom: 60px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .miniprogram-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 2px solid var(--oura-accent);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .miniprogram-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .miniprogram-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--oura-accent);
+            color: var(--oura-white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .miniprogram-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .miniprogram-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .miniprogram-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .miniprogram-description {
+            color: var(--oura-light-gray);
+            margin-bottom: 24px;
+        }
+
+        .miniprogram-steps {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .miniprogram-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .miniprogram-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: var(--oura-accent);
+            color: var(--oura-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .contact-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .contact-description {
+            color: var(--oura-light-gray);
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px;
+            }
+
+            .service-card {
+                min-width: auto;
+                max-width: none;
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero-features {
+                gap: 20px;
+            }
+
+            .services {
+                padding: 60px 0;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .contact {
+                padding: 60px 0;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .miniprogram-card {
+                padding: 32px 24px;
+            }
+
+            .miniprogram-qr {
+                width: 160px;
+                height: 160px;
+            }
+
+            .contact-qr {
+                width: 160px;
+                height: 160px;
+            }
+
+            .contact-card {
+                min-height: auto;
+                padding: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>售后服务</h1>
-      <p class="sub">我们将以专业、透明、迅速的服务，保障每一位用户的使用体验</p>
-    </header>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">AZLG</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">首页</a></li>
+                <li><a href="index.html#products" class="nav-link">产品</a></li>
+                <li><a href="blog/index.html" class="nav-link">技术博客</a></li>
+                <li><a href="#" class="nav-link">售后服务</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    <section class="card">
-      <h2>我们的承诺与理念</h2>
-      <p>质量保障：100天内有质量问题只换不修，让您无后顾之忧。</p>
-      <p>特权激活：激活特权服务可延长至1年内有质量问题换新。</p>
-      <p>全天候服务：24小时7天全天候服务咨询，随时为您解答疑问。</p>
-      <p>透明流程：从报修、检测、更换到回寄，全流程可追踪、可查询。</p>
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">专业售后服务，让您无后顾之忧</h1>
+            <p class="hero-subtitle">100天质量问题只换不修，24/7全天候技术支持，专业团队为您提供贴心服务</p>
+
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
+                        <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M12 7C13.4 7 14.8 8.6 14.8 10V11.5C15.4 11.5 16 12.1 16 12.7V16.2C16 16.8 15.4 17.3 14.8 17.3H9.2C8.6 17.3 8 16.8 8 16.2V12.7C8 12.1 8.6 11.5 9.2 11.5V10C9.2 8.6 10.6 7 12 7M12 8.2C11.2 8.2 10.5 8.7 10.5 10V11.5H13.5V10C13.5 8.7 12.8 8.2 12 8.2Z"/>
+                    </svg>
+                    100天只换不修
+                </div>
+                <div class="hero-feature">
+                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z"/>
+                    </svg>
+                    24/7全天候支持
+                </div>
+                <div class="hero-feature">
+                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
+                        <path d="M17 18C15.89 18 15 18.89 15 20C15 21.11 15.89 22 17 22C18.11 22 19 21.11 19 20C19 18.89 18.11 18 17 18M1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.11 5.89 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.58 17.3 11.97L20.88 5H5.21L4.27 3H1M7 18C5.89 18 5 18.89 5 20C5 21.11 5.89 22 7 22C8.11 22 9 21.11 9 20C9 18.89 8.11 18 7 18Z"/>
+                    </svg>
+                    专业技术团队
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="grid">
-      <div class="qr">
-        <img src="产品资料与图片/公众号.jpg" alt="AZLG 微信公众号二维码" title="AZLG 微信公众号" />
-        <h3>微信公众号</h3>
-        <p>关注后可获得最新资讯与售后进度查询</p>
-      </div>
-      <div class="qr">
-        <img src="产品资料与图片/产品经理二维码.png" alt="产品经理企业微信二维码" title="产品经理 企业微信" />
-        <h3>产品经理 · 企业微信</h3>
-        <p>建立直接沟通，反馈问题与建议</p>
-      </div>
+    <!-- 服务分类区域 -->
+    <section class="services">
+        <div class="container">
+            <h2 class="services-title">专业售后服务分类</h2>
+            <p class="services-subtitle">四大核心服务，全方位保障您的使用体验</p>
+
+            <div class="services-grid">
+                <!-- 保修服务 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M12 7C13.4 7 14.8 8.6 14.8 10V11.5C15.4 11.5 16 12.1 16 12.7V16.2C16 16.8 15.4 17.3 14.8 17.3H9.2C8.6 17.3 8 16.8 8 16.2V12.7C8 12.1 8.6 11.5 9.2 11.5V10C9.2 8.6 10.6 7 12 7M12 8.2C11.2 8.2 10.5 8.7 10.5 10V11.5H13.5V10C13.5 8.7 12.8 8.2 12 8.2Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">产品保修</h3>
+                    <p class="service-description">100天质量问题只换不修，特权激活延长至1年。让您购买无忧，使用放心。</p>
+                    <p class="service-action">扫码关注小程序查看保修状态</p>
+                </div>
+
+                <!-- 维修服务 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C10.1 1 7.1 0.6 4.7 1.7L9 6L6 9L1.6 4.7C0.4 7.1 0.9 10.1 2.9 12.1C4.8 14 7.5 14.5 9.8 13.6L18.9 22.7C19.3 23.1 19.9 23.1 20.3 22.7L22.6 20.4C23.1 20 23.1 19.3 22.7 19Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">设备维修</h3>
+                    <p class="service-description">专业技术团队，快速响应维修需求。从诊断到修复，全程专业服务。</p>
+                    <p class="service-action">通过小程序提交维修申请</p>
+                </div>
+
+                <!-- 更换服务 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6M18.76 7.74L17.3 9.2C17.74 10.04 18 11 18 12C18 15.31 15.31 18 12 18V15L8 19L12 23V20C16.42 20 20 16.42 20 12C20 10.43 19.54 8.97 18.76 7.74Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">产品更换</h3>
+                    <p class="service-description">质量问题直接换新，无需等待维修。先发新品，后收旧品，服务更贴心。</p>
+                    <p class="service-action">小程序一键申请更换服务</p>
+                </div>
+
+                <!-- 技术支持 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2M21 9V7L15 1L13.5 2.5L16.17 5.17L10.5 10.84L11.92 12.25L15.92 8.25L18.5 10.84L21 9M7.5 12C8.6 12 9.5 12.9 9.5 14S8.6 16 7.5 16 5.5 15.1 5.5 14 6.4 12 7.5 12M18.5 12C19.6 12 20.5 12.9 20.5 14S19.6 16 18.5 16 16.5 15.1 16.5 14 17.4 12 18.5 12M7.5 18C8.6 18 9.5 18.9 9.5 20S8.6 22 7.5 22 5.5 21.1 5.5 20 6.4 18 7.5 18M18.5 18C19.6 18 20.5 18.9 20.5 20S19.6 22 18.5 22 16.5 21.1 16.5 20 17.4 18 18.5 18Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">技术支持</h3>
+                    <p class="service-description">24/7全天候技术咨询和使用指导。专业客服团队，随时为您答疑解惑。</p>
+                    <p class="service-action">小程序在线客服即时响应</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="card">
-      <h2>常见问题（售后相关）</h2>
-      <p>保修政策：100天内有质量问题只换不修；特权激活用户可享受1年内质量问题换新服务。</p>
-      <p>服务时间：24小时7天全天候服务咨询，工作日优先处理，紧急问题随时响应。</p>
-      <p>处理时效：确认质量问题后，直接安排换新，无需维修等待时间。</p>
-      <p>特权激活：购买后联系客服激活特权服务，享受更长保障期和优先服务。</p>
-      <p>邮寄与换新：确认质量问题后，我们将直接寄送新品，无需您先寄回旧品，收到新品后再寄回即可。</p>
-      <p>数据安全：换新前请备份重要数据，我们承诺严格保护用户隐私，不会泄露任何个人信息。</p>
-      <div class="actions">
-        <a href="index.html" class="btn btn-outline">返回首页</a>
-        <a href="index.html#products" class="btn btn-primary">查看产品</a>
-      </div>
+    <!-- 联系方式区域 -->
+    <section class="contact">
+        <div class="container">
+            <h2 class="contact-title">联系我们</h2>
+            <p class="contact-subtitle">多种联系方式，选择最适合您的服务渠道</p>
+
+            <div class="contact-grid">
+                <!-- 小程序卡片 -->
+                <div class="miniprogram-card">
+                    <div class="miniprogram-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12 15.31 6 12 6M12 16C9.79 16 8 14.21 8 12S9.79 8 12 8 16 9.79 16 12 14.21 16 12 16Z"/>
+                        </svg>
+                        推荐服务
+                    </div>
+                    <div class="miniprogram-qr">
+                        <img src="产品资料与图片/小程序二维码.jpg" alt="AZLG小程序二维码" />
+                    </div>
+                    <h3 class="miniprogram-title">微信扫一扫，使用小程序</h3>
+                    <p class="miniprogram-description">最便捷的售后服务入口，一站式解决所有问题</p>
+
+                    <div class="miniprogram-steps">
+                        <div class="miniprogram-step">
+                            <div class="step-number">1</div>
+                            <span>微信扫描上方二维码</span>
+                        </div>
+                        <div class="miniprogram-step">
+                            <div class="step-number">2</div>
+                            <span>进入AZLG售后小程序</span>
+                        </div>
+                        <div class="miniprogram-step">
+                            <div class="step-number">3</div>
+                            <span>选择对应的服务类型</span>
+                        </div>
+                        <div class="miniprogram-step">
+                            <div class="step-number">4</div>
+                            <span>享受便捷的售后服务</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 微信公众号 -->
+                <div class="contact-card">
+                    <div class="contact-qr">
+                        <img src="产品资料与图片/公众号.jpg" alt="AZLG微信公众号二维码" />
+                    </div>
+                    <h3 class="contact-title">微信公众号</h3>
+                    <p class="contact-description">关注获取最新资讯与售后进度查询</p>
+                </div>
+
+                <!-- 企业微信 -->
+                <div class="contact-card">
+                    <div class="contact-qr">
+                        <img src="产品资料与图片/产品经理二维码.png" alt="产品经理企业微信二维码" />
+                    </div>
+                    <h3 class="contact-title">产品经理企业微信</h3>
+                    <p class="contact-description">建立直接沟通，反馈问题与建议</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <footer>
-      如需更多帮助，请通过以上渠道联系我们的售后团队。
-    </footer>
-  </div>
+    <!-- FAQ区域 -->
+    <section class="services" style="padding-top: 0;">
+        <div class="container">
+            <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 40px; backdrop-filter: blur(20px);">
+                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 24px; text-align: center;">常见问题</h2>
+
+                <div style="display: grid; gap: 20px;">
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
+                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">保修政策</h3>
+                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">100天内有质量问题只换不修；特权激活用户可享受1年内质量问题换新服务。</p>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
+                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">服务时间</h3>
+                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">24小时7天全天候服务咨询，工作日优先处理，紧急问题随时响应。</p>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
+                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">处理时效</h3>
+                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">确认质量问题后，直接安排换新，无需维修等待时间。先发新品，后收旧品。</p>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
+                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">数据安全</h3>
+                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">换新前请备份重要数据，我们承诺严格保护用户隐私，不会泄露任何个人信息。</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 32px;">
+                    <a href="index.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: var(--oura-white); border-radius: 24px; text-decoration: none; margin-right: 12px; font-weight: 500;">返回首页</a>
+                    <a href="index.html#products" style="display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; background: var(--oura-accent); color: var(--oura-white); border-radius: 24px; text-decoration: none; font-weight: 500;">查看产品</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 为所有服务卡片添加动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.service-card, .contact-card, .miniprogram-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+
+        // 移动端导航优化
+        if (window.innerWidth <= 768) {
+            const nav = document.querySelector('.nav');
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    nav.style.transform = 'translateY(-100%)';
+                } else {
+                    nav.style.transform = 'translateY(0)';
+                }
+                lastScrollY = currentScrollY;
+            });
+        }
+    </script>
+
 </body>
 </html>
 
