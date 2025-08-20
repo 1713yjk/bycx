@@ -544,7 +544,7 @@ var _hmt = _hmt || [];
 
         /* 移除滚动锁定指示器样式 */
 
-        /* Modern Hero Carousel - 超丝滑Apple风格视差设计 */
+        /* Modern Hero Carousel - 优化版本 */
         .hero-carousel {
             position: relative;
             width: 100%;
@@ -553,6 +553,7 @@ var _hmt = _hmt || [];
             margin: 0 auto;
             overflow: hidden;
             background: var(--oura-dark);
+            border-radius: 20px;
             transform-origin: center center;
             will-change: transform, filter, opacity;
             backface-visibility: hidden;
@@ -602,6 +603,7 @@ var _hmt = _hmt || [];
             object-fit: cover;
             object-position: center;
             display: block;
+            border-radius: inherit;
             filter: saturate(1.1) contrast(1.05) brightness(1.02);
             transition: none;
             will-change: auto;
@@ -772,12 +774,13 @@ var _hmt = _hmt || [];
             }
         }
 
-        /* Responsive Design - 适配Apple风格视差 */
+        /* 平板端优化 - 1024px及以下 */
         @media (max-width: 1024px) {
             .hero-carousel {
-                aspect-ratio: 2.4;
+                aspect-ratio: 16/9;
                 max-height: 640px;
                 margin: 0 auto;
+                border-radius: 16px;
             }
 
             /* 平板端调整指示器位置 */
@@ -791,48 +794,56 @@ var _hmt = _hmt || [];
             }
         }
 
+        /* 统一的移动端样式 - 768px及以下 */
         @media (max-width: 768px) {
+            /* 轮播图容器优化 */
             .hero-carousel {
                 aspect-ratio: 16/9;
-                max-height: 70vh;
+                max-height: 75vh;
                 margin: 0 8px;
                 border-radius: 12px;
+                transition: opacity 0.3s ease;
+                will-change: opacity;
             }
 
-            .hero-carousel .carousel-container .carousel-slide img {
-                object-fit: cover;
-                object-position: center;
+            /* 轮播图容器内部 */
+            .hero-carousel .carousel-container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                overflow: hidden;
+                border-radius: inherit;
+                touch-action: pan-x;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            /* 轮播图幻灯片 */
+            .hero-carousel .carousel-container .carousel-slide {
+                transition: opacity 0.3s ease;
+                will-change: opacity;
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
             }
-            .hero-carousel .carousel-container .carousel-indicators {
-                bottom: 24px;
-                gap: 12px;
-            }
-            .hero-carousel .carousel-container .indicator {
-                width: 6px;
-                height: 6px;
-            }
-            .hero-carousel .carousel-container .indicator.active {
-                width: 24px;
-            }
-            .hero-carousel .carousel-container .carousel-play-control {
-                bottom: 24px;
-                right: 24px;
-                width: 36px;
-                height: 36px;
-            }
-            .hero-carousel .carousel-container .play-icon,
-            .hero-carousel .carousel-container .pause-icon {
-                width: 14px;
-                height: 14px;
+
+            /* 轮播图图片优化 */
+            .hero-carousel .carousel-container .carousel-slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                border-radius: inherit;
+                filter: none;
+                transition: none;
+                will-change: auto;
+                display: block;
             }
 
-            /* 移动端隐藏右侧指示器，优化底部指示器 */
-            .scroll-indicator {
-                display: none;
-            }
-
+            /* 底部指示器优化 */
             .hero-carousel .carousel-container .carousel-indicators {
                 bottom: 16px;
                 padding: 12px 16px;
@@ -860,6 +871,25 @@ var _hmt = _hmt || [];
                 transform: scale(1.1);
             }
 
+            /* 播放控制按钮 */
+            .hero-carousel .carousel-container .carousel-play-control {
+                bottom: 24px;
+                right: 24px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .hero-carousel .carousel-container .play-icon,
+            .hero-carousel .carousel-container .pause-icon {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* 移动端隐藏右侧指示器 */
+            .scroll-indicator {
+                display: none;
+            }
+
             /* 移动端禁用复杂视差效果 */
             .parallax-container {
                 perspective: none;
@@ -874,17 +904,24 @@ var _hmt = _hmt || [];
                 transform: none !important;
                 filter: none !important;
             }
+
+            /* Hero内容区域优化 */
+            .oura-hero-content {
+                width: 100%;
+                margin-left: 0;
+                padding: 0;
+                display: block;
+            }
         }
 
-        /* 超小屏幕优化 */
+        /* 超小屏幕优化 - 480px及以下 */
         @media (max-width: 480px) {
             .hero-carousel {
                 aspect-ratio: 16/9;
-                max-height: 65vh;
+                max-height: 70vh;
                 margin: 0 4px;
                 border-radius: 8px;
             }
-        }
 
             .hero-carousel .carousel-container .carousel-indicators {
                 bottom: 12px;
@@ -902,90 +939,9 @@ var _hmt = _hmt || [];
             }
         }
 
-        /* 移动端轮播图重置 - 最高优先级 */
-        @media screen and (max-width: 768px) {
-            body .oura-hero {
-                min-height: auto !important;
-                height: auto !important;
-                padding: 80px 0 0 !important;
-                margin: 0 !important;
-            }
 
-            body .oura-hero .parallax-container {
-                padding: 0 !important;
-                margin: 0 !important;
-                height: auto !important;
-            }
 
-            body .oura-hero .oura-hero-content {
-                padding: 0 !important;
-                margin: 0 !important;
-                height: auto !important;
-                min-height: auto !important;
-            }
 
-            body .oura-hero .hero-carousel {
-                margin: 0 4px !important;
-                max-height: 75vh !important;
-                height: auto !important;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            body .oura-hero {
-                padding: 70px 0 0 !important;
-            }
-
-            body .oura-hero .hero-carousel {
-                margin: 0 2px !important;
-                max-height: 70vh !important;
-            }
-        }
-
-        /* 移动端性能优化 */
-        @media (max-width: 768px) {
-            .hero-carousel {
-                /* 简化动画，提升性能 */
-                transition: opacity 0.3s ease;
-                will-change: opacity;
-            }
-
-            .hero-carousel .carousel-container {
-                /* 确保容器完全填充 */
-                width: 100%;
-                height: 100%;
-                position: relative;
-                overflow: hidden;
-                border-radius: inherit;
-                touch-action: pan-x;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                user-select: none;
-            }
-
-            .hero-carousel .carousel-container .carousel-slide {
-                /* 移动端使用更快的过渡 */
-                transition: opacity 0.3s ease;
-                will-change: opacity;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-
-            .hero-carousel .carousel-container .carousel-slide img {
-                /* 确保图片完全显示 */
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-                filter: none;
-                transition: none;
-                will-change: auto;
-                display: block;
-            }
-        }
 
         .oura-hero::before {
 
@@ -1003,41 +959,14 @@ var _hmt = _hmt || [];
             position: relative;
             z-index: 2;
             padding: 80px 0 0;
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
             will-change: transform, opacity;
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* 移动端安全的全屏实现 - 高优先级 */
-        @media (max-width: 768px) {
-            .oura-hero-content {
-                width: 100% !important;
-                margin-left: 0 !important;
-                padding: 0 !important;
-                display: block !important;
-            }
 
-            .hero-carousel {
-                aspect-ratio: 16/9 !important;
-                max-height: 75vh !important;
-                margin: 0 4px !important;
-                border-radius: 12px !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .oura-hero-content {
-                padding: 0 !important;
-            }
-
-            .hero-carousel {
-                aspect-ratio: 16/9 !important;
-                max-height: 70vh !important;
-                margin: 0 2px !important;
-                border-radius: 8px !important;
-            }
-        }
 
         .oura-hero-title {
             font-size: clamp(48px, 8vw, 96px);
@@ -1251,6 +1180,91 @@ var _hmt = _hmt || [];
             color: var(--oura-light-gray);
         }
 
+
+            /* Feature Showcase Section Styles (Global) */
+            .feature-showcase {
+                padding: 120px 0;
+                background: var(--oura-dark);
+            }
+
+            .feature-showcase-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 24px;
+            }
+
+            .feature-showcase-item {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                align-items: center;
+                margin-bottom: 60px;
+            }
+
+            .feature-showcase-item:last-child {
+                margin-bottom: 0;
+            }
+
+            /* 默认布局：左图右文 */
+            .feature-showcase-item .feature-showcase-image {
+                order: 1;
+            }
+
+            .feature-showcase-item .feature-showcase-content {
+                order: 2;
+            }
+
+            /* 反向布局：右图左文 */
+            .feature-showcase-item.reverse {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .feature-showcase-item.reverse .feature-showcase-image {
+                order: 2;
+            }
+
+            .feature-showcase-item.reverse .feature-showcase-content {
+                order: 1;
+            }
+
+            .feature-showcase-image {
+                border-radius: 0;
+                overflow: hidden;
+                aspect-ratio: 16/9;
+                width: 100%;
+            }
+
+            .feature-showcase-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .feature-showcase-content h3 {
+                font-size: 40px;
+                font-weight: 700;
+                color: var(--oura-white);
+                margin-bottom: 24px;
+                margin-left: 24px;
+                line-height: 1.2;
+            }
+
+            .feature-showcase-content {
+                background: none;
+                border-radius: 0;
+                padding: 0;
+                border: 0;
+                margin-left: 24px;
+                max-width: 560px;
+            }
+
+            .feature-showcase-content p {
+                font-size: 18px;
+                color: var(--oura-light-gray);
+                line-height: 1.6;
+                margin-bottom: 0;
+            }
+
         @media (max-width: 768px) {
             .oura-container {
                 padding: 0 16px;
@@ -1357,6 +1371,8 @@ var _hmt = _hmt || [];
                 padding: 10px 20px !important;
             }
 
+            /* Feature Showcase Section Styles (moved to global at ~1184) */
+
             /* Product Section Mobile Styles */
             #products .fade-in > div {
                 grid-template-columns: 1fr !important;
@@ -1391,6 +1407,43 @@ var _hmt = _hmt || [];
 
             #products .fade-in:last-child > div > div > div:first-child {
                 font-size: 24px !important;
+            }
+
+            /* Feature Showcase Mobile Styles */
+            .feature-showcase {
+                padding: 60px 0 !important;
+            }
+
+            .feature-showcase-item {
+                grid-template-columns: 1fr !important;
+                gap: 32px !important;
+                margin-bottom: 60px !important;
+                text-align: center;
+            }
+
+            .feature-showcase-item .feature-showcase-image,
+            .feature-showcase-item .feature-showcase-content,
+            .feature-showcase-item.reverse .feature-showcase-image,
+            .feature-showcase-item.reverse .feature-showcase-content {
+                order: unset !important;
+            }
+
+            .feature-showcase-image {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 auto !important;
+            }
+
+            .feature-showcase-content h3 {
+                font-size: 28px !important;
+            }
+
+            .feature-showcase-content {
+                padding: 0 !important;
+            }
+
+            .feature-showcase-content p {
+                font-size: 16px !important;
             }
 
             .oura-footer-content {
@@ -1623,7 +1676,7 @@ var _hmt = _hmt || [];
                     <!-- Product Image -->
                     <div style="position: relative;">
                         <div style="width: 100%; aspect-ratio: 1; border-radius: 32px; overflow: hidden; position: relative; background: radial-gradient(circle at center, rgba(255,107,53,0.1) 0%, transparent 70%);">
-                            <img src="产品资料与图片/首页与商品详情/玻璃3.png" alt="AZ Ring产品图" style="width: 100%; height: 100%; object-fit: cover; border-radius: 32px;">
+                            <img src="产品资料与图片/首页与商品详情/双戒指.png" alt="AZ Ring产品图" style="width: 100%; height: 100%; object-fit: cover; border-radius: 32px;">
                             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%); border-radius: 32px;"></div>
                         </div>
                         <!-- Floating Elements -->
@@ -1676,7 +1729,7 @@ var _hmt = _hmt || [];
                         <!-- CTA Button -->
                         <div style="display: flex; gap: 16px; margin-bottom: 32px;">
                             <a href="az-ring-detail.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: var(--oura-white); color: var(--oura-black); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,255,255,0.1);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,255,255,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,255,255,0.1)'">>
-                                AZ Ring智能健康戒指详情
+                                查看详情
                                 <i class="fas fa-arrow-right" style="margin-left: 8px; font-size: 14px;"></i>
                             </a>
                             <a href="https://3.cn/2mlZRa-U?jkl=@Q8PbPDKjrGx@" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%); color: var(--oura-white); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,107,53,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,53,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,53,0.3)'">
@@ -1709,6 +1762,63 @@ var _hmt = _hmt || [];
                         <div style="font-size: 32px; font-weight: 200; margin-bottom: 8px; color: var(--oura-white);">24/7</div>
                         <div style="color: var(--oura-light-gray); font-size: 14px;">健康监测</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Showcase Section -->
+    <section class="feature-showcase">
+        <div class="feature-showcase-container">
+            <!-- 终极可穿戴设备 -->
+            <div class="feature-showcase-item fade-in">
+                <div class="feature-showcase-image">
+                    <img src="产品资料与图片/首页与商品详情/功能展示1.jpg" alt="终极可穿戴设备">
+                </div>
+                <div class="feature-showcase-content">
+                    <h3 data-zh="终极可穿戴设备" data-en="Ultimate Wearable Device" data-tw="終極可穿戴設備">终极可穿戴设备</h3>
+                    <p data-zh="AZ Ring采用先进的传感器技术，实现24小时不间断健康监测。轻量化设计让您几乎感受不到它的存在，却能时刻守护您的健康。" data-en="AZ Ring uses advanced sensor technology for 24-hour continuous health monitoring. The lightweight design makes you barely feel its presence while constantly protecting your health." data-tw="AZ Ring採用先進的傳感器技術，實現24小時不間斷健康監測。輕量化設計讓您幾乎感受不到它的存在，卻能時刻守護您的健康。">
+                        AZ Ring采用先进的传感器技术，实现24小时不间断健康监测。轻量化设计让您几乎感受不到它的存在，却能时刻守护您的健康。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 度身定制的健康指导 -->
+            <div class="feature-showcase-item reverse fade-in">
+                <div class="feature-showcase-image">
+                    <img src="产品资料与图片/首页与商品详情/功能展示2.jpg" alt="个性化健康指导">
+                </div>
+                <div class="feature-showcase-content">
+                    <h3 data-zh="度身定制的健康指导" data-en="Personalized Health Guidance" data-tw="度身定制的健康指導">度身定制的健康指导</h3>
+                    <p data-zh="基于您的个人数据和生活习惯，AZ Ring提供专属的健康建议和改善方案。智能算法持续学习，让建议更加精准有效。" data-en="Based on your personal data and lifestyle habits, AZ Ring provides exclusive health advice and improvement plans. Smart algorithms continuously learn to make recommendations more accurate and effective." data-tw="基於您的個人數據和生活習慣，AZ Ring提供專屬的健康建議和改善方案。智能算法持續學習，讓建議更加精準有效。">
+                        基于您的个人数据和生活习惯，AZ Ring提供专属的健康建议和改善方案。智能算法持续学习，让建议更加精准有效。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 耐用性保障 -->
+            <div class="feature-showcase-item fade-in">
+                <div class="feature-showcase-image">
+                    <img src="产品资料与图片/首页与商品详情/功能展示3.jpg" alt="耐用性保障">
+                </div>
+                <div class="feature-showcase-content">
+                    <h3 data-zh="耐用性保障" data-en="Durability Assurance" data-tw="耐用性保障">耐用性保障</h3>
+                    <p data-zh="采用航空级钛合金材质，具备出色的抗腐蚀性和耐磨性。IPX8防水等级，无论运动、洗澡还是游泳，都能安心佩戴。" data-en="Made with aerospace-grade titanium alloy, featuring excellent corrosion resistance and wear resistance. IPX8 waterproof rating allows worry-free wearing during exercise, bathing, or swimming." data-tw="採用航空級鈦合金材質，具備出色的抗腐蝕性和耐磨性。IPX8防水等級，無論運動、洗澡還是游泳，都能安心佩戴。">
+                        采用航空级钛合金材质，具备出色的抗腐蚀性和耐磨性。IPX8防水等级，无论运动、洗澡还是游泳，都能安心佩戴。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 完美合适，完美的功能 -->
+            <div class="feature-showcase-item reverse fade-in">
+                <div class="feature-showcase-image">
+                    <img src="产品资料与图片/首页与商品详情/功能展示4.jpg" alt="完美适配">
+                </div>
+                <div class="feature-showcase-content">
+                    <h3 data-zh="完美合适，完美的功能" data-en="Perfect Fit, Perfect Function" data-tw="完美合適，完美的功能">完美合适，完美的功能</h3>
+                    <p data-zh="多种尺寸可选，确保每位用户都能找到最适合的佩戴体验。精密的传感器布局和优化的算法，保证数据采集的准确性和可靠性。" data-en="Multiple sizes available to ensure every user finds the perfect wearing experience. Precise sensor layout and optimized algorithms guarantee accuracy and reliability of data collection." data-tw="多種尺寸可選，確保每位用戶都能找到最適合的佩戴體驗。精密的傳感器佈局和優化的算法，保證數據採集的準確性和可靠性。">
+                        多种尺寸可选，确保每位用户都能找到最适合的佩戴体验。精密的传感器布局和优化的算法，保证数据采集的准确性和可靠性。
+                    </p>
                 </div>
             </div>
         </div>
@@ -3056,30 +3166,7 @@ var _hmt = _hmt || [];
             }
         }
 
-        // 移动端轮播图样式强制应用
-        function applyMobileCarouselStyles() {
-            if (window.innerWidth <= 768) {
-                const heroSection = document.querySelector('.oura-hero');
-                const heroContent = document.querySelector('.oura-hero-content');
-                const carousel = document.querySelector('.hero-carousel');
 
-                if (heroSection) {
-                    heroSection.style.cssText += 'min-height: auto !important; padding: 80px 0 0 !important; height: auto !important;';
-                }
-
-                if (heroContent) {
-                    heroContent.style.cssText += 'padding: 0 !important; margin: 0 !important; height: auto !important;';
-                }
-
-                if (carousel) {
-                    if (window.innerWidth <= 480) {
-                        carousel.style.cssText += 'max-height: 70vh !important; margin: 0 2px !important;';
-                    } else {
-                        carousel.style.cssText += 'max-height: 75vh !important; margin: 0 4px !important;';
-                    }
-                }
-            }
-        }
 
         // 初始化语言切换按钮样式
         document.addEventListener('DOMContentLoaded', function() {
@@ -3091,12 +3178,6 @@ var _hmt = _hmt || [];
 
             // 初始化Apple风格滚轮轮播控制器
             new WheelCarouselController();
-
-            // 强制应用移动端样式
-            applyMobileCarouselStyles();
-
-            // 监听窗口大小变化
-            window.addEventListener('resize', applyMobileCarouselStyles);
         });
     </script>
 </body>
