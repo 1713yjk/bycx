@@ -143,6 +143,18 @@ var _hmt = _hmt || [];
             --oura-accent-light: #ff8a65;
             --oura-blue: #4a90e2;
             --oura-green: #7ed321;
+
+            /* 动态轮播图尺寸变量 */
+            --carousel-max-height: 900px;
+            --carousel-aspect-ratio: 16/9;
+            --carousel-min-height: 300px;
+
+            /* 导航栏高度变量 */
+            --nav-height: 80px;
+            --nav-height-desktop: 72px;
+            --nav-height-tablet: 64px;
+            --nav-height-mobile: 56px;
+            --nav-transition-duration: 0.3s;
         }
 
         * {
@@ -303,7 +315,7 @@ var _hmt = _hmt || [];
         .oura-hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            /* align-items: center; */ /* 移除此行以解决导航栏和轮播图之间的空隙问题 */
             justify-content: center;
             background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
             position: relative;
@@ -327,9 +339,17 @@ var _hmt = _hmt || [];
         }
 
         @media (max-width: 480px) {
+            :root {
+                --nav-height-mobile: 48px; /* 更小的移动端导航栏 */
+            }
+
             .oura-hero {
                 min-height: auto !important;
-                padding: 70px 0 0px !important;
+                padding: 0 !important;
+            }
+
+            .oura-hero-content {
+                padding-top: var(--nav-height) !important;
             }
         }
 
@@ -548,8 +568,12 @@ var _hmt = _hmt || [];
         .hero-carousel {
             position: relative;
             width: 100%;
-            aspect-ratio: 16/9;
-            max-height: 900px;
+            aspect-ratio: var(--carousel-aspect-ratio);
+            -webkit-aspect-ratio: var(--carousel-aspect-ratio); /* Safari兼容性 */
+            max-height: var(--carousel-max-height);
+            min-height: var(--carousel-min-height);
+            min-width: 400px;
+            max-width: 100vw;
             margin: 0 auto;
             overflow: hidden;
             background: var(--oura-dark);
@@ -559,7 +583,11 @@ var _hmt = _hmt || [];
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
             transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            transition: max-height 0.3s ease, aspect-ratio 0.3s ease;
         }
 
 
@@ -598,9 +626,12 @@ var _hmt = _hmt || [];
         }
 
         .hero-carousel .carousel-container .carousel-slide img {
+            --img-fit: cover;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: var(--img-fit, cover);
             object-position: center;
             display: block;
             border-radius: inherit;
@@ -760,6 +791,28 @@ var _hmt = _hmt || [];
             }
         }
 
+        /* 屏幕类型特定优化 */
+        .hero-carousel[data-screen-type="desktop-16inch"] {
+            /* 16寸屏幕特殊优化 */
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-carousel[data-screen-type="desktop-16inch"] .carousel-slide img {
+            /* 16寸屏幕下确保图片质量 */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        .hero-carousel[data-screen-type^="desktop"] {
+            /* 桌面端通用优化 */
+            border-radius: 24px;
+        }
+
+        .hero-carousel[data-screen-type^="laptop"] {
+            /* 笔记本端通用优化 */
+            border-radius: 16px;
+        }
+
         /* 减少动效偏好支持 */
         @media (prefers-reduced-motion: reduce) {
             .parallax-container,
@@ -771,6 +824,72 @@ var _hmt = _hmt || [];
                 transition: none !important;
                 animation: none !important;
                 will-change: auto !important;
+            }
+        }
+
+        /* 桌面端导航栏高度 - 1025px及以上 */
+        @media (min-width: 1025px) {
+            :root {
+                --nav-height: var(--nav-height-desktop);
+            }
+        }
+
+        /* 平板端导航栏高度 - 769px到1024px */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            :root {
+                --nav-height: var(--nav-height-tablet);
+            }
+        }
+
+        /* 移动端导航栏高度 - 768px及以下 */
+        @media (max-width: 768px) {
+            :root {
+                --nav-height: var(--nav-height-mobile);
+            }
+        }
+
+        /* 16寸笔记本专门优化 - 1920px及以下 */
+        @media (max-width: 1920px) and (min-width: 1441px) {
+            .hero-carousel {
+                aspect-ratio: var(--carousel-aspect-ratio);
+                max-height: var(--carousel-max-height);
+                margin: 0 auto;
+                border-radius: 20px;
+            }
+
+            /* 16寸屏幕下的图片优化 */
+            .hero-carousel[data-screen-type="desktop-16inch"] .carousel-slide img {
+                transition: object-fit 0.3s ease;
+            }
+        }
+
+        /* 大屏笔记本优化 - 1440px及以下 */
+        @media (max-width: 1440px) {
+            .hero-carousel {
+                aspect-ratio: var(--carousel-aspect-ratio);
+                max-height: var(--carousel-max-height);
+                margin: 0 auto;
+                border-radius: 18px;
+            }
+        }
+
+        /* 中等笔记本优化 - 1366px及以下 */
+        @media (max-width: 1366px) {
+            .hero-carousel {
+                aspect-ratio: var(--carousel-aspect-ratio);
+                max-height: var(--carousel-max-height);
+                margin: 0 auto;
+                border-radius: 16px;
+            }
+        }
+
+        /* 小屏笔记本优化 - 1280px及以下 */
+        @media (max-width: 1280px) {
+            .hero-carousel {
+                aspect-ratio: var(--carousel-aspect-ratio);
+                max-height: var(--carousel-max-height);
+                margin: 0 auto;
+                border-radius: 16px;
             }
         }
 
@@ -799,7 +918,7 @@ var _hmt = _hmt || [];
             /* 轮播图容器优化 */
             .hero-carousel {
                 aspect-ratio: 16/9;
-                max-height: 75vh;
+                max-height: calc(100vh - 120px);
                 margin: 0 8px;
                 border-radius: 12px;
                 transition: opacity 0.3s ease;
@@ -834,8 +953,12 @@ var _hmt = _hmt || [];
             .hero-carousel .carousel-container .carousel-slide img {
                 width: 100%;
                 height: 100%;
+                max-width: 100%;
+                max-height: 100%;
                 object-fit: cover;
+                -o-object-fit: cover;
                 object-position: center;
+                -o-object-position: center;
                 border-radius: inherit;
                 filter: none;
                 transition: none;
@@ -918,7 +1041,7 @@ var _hmt = _hmt || [];
         @media (max-width: 480px) {
             .hero-carousel {
                 aspect-ratio: 16/9;
-                max-height: 70vh;
+                max-height: calc(100vh - 140px);
                 margin: 0 4px;
                 border-radius: 8px;
             }
@@ -958,12 +1081,13 @@ var _hmt = _hmt || [];
         .oura-hero-content {
             position: relative;
             z-index: 2;
-            padding: 80px 0 0;
+            /* padding-top: var(--nav-height); */ /* 已将此内边距移至 .oura-hero 元素 */
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
             will-change: transform, opacity;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        padding-top var(--nav-transition-duration) ease;
         }
 
 
@@ -1284,12 +1408,15 @@ var _hmt = _hmt || [];
 
             .oura-hero {
                 min-height: auto !important;
-                padding: 80px 0 0 !important;
+                padding: 0 !important;
                 height: auto !important;
             }
 
             .oura-hero-content {
-                padding: 0 !important;
+                padding-top: var(--nav-height) !important;
+                padding-bottom: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
                 margin: 0 !important;
                 height: auto !important;
             }
@@ -1596,7 +1723,7 @@ var _hmt = _hmt || [];
                     <div class="carousel-container">
                         <div class="carousel-track" aria-live="polite">
                             <div class="carousel-slide active" data-index="0">
-                                <img src="产品资料与图片/轮播图/活动1.jpg" alt="AZLG 智能戒指：数据驱动健康监测" loading="eager">
+                                <img src="产品资料与图片/轮播图/瑜伽.jpg" alt="AZLG 智能戒指：数据驱动健康监测" loading="eager">
                             </div>
                             <div class="carousel-slide" data-index="1">
                                 <img src="产品资料与图片/轮播图/睡眠.png" alt="AZLG 智能戒指：防水设计，运动无忧" loading="lazy">
@@ -1692,36 +1819,36 @@ var _hmt = _hmt || [];
                     <div>
                         <div style="margin-bottom: 32px;">
                             <h3 style="font-size: 48px; font-weight: 200; margin-bottom: 16px; color: var(--oura-white); letter-spacing: -1px;">AZ Ring</h3>
-                            <p style="color: var(--oura-light-gray); font-size: 20px; line-height: 1.6; margin-bottom: 32px;" data-zh="新一代智能健康监测戒指，采用先进传感技术，24小时全方位精准监测您的健康数据" data-en="Next-generation smart health monitoring ring with advanced sensor technology for 24/7 comprehensive health monitoring" data-tw="新一代智能健康監測戒指，採用先進傳感技術，24小時全方位精準監測您的健康數據">新一代智能健康监测戒指，采用先进传感技术，24小时全方位精准监测您的健康数据</p>
+                            <p style="color: var(--oura-light-gray); font-size: 20px; line-height: 1.6; margin-bottom: 32px;" data-zh="独具匠心设计的健康智能戒指，深度的身体信号捕捉，提供个性化AI生活建议，赋能您的健康优质生活。" data-en="Next-generation smart health monitoring ring with advanced sensor technology for 24/7 comprehensive health monitoring" data-tw="新一代智能健康監測戒指，採用先進傳感技術，24小時全方位精準監測您的健康數據">新一代智能健康监测戒指，采用先进传感技术，24小时全方位精准监测您的健康数据</p>
                         </div>
 
                         <!-- Key Features -->
                         <div style="display: grid; gap: 16px; margin-bottom: 40px;">
                             <div style="display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
                                 <div style="width: 40px; height: 40px; background: rgba(255,107,53,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
-                                    <i class="fas fa-heartbeat" style="color: var(--oura-accent); font-size: 16px;"></i>
+                                    <span style="color: var(--oura-accent); font-size: 20px;">💍</span>
                                 </div>
                                 <div>
-                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">24/7 心率监测</span>
-                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">持续监测心率变化</p>
+                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">宝格丽风格设计</span>
+                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">对智能戒指产品构造的深度洞察而特别融合的风格设计</p>
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
                                 <div style="width: 40px; height: 40px; background: rgba(74,144,226,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
-                                    <i class="fas fa-moon" style="color: var(--oura-blue); font-size: 16px;"></i>
+                                    <span style="color: var(--oura-blue); font-size: 20px;">🌙</span>
                                 </div>
                                 <div>
-                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">睡眠质量分析</span>
-                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">深度睡眠数据分析</p>
+                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">准确无负担的睡眠监测</span>
+                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">手指的脉冲信号比手腕更强、更准确；戒指小且轻巧</p>
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
                                 <div style="width: 40px; height: 40px; background: rgba(126,211,33,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
-                                    <i class="fas fa-thermometer-half" style="color: var(--oura-green); font-size: 16px;"></i>
+                                    <span style="color: var(--oura-green); font-size: 20px;">♥</span>
                                 </div>
                                 <div>
-                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">体温 & 血氧监测</span>
-                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">精准健康指标追踪</p>
+                                    <span style="color: var(--oura-white); font-size: 16px; font-weight: 500;">用数据洞察提升健康水平</span>
+                                    <p style="color: var(--oura-light-gray); font-size: 14px; margin: 4px 0 0 0;">倾听自己身体的声音，我们用算法和AI帮您把身体数据转变为可行动的生活建议</p>
                                 </div>
                             </div>
                         </div>
@@ -2285,10 +2412,378 @@ var _hmt = _hmt || [];
             });
         });
 
+        // Navigation Height Calculator
+        class NavigationHeightCalculator {
+            constructor() {
+                this.navElement = document.querySelector('.oura-nav');
+                this.resizeObserver = null;
+                this.lastHeight = 0;
+                this.updateTimer = null;
+
+                // 预设高度值作为fallback
+                this.presetHeights = {
+                    'mobile': 56,      // 16px + 32px + 16px (移动端)
+                    'tablet': 64,      // 18px + 32px + 18px (平板端)
+                    'laptop': 72,      // 20px + 32px + 20px (笔记本)
+                    'desktop': 72      // 20px + 32px + 20px (桌面端)
+                };
+
+                this.init();
+            }
+
+            // 初始化
+            init() {
+                if (!this.navElement) {
+                    console.warn('[导航栏高度] 未找到导航栏元素');
+                    return;
+                }
+
+                // 立即计算一次
+                this.updateNavHeight();
+
+                // 设置ResizeObserver监听导航栏尺寸变化
+                this.setupResizeObserver();
+
+                // 监听字体加载完成
+                if (document.fonts) {
+                    document.fonts.ready.then(() => {
+                        setTimeout(() => this.updateNavHeight(), 100);
+                    });
+                }
+            }
+
+            // 获取屏幕类型
+            getScreenType() {
+                const width = window.innerWidth;
+                if (width <= 768) return 'mobile';
+                if (width <= 1024) return 'tablet';
+                if (width <= 1440) return 'laptop';
+                return 'desktop';
+            }
+
+            // 获取预设高度
+            getPresetHeight(screenType) {
+                return this.presetHeights[screenType] || this.presetHeights.desktop;
+            }
+
+            // 测量导航栏实际高度
+            measureNavHeight() {
+                try {
+                    if (!this.navElement) {
+                        const screenType = this.getScreenType();
+                        return this.getPresetHeight(screenType);
+                    }
+
+                    const rect = this.navElement.getBoundingClientRect();
+                    const height = Math.round(rect.height);
+
+                    // 验证高度合理性（防止异常值）
+                    if (height < 30 || height > 150) {
+                        console.warn(`[导航栏高度] 测量值异常: ${height}px，使用预设值`);
+                        const screenType = this.getScreenType();
+                        return this.getPresetHeight(screenType);
+                    }
+
+                    return height;
+                } catch (error) {
+                    console.warn('[导航栏高度] 测量失败:', error);
+                    const screenType = this.getScreenType();
+                    return this.getPresetHeight(screenType);
+                }
+            }
+
+            // 应用高度到CSS变量
+            applyHeight(height) {
+                try {
+                    const root = document.documentElement;
+                    root.style.setProperty('--nav-height', `${height}px`);
+
+                    console.log(`[导航栏高度] 已更新: ${height}px`);
+
+                    // 更新调试面板
+                    if (window.DebugPanel && window.DebugPanel.isEnabled) {
+                        const debugInfo = {
+                            navHeight: height,
+                            screenType: this.getScreenType(),
+                            timestamp: new Date().toLocaleTimeString()
+                        };
+
+                        // 如果调试面板存在，更新导航栏信息
+                        const panel = document.getElementById('carousel-debug-panel');
+                        if (panel) {
+                            const navInfo = panel.querySelector('.nav-height-info') ||
+                                          document.createElement('div');
+                            navInfo.className = 'nav-height-info';
+                            navInfo.innerHTML = `
+                                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
+                                    <div style="font-weight: bold; color: #4a90e2;">导航栏信息</div>
+                                    <div>实际高度: ${height}px</div>
+                                    <div>更新时间: ${debugInfo.timestamp}</div>
+                                </div>
+                            `;
+                            if (!panel.querySelector('.nav-height-info')) {
+                                panel.appendChild(navInfo);
+                            }
+                        }
+                    }
+
+                    return true;
+                } catch (error) {
+                    console.warn('[导航栏高度] 应用失败:', error);
+                    return false;
+                }
+            }
+
+            // 更新导航栏高度
+            updateNavHeight() {
+                const newHeight = this.measureNavHeight();
+
+                // 只在高度实际变化时更新
+                if (Math.abs(newHeight - this.lastHeight) >= 1) {
+                    this.lastHeight = newHeight;
+                    this.applyHeight(newHeight);
+
+                    // 触发自定义事件通知其他组件
+                    window.dispatchEvent(new CustomEvent('navHeightChanged', {
+                        detail: { height: newHeight }
+                    }));
+                }
+            }
+
+            // 设置ResizeObserver
+            setupResizeObserver() {
+                if (!window.ResizeObserver || !this.navElement) return;
+
+                try {
+                    this.resizeObserver = new ResizeObserver((entries) => {
+                        // 防抖动处理
+                        if (this.updateTimer) {
+                            clearTimeout(this.updateTimer);
+                        }
+
+                        this.updateTimer = setTimeout(() => {
+                            this.updateNavHeight();
+                        }, 100);
+                    });
+
+                    this.resizeObserver.observe(this.navElement);
+                    console.log('[导航栏高度] ResizeObserver已启动');
+                } catch (error) {
+                    console.warn('[导航栏高度] ResizeObserver设置失败:', error);
+                }
+            }
+
+            // 销毁观察器
+            destroy() {
+                if (this.resizeObserver) {
+                    this.resizeObserver.disconnect();
+                    this.resizeObserver = null;
+                }
+
+                if (this.updateTimer) {
+                    clearTimeout(this.updateTimer);
+                    this.updateTimer = null;
+                }
+            }
+
+            // 手动重新计算（供外部调用）
+            recalculate() {
+                this.updateNavHeight();
+            }
+        }
+
         // Modern Hero Carousel
         (function initModernCarousel() {
             const carousel = document.querySelector('.hero-carousel');
             if (!carousel) return;
+
+            // 动态尺寸计算器
+            const DynamicSizeCalculator = {
+                // 屏幕尺寸断点常量
+                BREAKPOINTS: {
+                    MOBILE: 768,
+                    TABLET: 1024,
+                    LAPTOP_SMALL: 1280,
+                    LAPTOP_MEDIUM: 1366,
+                    LAPTOP_LARGE: 1440,
+                    DESKTOP_16INCH: 1920,
+                    DESKTOP_2K: 2560,
+                    DESKTOP_4K: 3840
+                },
+
+                // 检测屏幕类型
+                detectScreenType() {
+                    const width = window.innerWidth;
+                    const height = window.innerHeight;
+                    const ratio = width / height;
+
+                    if (width <= this.BREAKPOINTS.MOBILE) return 'mobile';
+                    if (width <= this.BREAKPOINTS.TABLET) return 'tablet';
+                    if (width <= this.BREAKPOINTS.LAPTOP_SMALL) return 'laptop-small';
+                    if (width <= this.BREAKPOINTS.LAPTOP_MEDIUM) return 'laptop-medium';
+                    if (width <= this.BREAKPOINTS.LAPTOP_LARGE) return 'laptop-large';
+                    if (width <= this.BREAKPOINTS.DESKTOP_16INCH) return 'desktop-16inch';
+                    if (width <= this.BREAKPOINTS.DESKTOP_2K) return 'desktop-2k';
+                    return 'desktop-4k';
+                },
+
+                // 获取视口尺寸
+                getViewportDimensions() {
+                    return {
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                        ratio: window.innerWidth / window.innerHeight
+                    };
+                },
+
+                // 计算最优高度
+                calculateOptimalHeight(screenType, viewport) {
+                    const { width, height } = viewport;
+
+                    // 基于屏幕类型的高度计算规则
+                    switch (screenType) {
+                        case 'mobile':
+                            return Math.min(height * 0.6, 400);
+                        case 'tablet':
+                            return Math.min(height * 0.7, 640);
+                        case 'laptop-small':
+                            return Math.min(height * 0.75, 560);
+                        case 'laptop-medium':
+                            return Math.min(height * 0.8, 600);
+                        case 'laptop-large':
+                            return Math.min(height * 0.8, 720);
+                        case 'desktop-16inch':
+                            // 16寸笔记本专门优化
+                            return Math.min(height * 0.85, 1000);
+                        case 'desktop-2k':
+                            return Math.min(height * 0.8, 1200);
+                        case 'desktop-4k':
+                            return Math.min(height * 0.75, 1600);
+                        default:
+                            return 900;
+                    }
+                },
+
+                // 计算最优尺寸
+                calculateOptimalSize() {
+                    try {
+                        const viewport = this.getViewportDimensions();
+                        const screenType = this.detectScreenType();
+                        const optimalHeight = this.calculateOptimalHeight(screenType, viewport);
+
+                        // 确保最小和最大值限制
+                        const finalHeight = Math.max(300, Math.min(optimalHeight, viewport.height * 0.9));
+
+                        // 根据高度计算宽度（保持16:9比例）
+                        const aspectRatio = 16 / 9;
+                        const calculatedWidth = finalHeight * aspectRatio;
+
+                        // 确保宽度不超过视口宽度
+                        const finalWidth = Math.min(calculatedWidth, viewport.width * 0.95);
+                        const adjustedHeight = finalWidth / aspectRatio;
+
+                        console.log(`[轮播图尺寸计算] 屏幕类型: ${screenType}, 视口: ${viewport.width}x${viewport.height}, 计算结果: ${Math.round(finalWidth)}x${Math.round(adjustedHeight)}`);
+
+                        return {
+                            width: finalWidth,
+                            height: adjustedHeight,
+                            aspectRatio: aspectRatio,
+                            screenType: screenType
+                        };
+                    } catch (error) {
+                        console.warn('[轮播图尺寸计算] 计算失败，使用默认值:', error);
+                        return {
+                            width: 1600,
+                            height: 900,
+                            aspectRatio: 16/9,
+                            screenType: 'unknown'
+                        };
+                    }
+                },
+
+                // 应用计算结果
+                applySize(carousel, size) {
+                    try {
+                        const root = document.documentElement;
+                        root.style.setProperty('--carousel-max-height', `${size.height}px`);
+                        root.style.setProperty('--carousel-aspect-ratio', `${size.aspectRatio}`);
+
+                        // 添加屏幕类型标识
+                        carousel.setAttribute('data-screen-type', size.screenType);
+
+                        console.log(`[轮播图尺寸应用] 已应用尺寸: ${Math.round(size.width)}x${Math.round(size.height)}`);
+
+                        // 更新调试面板
+                        if (window.DebugPanel) {
+                            window.DebugPanel.update({
+                                screenType: size.screenType,
+                                viewport: this.getViewportDimensions(),
+                                size: size,
+                                cssUpdated: true
+                            });
+                        }
+
+                        return true;
+                    } catch (error) {
+                        console.warn('[轮播图尺寸应用] 应用失败:', error);
+
+                        // 更新调试面板显示错误
+                        if (window.DebugPanel) {
+                            window.DebugPanel.update({
+                                screenType: 'error',
+                                viewport: { width: 0, height: 0 },
+                                size: { width: 0, height: 0, aspectRatio: 0 },
+                                cssUpdated: false
+                            });
+                        }
+
+                        return false;
+                    }
+                }
+            };
+
+            // 初始化导航栏高度计算器
+            const navHeightCalculator = new NavigationHeightCalculator();
+
+            // 初始化动态尺寸
+            const initDynamicSize = () => {
+                const size = DynamicSizeCalculator.calculateOptimalSize();
+                DynamicSizeCalculator.applySize(carousel, size);
+            };
+
+            // 防抖动的resize处理器
+            let resizeTimer = null;
+            const handleResize = () => {
+                if (resizeTimer) clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    // 先更新导航栏高度，再更新轮播图尺寸
+                    if (navHeightCalculator) {
+                        navHeightCalculator.recalculate();
+                    }
+
+                    // 延迟一点时间确保导航栏高度更新完成
+                    setTimeout(() => {
+                        initDynamicSize();
+                    }, 50);
+                }, 250);
+            };
+
+            // 监听导航栏高度变化
+            window.addEventListener('navHeightChanged', (e) => {
+                console.log(`[轮播图] 导航栏高度变化: ${e.detail.height}px`);
+                // 导航栏高度变化时重新计算轮播图尺寸
+                setTimeout(() => {
+                    initDynamicSize();
+                }, 50);
+            });
+
+            // 立即初始化尺寸（在导航栏高度计算后）
+            setTimeout(() => {
+                initDynamicSize();
+            }, 100);
+
+            // 监听窗口尺寸变化
+            window.addEventListener('resize', handleResize, { passive: true });
 
             const track = carousel.querySelector('.carousel-track');
             const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
@@ -2463,9 +2958,117 @@ var _hmt = _hmt || [];
                 }
             });
 
+            // 图片加载检测和优化
+            const ImageOptimizer = {
+                // 加载图片尺寸
+                async loadImageDimensions(src) {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            resolve({
+                                width: img.naturalWidth,
+                                height: img.naturalHeight,
+                                aspectRatio: img.naturalWidth / img.naturalHeight
+                            });
+                        };
+                        img.onerror = reject;
+                        img.src = src;
+                    });
+                },
+
+                // 优化图片适配策略
+                async optimizeImageFit() {
+                    try {
+                        const images = carousel.querySelectorAll('.carousel-slide img');
+                        const screenType = carousel.getAttribute('data-screen-type');
+
+                        for (const img of images) {
+                            try {
+                                const dimensions = await this.loadImageDimensions(img.src);
+                                const containerAspectRatio = 16 / 9;
+
+                                // 根据图片比例和屏幕类型选择最佳适配方式
+                                if (Math.abs(dimensions.aspectRatio - containerAspectRatio) < 0.1) {
+                                    // 比例接近，使用cover
+                                    img.style.objectFit = 'cover';
+                                } else if (screenType === 'desktop-16inch' && dimensions.aspectRatio > containerAspectRatio) {
+                                    // 16寸屏幕且图片更宽，使用contain确保完整显示
+                                    img.style.objectFit = 'contain';
+                                    img.style.backgroundColor = 'var(--oura-dark)';
+                                } else {
+                                    // 其他情况使用cover
+                                    img.style.objectFit = 'cover';
+                                }
+
+                                console.log(`[图片优化] ${img.alt}: ${dimensions.width}x${dimensions.height} (${dimensions.aspectRatio.toFixed(2)}), 适配: ${img.style.objectFit}`);
+                            } catch (error) {
+                                console.warn(`[图片优化] 无法加载图片尺寸: ${img.src}`, error);
+                                // 保持默认的cover设置
+                                img.style.objectFit = 'cover';
+                            }
+                        }
+                    } catch (error) {
+                        console.warn('[图片优化] 优化过程出错:', error);
+                    }
+                }
+            };
+
+            // 性能监控
+            const PerformanceMonitor = {
+                startTime: performance.now(),
+
+                logInitTime() {
+                    const endTime = performance.now();
+                    const initTime = endTime - this.startTime;
+                    console.log(`[轮播图性能] 初始化耗时: ${initTime.toFixed(2)}ms`);
+                },
+
+                logResizeTime(startTime) {
+                    const endTime = performance.now();
+                    const resizeTime = endTime - startTime;
+                    console.log(`[轮播图性能] 尺寸调整耗时: ${resizeTime.toFixed(2)}ms`);
+                }
+            };
+
+            // 增强的resize处理器
+            const originalHandleResize = handleResize;
+            const enhancedHandleResize = () => {
+                const startTime = performance.now();
+                originalHandleResize();
+
+                // 在尺寸调整后重新优化图片
+                setTimeout(() => {
+                    ImageOptimizer.optimizeImageFit();
+                    PerformanceMonitor.logResizeTime(startTime);
+                }, 300);
+            };
+
+            // 页面可见性变化时重新计算（处理浏览器缩放等情况）
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    setTimeout(() => {
+                        if (navHeightCalculator) {
+                            navHeightCalculator.recalculate();
+                        }
+                        initDynamicSize();
+                    }, 100);
+                }
+            });
+
+            // 替换resize监听器
+            window.removeEventListener('resize', handleResize);
+            window.addEventListener('resize', enhancedHandleResize, { passive: true });
+
             // 初始化
             goToSlide(0);
             startAutoplay();
+
+            // 异步优化图片适配
+            setTimeout(() => {
+                ImageOptimizer.optimizeImageFit().then(() => {
+                    PerformanceMonitor.logInitTime();
+                });
+            }, 100);
         })();
 
         // Mobile menu toggle
@@ -3168,8 +3771,98 @@ var _hmt = _hmt || [];
 
 
 
+        // 调试面板（仅在开发模式下显示）
+        window.DebugPanel = {
+            isEnabled: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+
+            create() {
+                if (!this.isEnabled) return;
+
+                const panel = document.createElement('div');
+                panel.id = 'carousel-debug-panel';
+                panel.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    right: 20px;
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    font-family: monospace;
+                    font-size: 12px;
+                    z-index: 10000;
+                    max-width: 300px;
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                `;
+
+                document.body.appendChild(panel);
+                return panel;
+            },
+
+            update(data) {
+                if (!this.isEnabled) return;
+
+                const panel = document.getElementById('carousel-debug-panel') || this.create();
+
+                // 获取当前导航栏高度
+                const navHeight = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--nav-height').trim();
+
+                panel.innerHTML = `
+                    <div style="margin-bottom: 10px; font-weight: bold; color: #ff6b35;">轮播图调试信息</div>
+                    <div>屏幕类型: ${data.screenType}</div>
+                    <div>视口尺寸: ${data.viewport.width}x${data.viewport.height}</div>
+                    <div>容器尺寸: ${Math.round(data.size.width)}x${Math.round(data.size.height)}</div>
+                    <div>宽高比: ${data.size.aspectRatio.toFixed(2)}</div>
+                    <div>CSS变量已更新: ${data.cssUpdated ? '✓' : '✗'}</div>
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
+                        <div style="font-weight: bold; color: #4a90e2;">导航栏信息</div>
+                        <div>当前高度: ${navHeight}</div>
+                        <div>padding-top: ${navHeight}</div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 10px; opacity: 0.7;">
+                        最后更新: ${new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            }
+        };
+
+        // 全局导航栏高度计算器实例
+        window.globalNavHeightCalculator = null;
+
+        // 全局工具函数：获取当前导航栏高度
+        window.getCurrentNavHeight = function() {
+            try {
+                const heightStr = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--nav-height').trim();
+                return parseInt(heightStr) || 80; // 默认80px
+            } catch (error) {
+                console.warn('[导航栏高度] 获取失败:', error);
+                return 80;
+            }
+        };
+
+        // 全局工具函数：手动重新计算导航栏高度
+        window.recalculateNavHeight = function() {
+            if (window.globalNavHeightCalculator) {
+                window.globalNavHeightCalculator.recalculate();
+                return true;
+            }
+            console.warn('[导航栏高度] 全局计算器未初始化');
+            return false;
+        };
+
         // 初始化语言切换按钮样式
         document.addEventListener('DOMContentLoaded', function() {
+            // 优先初始化导航栏高度计算器
+            try {
+                window.globalNavHeightCalculator = new NavigationHeightCalculator();
+                console.log('[导航栏高度] 全局计算器已初始化');
+            } catch (error) {
+                console.warn('[导航栏高度] 全局计算器初始化失败:', error);
+            }
+
             // 初始化语言为中文
             switchLanguage('zh');
 
@@ -3178,6 +3871,22 @@ var _hmt = _hmt || [];
 
             // 初始化Apple风格滚轮轮播控制器
             new WheelCarouselController();
+
+            // 初始化调试面板
+            if (window.DebugPanel && window.DebugPanel.isEnabled) {
+                console.log('[轮播图调试] 调试模式已启用');
+
+                // 添加键盘快捷键切换调试面板
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                        e.preventDefault();
+                        const panel = document.getElementById('carousel-debug-panel');
+                        if (panel) {
+                            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                        }
+                    }
+                });
+            }
         });
     </script>
 </body>
