@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">header-placeholder
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>技术博客 - AZ Ring智能健康戒指 | 智能穿戴设备技术解析</title>
     <meta name="description" content="探索智能健康戒指技术原理，了解AI健康监测、生物传感器、睡眠分析等前沿技术。深圳佰屹创新技术博客，深度解析智能穿戴设备技术。">
@@ -164,7 +164,9 @@
 <body>
     <!-- 阅读进度条 -->
     <div class="reading-progress" id="reading-progress"></div>
-
+    
+    <!-- Header -->
+    <div id="header-placeholder"></div>
     
     <!-- 阿里百炼AI助手 -->
     <script src="https://o.alicdn.com/appflow/chatbot/v1/AppflowChatSDK.js"></script>
@@ -206,6 +208,26 @@
                     <input type="text" id="blog-search" placeholder="搜索文章..." data-zh-placeholder="搜索文章..." data-en-placeholder="Search articles..." data-tw-placeholder="搜索文章...">
                 </div>
                 
+                <!-- 文章列表 -->
+                <!-- 最新文章：未来趋势 -->
+                <article class="blog-card" data-category="future">
+                    <div class="blog-card-meta">
+                        <span class="blog-card-category">未来趋势</span>
+                        <span><i class="fas fa-calendar"></i> 2024-08-25</span>
+                        <span><i class="fas fa-clock"></i> 8 分钟阅读</span>
+                    </div>
+                    <h2 class="blog-card-title">
+                        <a href="articles/future-health-prediction.html" style="color: inherit; text-decoration: none;">2025年的智能戒指能预测疾病吗？AI健康监测的边界与可能</a>
+                    </h2>
+                    <p class="blog-card-excerpt">探索AI健康监测的未来边界与伦理考量。从被动监测到主动预测，从个体健康到群体智能，深入分析技术发展趋势、实施挑战与道德边界。</p>
+                    <div class="blog-card-tags">
+                        <span class="blog-card-tag">AI预测</span>
+                        <span class="blog-card-tag">健康科技</span>
+                        <span class="blog-card-tag">伦理考量</span>
+                        <span class="blog-card-tag">未来趋势</span>
+                    </div>
+                </article>
+
                 <!-- 文章列表 -->
                 <article class="blog-card" data-category="ai">
                     <div class="blog-card-meta">
@@ -350,7 +372,11 @@
                     <div class="blog-categories">
                         <a href="#" class="blog-category active" data-category="all">
                             <span data-zh="全部" data-en="All" data-tw="全部">全部</span>
-                            <span class="blog-category-count">7</span>
+                            <span class="blog-category-count">8</span>
+                        </a>
+                        <a href="#" class="blog-category" data-category="future">
+                            <span data-zh="未来趋势" data-en="Future Trends" data-tw="未來趋勢">未来趋势</span>
+                            <span class="blog-category-count">1</span>
                         </a>
                         <a href="#" class="blog-category" data-category="ai">
                             <span data-zh="AI技术" data-en="AI Technology" data-tw="AI技術">AI技术</span>
@@ -387,10 +413,13 @@
                 <div class="blog-sidebar-section">
                     <h3 class="blog-sidebar-title" data-zh="热门标签" data-en="Popular Tags" data-tw="熱門標籤">热门标签</h3>
                     <div class="blog-tags">
+                        <a href="#" class="blog-tag">AI预测</a>
+                        <a href="#" class="blog-tag">未来趋势</a>
                         <a href="#" class="blog-tag">AI算法</a>
                         <a href="#" class="blog-tag">生物传感器</a>
                         <a href="#" class="blog-tag">睡眠分析</a>
                         <a href="#" class="blog-tag">心率监测</a>
+                        <a href="#" class="blog-tag">伦理考量</a>
                         <a href="#" class="blog-tag">数据安全</a>
                         <a href="#" class="blog-tag">PPG技术</a>
                         <a href="#" class="blog-tag">机器学习</a>
@@ -428,7 +457,20 @@
     <!-- JavaScript -->
     <script src="assets/blog-scripts.js"></script>
     <script>
-       
+        // 加载header和footer
+        fetch('../components/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+                initMobileMenu();
+                initLanguageSwitcher();
+            });
+
+        fetch('../components/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            });
 
         // 语言切换功能
         let currentLanguage = 'zh';
