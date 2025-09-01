@@ -1652,6 +1652,39 @@ var _hmt = _hmt || [];
             }
         }
     </style>
+
+    <!-- Lazy Loading CSS Styles -->
+    <style>
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            background-color: #f0f0f0;
+            background-image: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            object-fit: contain;
+        }
+
+        .lazy-image.lazy-loading {
+            opacity: 0.5;
+        }
+
+        .lazy-image.lazy-loaded {
+            opacity: 1;
+            background-image: none;
+            animation: none;
+        }
+
+        .lazy-image img {
+            aspect-ratio: auto;
+            object-fit: contain;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
 <body>
     <!-- 阿里百炼AI助手 -->
@@ -1724,10 +1757,10 @@ var _hmt = _hmt || [];
                         <!-- 轮播图轨道 -->
                         <div class="carousel-track" aria-live="polite">
                             <div class="carousel-slide active" data-index="0">
-                                <img src="产品资料与图片/轮播图/瑜伽.png" alt="AZLG 智能戒指：数据驱动健康监测" loading="eager">
+                                <img data-src="产品资料与图片/轮播图/瑜伽.png" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="eager" alt="AZLG 智能戒指：数据驱动健康监测">
                             </div>
                             <div class="carousel-slide" data-index="1">
-                                <img src="产品资料与图片/轮播图/睡眠2.jpg" alt="AZLG 智能戒指：防水设计，运动无忧" loading="lazy">
+                                <img data-src="产品资料与图片/轮播图/睡眠2.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="AZLG 智能戒指：防水设计，运动无忧">
                             </div>
                         </div>
 
@@ -1802,7 +1835,7 @@ var _hmt = _hmt || [];
                     <!-- Product Image -->
                     <div style="position: relative;">
                         <div style="width: 100%; aspect-ratio: 1; border-radius: 32px; overflow: hidden; position: relative; background: radial-gradient(circle at center, rgba(255,107,53,0.1) 0%, transparent 70%);">
-                            <img src="产品资料与图片/首页与商品详情/双戒指.png" alt="AZ Ring产品图" style="width: 100%; height: 100%; object-fit: cover; border-radius: 32px;">
+                            <img data-src="产品资料与图片/首页与商品详情/双戒指.png" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="AZ Ring产品图" style="width: 100%; height: 100%; object-fit: cover; border-radius: 32px;">
                             <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%); border-radius: 32px;"></div>
                         </div>
                         <!-- Floating Elements -->
@@ -1899,7 +1932,7 @@ var _hmt = _hmt || [];
             <!-- 终极可穿戴设备 -->
             <div class="feature-showcase-item fade-in">
                 <div class="feature-showcase-image">
-                    <img src="产品资料与图片/首页与商品详情/功能展示1.jpg" alt="终极可穿戴设备">
+                    <img data-src="产品资料与图片/首页与商品详情/功能展示1.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="终极可穿戴设备">
                 </div>
                 <div class="feature-showcase-content">
                     <h3 data-zh="终极可穿戴设备" data-en="Ultimate Wearable Device" data-tw="終極可穿戴設備">终极可穿戴设备</h3>
@@ -1912,7 +1945,7 @@ var _hmt = _hmt || [];
             <!-- 度身定制的健康指导 -->
             <div class="feature-showcase-item reverse fade-in">
                 <div class="feature-showcase-image">
-                    <img src="产品资料与图片/首页与商品详情/功能展示2.jpg" alt="个性化健康指导">
+                    <img data-src="产品资料与图片/首页与商品详情/功能展示2.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="个性化健康指导">
                 </div>
                 <div class="feature-showcase-content">
                     <h3 data-zh="度身定制的健康指导" data-en="Personalized Health Guidance" data-tw="度身定制的健康指導">度身定制的健康指导</h3>
@@ -1925,7 +1958,7 @@ var _hmt = _hmt || [];
             <!-- 耐用性保障 -->
             <div class="feature-showcase-item fade-in">
                 <div class="feature-showcase-image">
-                    <img src="产品资料与图片/首页与商品详情/功能展示3.jpg" alt="耐用性保障">
+                    <img data-src="产品资料与图片/首页与商品详情/功能展示3.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="耐用性保障">
                 </div>
                 <div class="feature-showcase-content">
                     <h3 data-zh="耐用性保障" data-en="Durability Assurance" data-tw="耐用性保障">耐用性保障</h3>
@@ -1938,7 +1971,7 @@ var _hmt = _hmt || [];
             <!-- 完美合适，完美的功能 -->
             <div class="feature-showcase-item reverse fade-in">
                 <div class="feature-showcase-image">
-                    <img src="产品资料与图片/首页与商品详情/功能展示4.jpg" alt="完美适配">
+                    <img data-src="产品资料与图片/首页与商品详情/功能展示4.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="完美适配">
                 </div>
                 <div class="feature-showcase-content">
                     <h3 data-zh="完美合适，完美的功能" data-en="Perfect Fit, Perfect Function" data-tw="完美合適，完美的功能">完美合适，完美的功能</h3>
@@ -3887,6 +3920,121 @@ var _hmt = _hmt || [];
                 });
             }
         });
+    </script>
+
+    <!-- Lazy Loading JavaScript -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // 网络状态检测
+            function getConnectionSpeed() {
+                if ('connection' in navigator) {
+                    const connection = navigator.connection;
+                    return connection.effectiveType || 'unknown';
+                }
+                return 'unknown';
+            }
+            
+            // 图片预加载函数
+            function preloadImage(src) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => reject(new Error('Image load failed'));
+                    img.src = src;
+                });
+            }
+            
+            // 重试机制
+            function retryLoad(src, maxRetries = 3) {
+                let retryCount = 0;
+                const delays = [1000, 3000, 5000];
+                
+                function attempt() {
+                    return preloadImage(src).catch(error => {
+                        if (retryCount < maxRetries) {
+                            return new Promise((resolve, reject) => {
+                                setTimeout(() => {
+                                    retryCount++;
+                                    attempt().then(resolve).catch(reject);
+                                }, delays[retryCount - 1] || 5000);
+                            });
+                        }
+                        throw error;
+                    });
+                }
+                
+                return attempt();
+            }
+            
+            // 懒加载处理函数
+            function loadImage(img) {
+                const src = img.getAttribute('data-src');
+                if (!src) return;
+                
+                img.classList.add('lazy-loading');
+                
+                retryLoad(src)
+                    .then(() => {
+                        img.src = src;
+                        img.classList.remove('lazy-loading');
+                        img.classList.add('lazy-loaded');
+                    })
+                    .catch(() => {
+                        img.classList.remove('lazy-loading');
+                        // 保持占位符
+                        console.warn('Failed to load image after retries:', src);
+                    });
+            }
+            
+            // 创建 Intersection Observer
+            function createObserver() {
+                const options = {
+                    rootMargin: '50px',
+                    threshold: 0.1
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            loadImage(img);
+                            observer.unobserve(img);
+                        }
+                    });
+                }, options);
+                
+                return observer;
+            }
+            
+            // 初始化懒加载
+            function initLazyLoading() {
+                if (!('IntersectionObserver' in window)) {
+                    // 降级方案：立即加载所有图片
+                    document.querySelectorAll('.lazy-image').forEach(img => {
+                        const src = img.getAttribute('data-src');
+                        if (src) {
+                            img.src = src;
+                            img.classList.add('lazy-loaded');
+                        }
+                    });
+                    return;
+                }
+                
+                const observer = createObserver();
+                document.querySelectorAll('.lazy-image').forEach(img => {
+                    observer.observe(img);
+                });
+            }
+            
+            // 页面加载完成后初始化
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initLazyLoading);
+            } else {
+                initLazyLoading();
+            }
+        })();
     </script>
 </body>
 </html>
