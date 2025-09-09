@@ -10,7 +10,15 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta name="baidu-site-verification" content="codeva-GGcPSodAJb" />
+    <meta name="baidu-site-verification" content="codeva-GGcPSodAJb" />
+
+    <!-- DNS优化和预解析 -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//cdn.staticfile.org">
+    <link rel="dns-prefetch" href="//hm.baidu.com">
+    <link rel="dns-prefetch" href="//o.alicdn.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.staticfile.org">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,8 +43,8 @@ var _hmt = _hmt || [];
     <meta property="twitter:image" content="https://www.azlg.com/logo.png">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://www.baiyiholding.com/images/favicon.png">
-    <link rel="apple-touch-icon" href="https://www.baiyiholding.com/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 
     <!-- 结构化数据 -->
     <script type="application/ld+json">
@@ -129,9 +137,18 @@ var _hmt = _hmt || [];
     }
     </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.6/lib/tailwind.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('fonts/inter-variable.woff2') format('woff2');
+        }
+    </style>
     <style>
         :root {
             --oura-black: #0a0a0a;
@@ -2530,7 +2547,7 @@ var _hmt = _hmt || [];
                     const root = document.documentElement;
                     root.style.setProperty('--nav-height', `${height}px`);
 
-                    console.log(`[导航栏高度] 已更新: ${height}px`);
+                    // 导航栏高度已更新
 
                     // 更新调试面板
                     if (window.DebugPanel && window.DebugPanel.isEnabled) {
@@ -2599,7 +2616,7 @@ var _hmt = _hmt || [];
                     });
 
                     this.resizeObserver.observe(this.navElement);
-                    console.log('[导航栏高度] ResizeObserver已启动');
+                    // ResizeObserver已启动
                 } catch (error) {
                     console.warn('[导航栏高度] ResizeObserver设置失败:', error);
                 }
@@ -2714,7 +2731,7 @@ var _hmt = _hmt || [];
                         const finalWidth = Math.min(calculatedWidth, viewport.width * 0.95);
                         const adjustedHeight = finalWidth / aspectRatio;
 
-                        console.log(`[轮播图尺寸计算] 屏幕类型: ${screenType}, 视口: ${viewport.width}x${viewport.height}, 计算结果: ${Math.round(finalWidth)}x${Math.round(adjustedHeight)}`);
+                        // 轮播图尺寸已计算
 
                         return {
                             width: finalWidth,
@@ -2743,7 +2760,7 @@ var _hmt = _hmt || [];
                         // 添加屏幕类型标识
                         carousel.setAttribute('data-screen-type', size.screenType);
 
-                        console.log(`[轮播图尺寸应用] 已应用尺寸: ${Math.round(size.width)}x${Math.round(size.height)}`);
+                        // 轮播图尺寸已应用
 
                         // 更新调试面板
                         if (window.DebugPanel) {
@@ -2783,11 +2800,17 @@ var _hmt = _hmt || [];
                 DynamicSizeCalculator.applySize(carousel, size);
             };
 
-            // 防抖动的resize处理器
+            // 防抖动的resize处理器（优化延迟）
             let resizeTimer = null;
+            let lastSize = null; // 缓存上次计算结果
             const handleResize = () => {
                 if (resizeTimer) clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
+                    // 检查尺寸是否真的发生变化
+                    const currentSize = `${window.innerWidth}x${window.innerHeight}`;
+                    if (lastSize === currentSize) return;
+                    lastSize = currentSize;
+
                     // 先更新导航栏高度，再更新轮播图尺寸
                     if (navHeightCalculator) {
                         navHeightCalculator.recalculate();
@@ -2797,12 +2820,12 @@ var _hmt = _hmt || [];
                     setTimeout(() => {
                         initDynamicSize();
                     }, 50);
-                }, 250);
+                }, 300); // 增加防抖延迟到300ms
             };
 
             // 监听导航栏高度变化
             window.addEventListener('navHeightChanged', (e) => {
-                console.log(`[轮播图] 导航栏高度变化: ${e.detail.height}px`);
+                // 导航栏高度变化，重新计算轮播图尺寸
                 // 导航栏高度变化时重新计算轮播图尺寸
                 setTimeout(() => {
                     initDynamicSize();
@@ -3032,7 +3055,7 @@ var _hmt = _hmt || [];
                                     img.style.objectFit = 'cover';
                                 }
 
-                                console.log(`[图片优化] ${img.alt}: ${dimensions.width}x${dimensions.height} (${dimensions.aspectRatio.toFixed(2)}), 适配: ${img.style.objectFit}`);
+                                // 图片适配优化完成
                             } catch (error) {
                                 console.warn(`[图片优化] 无法加载图片尺寸: ${img.src}`, error);
                                 // 保持默认的cover设置
@@ -3052,13 +3075,13 @@ var _hmt = _hmt || [];
                 logInitTime() {
                     const endTime = performance.now();
                     const initTime = endTime - this.startTime;
-                    console.log(`[轮播图性能] 初始化耗时: ${initTime.toFixed(2)}ms`);
+                    // 轮播图初始化完成
                 },
 
                 logResizeTime(startTime) {
                     const endTime = performance.now();
                     const resizeTime = endTime - startTime;
-                    console.log(`[轮播图性能] 尺寸调整耗时: ${resizeTime.toFixed(2)}ms`);
+                    // 轮播图尺寸调整完成
                 }
             };
 
@@ -3803,62 +3826,7 @@ var _hmt = _hmt || [];
 
 
 
-        // 调试面板（仅在开发模式下显示）
-        window.DebugPanel = {
-            isEnabled: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
-
-            create() {
-                if (!this.isEnabled) return;
-
-                const panel = document.createElement('div');
-                panel.id = 'carousel-debug-panel';
-                panel.style.cssText = `
-                    position: fixed;
-                    top: 100px;
-                    right: 20px;
-                    background: rgba(0, 0, 0, 0.8);
-                    color: white;
-                    padding: 15px;
-                    border-radius: 8px;
-                    font-family: monospace;
-                    font-size: 12px;
-                    z-index: 10000;
-                    max-width: 300px;
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                `;
-
-                document.body.appendChild(panel);
-                return panel;
-            },
-
-            update(data) {
-                if (!this.isEnabled) return;
-
-                const panel = document.getElementById('carousel-debug-panel') || this.create();
-
-                // 获取当前导航栏高度
-                const navHeight = getComputedStyle(document.documentElement)
-                    .getPropertyValue('--nav-height').trim();
-
-                panel.innerHTML = `
-                    <div style="margin-bottom: 10px; font-weight: bold; color: #ff6b35;">轮播图调试信息</div>
-                    <div>屏幕类型: ${data.screenType}</div>
-                    <div>视口尺寸: ${data.viewport.width}x${data.viewport.height}</div>
-                    <div>容器尺寸: ${Math.round(data.size.width)}x${Math.round(data.size.height)}</div>
-                    <div>宽高比: ${data.size.aspectRatio.toFixed(2)}</div>
-                    <div>CSS变量已更新: ${data.cssUpdated ? '✓' : '✗'}</div>
-                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
-                        <div style="font-weight: bold; color: #4a90e2;">导航栏信息</div>
-                        <div>当前高度: ${navHeight}</div>
-                        <div>padding-top: ${navHeight}</div>
-                    </div>
-                    <div style="margin-top: 10px; font-size: 10px; opacity: 0.7;">
-                        最后更新: ${new Date().toLocaleTimeString()}
-                    </div>
-                `;
-            }
-        };
+        // 调试面板代码已移除以提升生产环境性能
 
         // 全局导航栏高度计算器实例
         window.globalNavHeightCalculator = null;
@@ -3890,7 +3858,7 @@ var _hmt = _hmt || [];
             // 优先初始化导航栏高度计算器
             try {
                 window.globalNavHeightCalculator = new NavigationHeightCalculator();
-                console.log('[导航栏高度] 全局计算器已初始化');
+                // 全局导航栏高度计算器已初始化
             } catch (error) {
                 console.warn('[导航栏高度] 全局计算器初始化失败:', error);
             }
@@ -3906,7 +3874,7 @@ var _hmt = _hmt || [];
 
             // 初始化调试面板
             if (window.DebugPanel && window.DebugPanel.isEnabled) {
-                console.log('[轮播图调试] 调试模式已启用');
+                // 生产环境已禁用调试模式
 
                 // 添加键盘快捷键切换调试面板
                 document.addEventListener('keydown', (e) => {
