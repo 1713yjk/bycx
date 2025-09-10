@@ -25,6 +25,11 @@
     <meta name="twitter:description" content="AZ Ring智能健康戒指，您的全天候智能健康管家。精准监测心率、睡眠、血氧饱和度，提供个性化健康报告与专业健康管理建议。适用于运动、日常健康追踪，是智能穿戴设备的理想选择。">
     <meta name="twitter:image" content="https://www.azlg.com/logo.png">
     
+    <!-- DNS优化和预解析 -->
+    <link rel="dns-prefetch" href="//cdn.staticfile.org">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.staticfile.org">
+    
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
@@ -55,10 +60,17 @@
     </script>
     
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('fonts/inter-variable.woff2') format('woff2');
+        }
+    </style>
     
     <style>
         :root {
