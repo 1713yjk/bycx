@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Monkey风格 - 标准评估演示</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* 专业布局容器 */
+        .survey-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            min-height: 100vh;
+        }
+
+        /* 头部 */
+        .survey-header {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: #5a6c7d;
+            margin-bottom: 32px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 数据可视化进度条 */
+        .progress-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .progress-stats {
+            font-size: 12px;
+            color: #6c757d;
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-icon {
+            font-size: 10px;
+            color: #0366d6;
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0366d6, #28a745);
+            border-radius: 6px;
+            transition: width 0.4s ease;
+            width: 10%;
+        }
+
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            background: white;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #0366d6;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-button:hover {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        /* 问题容器 */
+        .question-block {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .question-block:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .question-info {
+            flex: 1;
+        }
+
+        .question-category {
+            background: #e8f4f8;
+            color: #0366d6;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-number {
+            background: #0366d6;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-left: 16px;
+            flex-shrink: 0;
+        }
+
+        .question-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .question-subtitle {
+            font-size: 16px;
+            color: #5a6c7d;
+            margin-bottom: 32px;
+        }
+
+        .required-indicator {
+            color: #dc3545;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        /* 响应式选项布局 */
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .survey-option {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .survey-option:hover {
+            border-color: #0366d6;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.15);
+        }
+
+        .survey-option.selected {
+            border-color: #0366d6;
+            background: #e8f4f8;
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.2);
+        }
+
+        .option-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #6c757d;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .survey-option.selected .option-radio {
+            border-color: #0366d6;
+            background: #0366d6;
+        }
+
+        .survey-option.selected .option-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            transform: translate(-50%, -50%);
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-text {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: #5a6c7d;
+            line-height: 1.4;
+        }
+
+        .survey-option.selected .option-text {
+            color: #0366d6;
+            font-weight: 600;
+        }
+
+        .survey-option.selected .option-description {
+            color: #2c3e50;
+        }
+
+        /* 选项级别指示器 */
+        .option-level {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #6c757d;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-bottom-left-radius: 6px;
+            opacity: 0.7;
+        }
+
+        .survey-option.selected .option-level {
+            background: #0366d6;
+            opacity: 1;
+        }
+
+        /* 实时统计显示 */
+        .stats-display {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 24px;
+            display: none;
+        }
+
+        .stats-display.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .stats-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .stat-metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0366d6;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        /* 清晰的步骤指示 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #0366d6;
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed {
+            background: #28a745;
+        }
+
+        /* 导航按钮 */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .nav-button {
+            border: 1px solid #d1d5da;
+            background: white;
+            color: #0366d6;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-button.primary {
+            background: #0366d6;
+            color: white;
+            border-color: #0366d6;
+        }
+
+        .nav-button.primary:hover:not(:disabled) {
+            background: #0256cc;
+            border-color: #0256cc;
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.3);
+        }
+
+        /* 验证消息 */
+        .validation-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 16px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        .validation-message::before {
+            content: '⚠️ ';
+            margin-right: 8px;
+        }
+
+        /* 结果页面 */
+        .result-block {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 48px 40px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-icon {
+            font-size: 72px;
+            color: #28a745;
+            margin-bottom: 32px;
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .result-description {
+            font-size: 18px;
+            color: #5a6c7d;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            background: #0366d6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #0256cc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.3);
+        }
+
+        .action-button.secondary {
+            background: white;
+            color: #0366d6;
+            border: 1px solid #d1d5da;
+        }
+
+        .action-button.secondary:hover {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .survey-container {
+                padding: 20px 16px;
+            }
+
+            .survey-header,
+            .question-block {
+                padding: 24px 20px;
+            }
+
+            .header-title {
+                font-size: 24px;
+            }
+
+            .question-title {
+                font-size: 20px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .question-number {
+                align-self: flex-start;
+                margin-left: 0;
+            }
+
+            .survey-option {
+                padding: 16px 20px;
+            }
+
+            .stats-content {
+                justify-content: space-around;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <!-- 返回按钮 -->
+        <a href="health-tcm-constitution.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            返回体质测试
+        </a>
+
+        <!-- 头部 -->
+        <div class="survey-header">
+            <h1 class="header-title">中医体质标准评估</h1>
+            <p class="header-subtitle">
+                基于中医体质学理论的专业评估系统，通过科学的问卷设计全面分析您的体质特征。
+                本评估包含九种体质分类，提供个性化的调理建议和健康指导。
+            </p>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">评估进度</span>
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-list stat-icon"></i>
+                            <span id="progressStats">1 / 10 题</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock stat-icon"></i>
+                            <span>预计 8 分钟</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                    <div class="progress-percentage" id="progressPercentage">10%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤指示器 -->
+        <div class="step-indicator" id="stepIndicator">
+            <div class="step-dot active"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+        </div>
+
+        <!-- 问题容器 -->
+        <div class="question-block" id="question-0">
+            <div class="question-header">
+                <div class="question-info">
+                    <div class="question-category">体形特征</div>
+                    <h2 class="question-title">
+                        您的体形特点是？
+                        <span class="required-indicator">*</span>
+                    </h2>
+                    <p class="question-subtitle">请根据您最近三个月的实际情况选择最符合的答案</p>
+                </div>
+                <div class="question-number">1/10</div>
+            </div>
+            
+            <div class="options-container" id="options-0">
+                <div class="survey-option" onclick="selectOption(0, 0)">
+                    <div class="option-radio"></div>
+                    <div class="option-content">
+                        <div class="option-text">偏瘦</div>
+                        <div class="option-description">体重明显低于标准，骨骼较为突出</div>
+                    </div>
+                    <div class="option-level">1</div>
+                </div>
+                <div class="survey-option" onclick="selectOption(0, 1)">
+                    <div class="option-radio"></div>
+                    <div class="option-content">
+                        <div class="option-text">匀称</div>
+                        <div class="option-description">体重适中，身材比例协调</div>
+                    </div>
+                    <div class="option-level">2</div>
+                </div>
+                <div class="survey-option" onclick="selectOption(0, 2)">
+                    <div class="option-radio"></div>
+                    <div class="option-content">
+                        <div class="option-text">偏胖</div>
+                        <div class="option-description">体重略高于标准，有一定脂肪堆积</div>
+                    </div>
+                    <div class="option-level">3</div>
+                </div>
+                <div class="survey-option" onclick="selectOption(0, 3)">
+                    <div class="option-radio"></div>
+                    <div class="option-content">
+                        <div class="option-text">肥胖</div>
+                        <div class="option-description">体重明显超标，脂肪较多</div>
+                    </div>
+                    <div class="option-level">4</div>
+                </div>
+                <div class="survey-option" onclick="selectOption(0, 4)">
+                    <div class="option-radio"></div>
+                    <div class="option-content">
+                        <div class="option-text">很瘦</div>
+                        <div class="option-description">体重严重不足，体型消瘦</div>
+                    </div>
+                    <div class="option-level">5</div>
+                </div>
+            </div>
+
+            <div class="stats-display" id="stats-0">
+                <div class="stats-title">
+                    <i class="fas fa-chart-bar"></i>
+                    选择统计
+                </div>
+                <div class="stats-content">
+                    <div class="stat-metric">
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">已选择</div>
+                    </div>
+                    <div class="stat-metric">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">总选项</div>
+                    </div>
+                    <div class="stat-metric">
+                        <div class="stat-value">体质</div>
+                        <div class="stat-label">评估维度</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="validation-message" id="validation-0">
+                请选择最符合您情况的选项
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" style="visibility: hidden;">
+                    <i class="fas fa-arrow-left"></i>
+                    上一题
+                </button>
+                <button class="nav-button primary" id="nextBtn-0" onclick="nextQuestion()" disabled>
+                    下一题
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他问题将通过JavaScript动态生成 -->
+
+        <!-- 结果页面 -->
+        <div class="result-block" id="result" style="display: none;">
+            <div class="result-icon">
+                <i class="fas fa-award"></i>
+            </div>
+            <h2 class="result-title">标准评估完成</h2>
+            <p class="result-description">
+                恭喜您完成了中医体质标准评估！基于您的详细回答，我们生成了完整的体质分析报告，
+                包含雷达图分析和个性化调理建议。如需更深入的综合健康分析，建议您进行深度剖析。
+            </p>
+            <div class="result-actions">
+                <a href="demo-survey-deep.html" class="action-button">
+                    <i class="fas fa-microscope"></i>
+                    进行深度剖析
+                </a>
+                <a href="health-tcm-constitution.html" class="action-button secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回选择
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 问题数据（简化版，实际应该有60题）
+        const questions = [
+            {
+                category: "体形特征",
+                title: "您的体形特点是？",
+                subtitle: "请根据您最近三个月的实际情况选择最符合的答案",
+                options: [
+                    { text: "偏瘦", desc: "体重明显低于标准，骨骼较为突出", level: 1 },
+                    { text: "匀称", desc: "体重适中，身材比例协调", level: 2 },
+                    { text: "偏胖", desc: "体重略高于标准，有一定脂肪堆积", level: 3 },
+                    { text: "肥胖", desc: "体重明显超标，脂肪较多", level: 4 },
+                    { text: "很瘦", desc: "体重严重不足，体型消瘦", level: 5 }
+                ]
+            },
+            {
+                category: "精神状态",
+                title: "您平时精力充沛吗？",
+                subtitle: "评估您的整体精神状态和活力水平",
+                options: [
+                    { text: "总是很累", desc: "经常感到疲倦，精神不振", level: 1 },
+                    { text: "偶尔疲倦", desc: "有时感到疲倦，但能恢复", level: 2 },
+                    { text: "精力一般", desc: "精神状态正常，无特别感受", level: 3 },
+                    { text: "精力充沛", desc: "大多数时候精神饱满", level: 4 },
+                    { text: "精力旺盛", desc: "始终保持高度的精神状态", level: 5 }
+                ]
+            },
+            {
+                category: "睡眠质量",
+                title: "您的睡眠质量如何？",
+                subtitle: "包括入睡时间、睡眠深度和醒后感受",
+                options: [
+                    { text: "经常失眠", desc: "难以入睡，睡眠质量很差", level: 1 },
+                    { text: "偶尔失眠", desc: "有时睡眠不好，但多数正常", level: 2 },
+                    { text: "睡眠一般", desc: "睡眠质量中等，无特别问题", level: 3 },
+                    { text: "睡眠良好", desc: "能够较好入睡，睡眠质量好", level: 4 },
+                    { text: "睡眠很好", desc: "睡眠质量优秀，醒后精神饱满", level: 5 }
+                ]
+            },
+            {
+                category: "体力状况",
+                title: "您容易感到疲倦吗？",
+                subtitle: "日常活动中的体力表现和耐力",
+                options: [
+                    { text: "从不疲倦", desc: "体力充沛，很少感到疲劳", level: 5 },
+                    { text: "很少疲倦", desc: "偶尔感到疲倦，但很快恢复", level: 4 },
+                    { text: "偶尔疲倦", desc: "有时会感到疲倦，需要休息", level: 3 },
+                    { text: "经常疲倦", desc: "经常感到疲倦，体力不足", level: 2 },
+                    { text: "总是疲倦", desc: "持续感到疲倦，体力很差", level: 1 }
+                ]
+            },
+            {
+                category: "呼吸状况",
+                title: "您说话的声音大小？",
+                subtitle: "平时说话的音量和气息状况",
+                options: [
+                    { text: "声音洪亮", desc: "说话声音响亮，气息充足", level: 5 },
+                    { text: "声音较大", desc: "说话声音比较响亮", level: 4 },
+                    { text: "声音一般", desc: "说话声音正常，无特别感受", level: 3 },
+                    { text: "声音较小", desc: "说话声音偏小，气息不足", level: 2 },
+                    { text: "声音很小", desc: "说话声音很小，气息虚弱", level: 1 }
+                ]
+            },
+            {
+                category: "免疫力",
+                title: "您容易感冒吗？",
+                subtitle: "评估您的抵抗力和免疫状况",
+                options: [
+                    { text: "从不感冒", desc: "免疫力很强，很少生病", level: 5 },
+                    { text: "很少感冒", desc: "偶尔感冒，但恢复较快", level: 4 },
+                    { text: "偶尔感冒", desc: "有时会感冒，恢复正常", level: 3 },
+                    { text: "经常感冒", desc: "经常感冒，免疫力较弱", level: 2 },
+                    { text: "总是感冒", desc: "频繁感冒，免疫力很差", level: 1 }
+                ]
+            },
+            {
+                category: "怕冷程度",
+                title: "您怕冷吗？",
+                subtitle: "在正常温度环境下的冷热感受",
+                options: [
+                    { text: "从不怕冷", desc: "对寒冷不敏感，很少感到冷", level: 1 },
+                    { text: "很少怕冷", desc: "偶尔感到冷，但能适应", level: 2 },
+                    { text: "偶尔怕冷", desc: "有时感到冷，需要保暖", level: 3 },
+                    { text: "经常怕冷", desc: "经常感到冷，需要多穿衣服", level: 4 },
+                    { text: "总是怕冷", desc: "非常怕冷，手脚经常冰凉", level: 5 }
+                ]
+            },
+            {
+                category: "手脚温度",
+                title: "您的手脚温度如何？",
+                subtitle: "日常手脚的温度感受",
+                options: [
+                    { text: "总是温暖", desc: "手脚始终保持温暖", level: 5 },
+                    { text: "大多温暖", desc: "手脚大多数时候温暖", level: 4 },
+                    { text: "温度一般", desc: "手脚温度正常，无特别感受", level: 3 },
+                    { text: "偏凉", desc: "手脚经常偏凉，需要保暖", level: 2 },
+                    { text: "总是冰凉", desc: "手脚总是冰凉，很难暖和", level: 1 }
+                ]
+            },
+            {
+                category: "饮食偏好",
+                title: "您喜欢吃热的还是凉的食物？",
+                subtitle: "平时的饮食温度偏好",
+                options: [
+                    { text: "喜欢冷饮", desc: "偏爱冰冷的食物和饮料", level: 1 },
+                    { text: "偏爱凉食", desc: "比较喜欢凉性食物", level: 2 },
+                    { text: "没有偏好", desc: "对食物温度没有特别偏好", level: 3 },
+                    { text: "偏爱热食", desc: "比较喜欢温热的食物", level: 4 },
+                    { text: "只吃热食", desc: "只喜欢吃热的食物和饮料", level: 5 }
+                ]
+            },
+            {
+                category: "怕热程度",
+                title: "您怕热吗？",
+                subtitle: "在温热环境下的感受",
+                options: [
+                    { text: "从不怕热", desc: "对炎热不敏感，很少感到热", level: 5 },
+                    { text: "很少怕热", desc: "偶尔感到热，但能适应", level: 4 },
+                    { text: "偶尔怕热", desc: "有时感到热，需要降温", level: 3 },
+                    { text: "经常怕热", desc: "经常感到热，容易出汗", level: 2 },
+                    { text: "总是怕热", desc: "非常怕热，稍热就难受", level: 1 }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+
+        // 初始化
+        function init() {
+            // 生成所有问题
+            generateQuestions();
+            // 更新进度
+            updateProgress();
+            updateStepIndicator();
+        }
+
+        // 生成问题
+        function generateQuestions() {
+            const container = document.querySelector('.survey-container');
+            const resultBlock = document.getElementById('result');
+            
+            for (let i = 1; i < questions.length; i++) {
+                const question = questions[i];
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.id = `question-${i}`;
+                block.style.display = 'none';
+                
+                const optionsHtml = question.options.map((option, index) => `
+                    <div class="survey-option" onclick="selectOption(${i}, ${index})">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-text">${option.text}</div>
+                            <div class="option-description">${option.desc}</div>
+                        </div>
+                        <div class="option-level">${option.level}</div>
+                    </div>
+                `).join('');
+                
+                block.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-info">
+                            <div class="question-category">${question.category}</div>
+                            <h2 class="question-title">
+                                ${question.title}
+                                <span class="required-indicator">*</span>
+                            </h2>
+                            <p class="question-subtitle">${question.subtitle}</p>
+                        </div>
+                        <div class="question-number">${i + 1}/10</div>
+                    </div>
+                    
+                    <div class="options-container" id="options-${i}">
+                        ${optionsHtml}
+                    </div>
+
+                    <div class="stats-display" id="stats-${i}">
+                        <div class="stats-title">
+                            <i class="fas fa-chart-bar"></i>
+                            选择统计
+                        </div>
+                        <div class="stats-content">
+                            <div class="stat-metric">
+                                <div class="stat-value">0</div>
+                                <div class="stat-label">已选择</div>
+                            </div>
+                            <div class="stat-metric">
+                                <div class="stat-value">${question.options.length}</div>
+                                <div class="stat-label">总选项</div>
+                            </div>
+                            <div class="stat-metric">
+                                <div class="stat-value">${question.category}</div>
+                                <div class="stat-label">评估维度</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="validation-message" id="validation-${i}">
+                        请选择最符合您情况的选项
+                    </div>
+
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()">
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" id="nextBtn-${i}" onclick="nextQuestion()" disabled>
+                            ${i === questions.length - 1 ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.insertBefore(block, resultBlock);
+            }
+        }
+
+        // 选择选项
+        function selectOption(questionIndex, optionIndex) {
+            answers[questionIndex] = optionIndex;
+            
+            // 更新选项样式
+            const optionsContainer = document.getElementById(`options-${questionIndex}`);
+            const options = optionsContainer.querySelectorAll('.survey-option');
+            
+            options.forEach((option, index) => {
+                option.classList.toggle('selected', index === optionIndex);
+            });
+            
+            // 显示统计
+            const stats = document.getElementById(`stats-${questionIndex}`);
+            if (stats) {
+                stats.classList.add('show');
+                const statValue = stats.querySelector('.stat-value');
+                if (statValue) {
+                    statValue.textContent = '1';
+                }
+            }
+            
+            // 启用下一题按钮
+            const nextBtn = document.getElementById(`nextBtn-${questionIndex}`);
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+            
+            // 隐藏验证消息
+            const validation = document.getElementById(`validation-${questionIndex}`);
+            if (validation) {
+                validation.classList.remove('show');
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            // 验证当前问题是否已回答
+            if (!validateCurrentQuestion()) {
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                // 隐藏当前问题
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                
+                currentQuestion++;
+                
+                // 显示下一题
+                document.getElementById(`question-${currentQuestion}`).style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStepIndicator();
+            } else {
+                // 显示结果
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStepIndicator();
+            }
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 隐藏当前问题
+                if (currentQuestion < questions.length) {
+                    document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                } else {
+                    document.getElementById('result').style.display = 'none';
+                }
+                
+                currentQuestion--;
+                
+                // 显示上一题
+                document.getElementById(`question-${currentQuestion}`).style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStepIndicator();
+            }
+        }
+
+        // 验证当前问题
+        function validateCurrentQuestion() {
+            const validation = document.getElementById(`validation-${currentQuestion}`);
+            
+            if (answers[currentQuestion] === undefined) {
+                // 显示验证消息
+                if (validation) {
+                    validation.classList.add('show');
+                }
+                return false;
+            }
+            
+            // 隐藏验证消息
+            if (validation) {
+                validation.classList.remove('show');
+            }
+            return true;
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            const progressBarFill = document.getElementById('progressBarFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressStats = document.getElementById('progressStats');
+            
+            progressBarFill.style.width = `${progress}%`;
+            progressPercentage.textContent = `${Math.round(progress)}%`;
+            progressStats.textContent = `${currentQuestion + 1} / ${questions.length} 题`;
+            
+            if (currentQuestion >= questions.length) {
+                progressStats.textContent = '已完成';
+                progressBarFill.style.width = '100%';
+                progressPercentage.textContent = '100%';
+            }
+        }
+
+        // 更新步骤指示器
+        function updateStepIndicator() {
+            const dots = document.querySelectorAll('.step-dot');
+            
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                
+                if (index < currentQuestion) {
+                    dot.classList.add('completed');
+                } else if (index === currentQuestion) {
+                    dot.classList.add('active');
+                }
+            });
+            
+            // 如果已完成所有问题
+            if (currentQuestion >= questions.length) {
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                    dot.classList.add('completed');
+                });
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Monkey风格 - 深度剖析演示</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        /* 专业布局容器 */
+        .survey-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            min-height: 100vh;
+        }
+
+        /* 头部 */
+        .survey-header {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 36px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: #5a6c7d;
+            margin-bottom: 32px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 高级进度指示器 */
+        .progress-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0366d6;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #5a6c7d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar-container {
+            height: 16px;
+            background: #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0366d6, #28a745, #ffc107);
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            width: 8.33%;
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: shimmer 2s infinite;
+        }
+
+        .progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-stages {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .stage-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: #6c757d;
+        }
+
+        .stage-marker.active {
+            color: #0366d6;
+            font-weight: 600;
+        }
+
+        .stage-marker.completed {
+            color: #28a745;
+        }
+
+        /* 返回按钮 */
+        .back-button {
+            background: white;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #0366d6;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-button:hover {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        /* 分组专业布局 */
+        .section-container {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #0366d6, #28a745);
+            color: white;
+            padding: 32px 40px;
+            position: relative;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .section-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        .section-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .section-content {
+            padding: 40px;
+        }
+
+        /* 问题组 */
+        .question-group {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .question-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .question-header {
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            background: #0366d6;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .question-subtitle {
+            font-size: 16px;
+            color: #5a6c7d;
+            margin-bottom: 24px;
+        }
+
+        .required-indicator {
+            color: #dc3545;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        /* 评分量表 */
+        .rating-container {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .rating-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 16px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 60px;
+            max-width: 80px;
+            background: white;
+            border: 1px solid #e9ecef;
+        }
+
+        .rating-item:hover {
+            background: #e8f4f8;
+            border-color: #0366d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(3, 102, 214, 0.15);
+        }
+
+        .rating-item.selected {
+            background: #0366d6;
+            border-color: #0366d6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.3);
+        }
+
+        .rating-number {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .rating-label {
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .rating-description {
+            margin-top: 16px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #5a6c7d;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 多选题 */
+        .checkbox-container {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .checkbox-option:hover {
+            border-color: #0366d6;
+            background: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        .checkbox-option.selected {
+            border-color: #0366d6;
+            background: #e8f4f8;
+            box-shadow: 0 2px 8px rgba(3, 102, 214, 0.2);
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #6c757d;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-option.selected .checkbox-input {
+            border-color: #0366d6;
+            background: #0366d6;
+        }
+
+        .checkbox-option.selected .checkbox-input::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .checkbox-text {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .checkbox-option.selected .checkbox-text {
+            color: #0366d6;
+            font-weight: 600;
+        }
+
+        .checkbox-summary {
+            margin-top: 16px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #5a6c7d;
+            text-align: center;
+        }
+
+        /* 高效的用户流程 */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            padding: 32px 40px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .nav-button {
+            border: 1px solid #d1d5da;
+            background: white;
+            color: #0366d6;
+            padding: 14px 28px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-button.primary {
+            background: #0366d6;
+            color: white;
+            border-color: #0366d6;
+        }
+
+        .nav-button.primary:hover:not(:disabled) {
+            background: #0256cc;
+            border-color: #0256cc;
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.3);
+        }
+
+        /* 验证消息 */
+        .validation-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 16px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        .validation-message::before {
+            content: '⚠️ ';
+            margin-right: 8px;
+        }
+
+        /* 结果页面 */
+        .result-container {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 48px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .result-header::before {
+            content: '🎉';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 32px;
+            opacity: 0.3;
+        }
+
+        .result-icon {
+            font-size: 72px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .result-title {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .result-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .result-content {
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .result-description {
+            font-size: 18px;
+            color: #5a6c7d;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            background: #0366d6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #0256cc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(3, 102, 214, 0.3);
+        }
+
+        .action-button.secondary {
+            background: white;
+            color: #0366d6;
+            border: 1px solid #d1d5da;
+        }
+
+        .action-button.secondary:hover {
+            background: #f6f8fa;
+            border-color: #0366d6;
+            box-shadow: 0 2px 6px rgba(3, 102, 214, 0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(20px); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .survey-container {
+                padding: 20px 16px;
+            }
+
+            .survey-header,
+            .section-content,
+            .result-content {
+                padding: 24px 20px;
+            }
+
+            .section-header {
+                padding: 24px 20px;
+            }
+
+            .header-title,
+            .result-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .question-title {
+                font-size: 18px;
+            }
+
+            .progress-stats {
+                gap: 16px;
+            }
+
+            .rating-scale {
+                gap: 4px;
+            }
+
+            .rating-item {
+                min-width: 50px;
+                max-width: 60px;
+                padding: 12px 6px;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .checkbox-option {
+                padding: 12px 16px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 16px;
+                padding: 24px 20px;
+            }
+
+            .nav-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <!-- 返回按钮 -->
+        <a href="health-tcm-constitution.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            返回体质测试
+        </a>
+
+        <!-- 头部 -->
+        <div class="survey-header">
+            <h1 class="header-title">综合健康深度剖析</h1>
+            <p class="header-subtitle">
+                全面的健康评估系统，深入分析您的体质特征、生活方式、心理状态和环境适应能力。
+                通过多维度的专业评估，为您提供最全面的健康分析报告和个性化调理方案。
+            </p>
+            
+            <div class="progress-section">
+                <div class="progress-header">
+                    <div class="progress-title">评估进度总览</div>
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="currentStage">1</div>
+                            <div class="stat-label">当前阶段</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalQuestions">12</div>
+                            <div class="stat-label">总题数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="completedQuestions">0</div>
+                            <div class="stat-label">已完成</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">预计分钟</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                    <div class="progress-percentage" id="progressPercentage">8%</div>
+                </div>
+                <div class="progress-stages">
+                    <div class="stage-marker active">体质分析</div>
+                    <div class="stage-marker">生活方式</div>
+                    <div class="stage-marker">心理状态</div>
+                    <div class="stage-marker">环境适应</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第一阶段：体质分析 -->
+        <div class="section-container" id="section-0">
+            <div class="section-header">
+                <div class="section-info">
+                    <div class="section-badge">阶段 1</div>
+                    <h2 class="section-title">体质分析</h2>
+                    <p class="section-subtitle">评估您的基础体质特征和身体状况</p>
+                    <div class="section-progress">3 个问题 · 预计 4 分钟</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <!-- 问题1 -->
+                <div class="question-group">
+                    <div class="question-header">
+                        <div class="question-number">问题 1</div>
+                        <h3 class="question-title">
+                            您的整体精神状态如何？
+                            <span class="required-indicator">*</span>
+                        </h3>
+                        <p class="question-subtitle">请根据您最近三个月的实际情况作答</p>
+                    </div>
+                    
+                    <div class="rating-container">
+                        <div class="rating-scale" id="rating-0-0">
+                            <div class="rating-item" onclick="selectRating(0, 0, 0)">
+                                <div class="rating-number">1</div>
+                                <div class="rating-label">很差</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 0, 1)">
+                                <div class="rating-number">2</div>
+                                <div class="rating-label">较差</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 0, 2)">
+                                <div class="rating-number">3</div>
+                                <div class="rating-label">一般</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 0, 3)">
+                                <div class="rating-number">4</div>
+                                <div class="rating-label">较好</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 0, 4)">
+                                <div class="rating-number">5</div>
+                                <div class="rating-label">很好</div>
+                            </div>
+                        </div>
+                        <div class="rating-description" id="desc-0-0">
+                            请选择最符合您当前精神状态的选项
+                        </div>
+                    </div>
+                    
+                    <div class="validation-message" id="validation-0-0">
+                        请选择最符合您情况的选项
+                    </div>
+                </div>
+
+                <!-- 问题2 -->
+                <div class="question-group">
+                    <div class="question-header">
+                        <div class="question-number">问题 2</div>
+                        <h3 class="question-title">
+                            您的睡眠质量如何？
+                            <span class="required-indicator">*</span>
+                        </h3>
+                        <p class="question-subtitle">包括入睡时间、睡眠深度和醒后感受</p>
+                    </div>
+                    
+                    <div class="rating-container">
+                        <div class="rating-scale" id="rating-0-1">
+                            <div class="rating-item" onclick="selectRating(0, 1, 0)">
+                                <div class="rating-number">1</div>
+                                <div class="rating-label">很差</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 1, 1)">
+                                <div class="rating-number">2</div>
+                                <div class="rating-label">较差</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 1, 2)">
+                                <div class="rating-number">3</div>
+                                <div class="rating-label">一般</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 1, 3)">
+                                <div class="rating-number">4</div>
+                                <div class="rating-label">较好</div>
+                            </div>
+                            <div class="rating-item" onclick="selectRating(0, 1, 4)">
+                                <div class="rating-number">5</div>
+                                <div class="rating-label">很好</div>
+                            </div>
+                        </div>
+                        <div class="rating-description" id="desc-0-1">
+                            请选择最符合您睡眠质量的选项
+                        </div>
+                    </div>
+                    
+                    <div class="validation-message" id="validation-0-1">
+                        请选择最符合您情况的选项
+                    </div>
+                </div>
+
+                <!-- 问题3 -->
+                <div class="question-group">
+                    <div class="question-header">
+                        <div class="question-number">问题 3</div>
+                        <h3 class="question-title">
+                            您有哪些体质特征？
+                            <span class="required-indicator">*</span>
+                        </h3>
+                        <p class="question-subtitle">请选择所有适用的选项（可多选）</p>
+                    </div>
+                    
+                    <div class="checkbox-container">
+                        <div class="checkbox-grid" id="checkbox-0-2">
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 0)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">容易疲倦</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 1)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">怕冷</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 2)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">怕热</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 3)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">手脚冰凉</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 4)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">容易出汗</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 5)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">皮肤干燥</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 6)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">其他</div>
+                            </div>
+                            <div class="checkbox-option" onclick="toggleCheckbox(0, 2, 7)">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">无</div>
+                            </div>
+                        </div>
+                        <div class="checkbox-summary" id="summary-0-2">
+                            已选择 0 项体质特征
+                        </div>
+                    </div>
+                    
+                    <div class="validation-message" id="validation-0-2">
+                        请至少选择一个选项
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-button" style="visibility: hidden;">
+                    <i class="fas fa-arrow-left"></i>
+                    上一阶段
+                </button>
+                <button class="nav-button primary" id="nextBtn" onclick="nextSection()" disabled>
+                    下一阶段
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他阶段将通过JavaScript动态生成 -->
+
+        <!-- 结果页面 -->
+        <div class="result-container" id="result" style="display: none;">
+            <div class="result-header">
+                <div class="result-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="result-title">深度剖析完成</h2>
+                <p class="result-subtitle">您的综合健康评估报告已生成</p>
+            </div>
+            <div class="result-content">
+                <p class="result-description">
+                    恭喜您完成了全面的综合健康深度剖析！我们已经从体质分析、生活方式、心理状态和环境适应四个维度
+                    对您的健康状况进行了深入评估。基于您的详细回答，我们生成了包含个性化调理建议、健康管理方案
+                    和生活指导的完整报告。您可以下载完整的PDF报告或分享给专业医师参考。
+                </p>
+                <div class="result-actions">
+                    <button onclick="generateReport()" class="action-button">
+                        <i class="fas fa-file-pdf"></i>
+                        生成完整报告
+                    </button>
+                    <button onclick="shareReport()" class="action-button secondary">
+                        <i class="fas fa-share-alt"></i>
+                        分享报告
+                    </button>
+                    <a href="health-tcm-constitution.html" class="action-button secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        返回选择
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 问题数据（分为4个阶段）
+        const sections = [
+            {
+                title: "体质分析",
+                subtitle: "评估您的基础体质特征和身体状况",
+                questions: [
+                    {
+                        title: "您的整体精神状态如何？",
+                        subtitle: "请根据您最近三个月的实际情况作答",
+                        type: "rating",
+                        descriptions: [
+                            "精神状态很差，经常感到疲倦和无力",
+                            "精神状态较差，偶尔感到疲倦",
+                            "精神状态一般，无特别感受",
+                            "精神状态较好，大多数时候精力充沛",
+                            "精神状态很好，始终保持活力"
+                        ]
+                    },
+                    {
+                        title: "您的睡眠质量如何？",
+                        subtitle: "包括入睡时间、睡眠深度和醒后感受",
+                        type: "rating",
+                        descriptions: [
+                            "睡眠质量很差，经常失眠或睡不深",
+                            "睡眠质量较差，偶尔失眠",
+                            "睡眠质量一般，无特别问题",
+                            "睡眠质量较好，能够正常入睡",
+                            "睡眠质量很好，醒后精神饱满"
+                        ]
+                    },
+                    {
+                        title: "您有哪些体质特征？",
+                        subtitle: "请选择所有适用的选项（可多选）",
+                        type: "checkbox",
+                        options: ["容易疲倦", "怕冷", "怕热", "手脚冰凉", "容易出汗", "皮肤干燥", "其他", "无"]
+                    }
+                ]
+            },
+            {
+                title: "生活方式",
+                subtitle: "评估您的日常生活习惯和行为模式",
+                questions: [
+                    {
+                        title: "您每周运动几次？",
+                        subtitle: "包括各种形式的体育锻炼和运动",
+                        type: "rating",
+                        descriptions: [
+                            "从不运动，完全缺乏体育锻炼",
+                            "很少运动，偶尔进行轻度活动",
+                            "适量运动，每周2-3次",
+                            "经常运动，每周4-5次",
+                            "频繁运动，几乎每天都锻炼"
+                        ]
+                    },
+                    {
+                        title: "您的饮食习惯如何？",
+                        subtitle: "评估饮食的规律性和营养均衡",
+                        type: "rating",
+                        descriptions: [
+                            "饮食很不规律，营养不均衡",
+                            "饮食较不规律，偶尔注意营养",
+                            "饮食基本规律，营养一般",
+                            "饮食比较规律，注意营养搭配",
+                            "饮食非常规律，营养均衡"
+                        ]
+                    },
+                    {
+                        title: "您有哪些不良生活习惯？",
+                        subtitle: "请选择所有适用的选项（可多选）",
+                        type: "checkbox",
+                        options: ["吸烟", "过量饮酒", "熬夜", "久坐不动", "饮食不规律", "压力过大", "其他", "无"]
+                    }
+                ]
+            },
+            {
+                title: "心理状态",
+                subtitle: "评估您的心理健康和情绪状况",
+                questions: [
+                    {
+                        title: "您最近的心情如何？",
+                        subtitle: "评估您的整体情绪状态",
+                        type: "rating",
+                        descriptions: [
+                            "心情很糟糕，经常感到沮丧或焦虑",
+                            "心情较差，偶尔感到不开心",
+                            "心情一般，情绪比较平稳",
+                            "心情较好，大多数时候愉快",
+                            "心情很好，经常感到快乐和满足"
+                        ]
+                    },
+                    {
+                        title: "您的压力水平如何？",
+                        subtitle: "来自工作、生活等各方面的压力",
+                        type: "rating",
+                        descriptions: [
+                            "压力很大，经常感到不堪重负",
+                            "压力较大，有时感到紧张",
+                            "压力一般，能够正常应对",
+                            "压力较小，大多数时候轻松",
+                            "压力很小，几乎没有压力感"
+                        ]
+                    },
+                    {
+                        title: "您有以下哪些心理症状？",
+                        subtitle: "请选择最近经常出现的症状（可多选）",
+                        type: "checkbox",
+                        options: ["焦虑", "抑郁", "失眠", "注意力不集中", "易怒", "疲劳", "其他", "无"]
+                    }
+                ]
+            },
+            {
+                title: "环境适应",
+                subtitle: "评估您对环境变化的适应能力",
+                questions: [
+                    {
+                        title: "您对环境变化的适应能力？",
+                        subtitle: "包括气候、工作环境等变化的适应",
+                        type: "rating",
+                        descriptions: [
+                            "适应能力很差，对环境变化很敏感",
+                            "适应能力较差，需要较长时间适应",
+                            "适应能力一般，能够逐步适应",
+                            "适应能力较好，能够较快适应",
+                            "适应能力很好，能够迅速适应各种环境"
+                        ]
+                    },
+                    {
+                        title: "您的工作环境如何？",
+                        subtitle: "评估工作环境对健康的影响",
+                        type: "rating",
+                        descriptions: [
+                            "工作环境很差，对健康有不良影响",
+                            "工作环境较差，有一定健康隐患",
+                            "工作环境一般，基本满足需求",
+                            "工作环境较好，有利于健康",
+                            "工作环境很好，非常有利于身心健康"
+                        ]
+                    },
+                    {
+                        title: "您认为哪些环境因素影响您的健康？",
+                        subtitle: "请选择对您影响较大的因素（可多选）",
+                        type: "checkbox",
+                        options: ["空气质量", "噪音", "光照", "温度", "湿度", "工作压力", "其他", "无"]
+                    }
+                ]
+            }
+        ];
+
+        let currentSection = 0;
+        let answers = {};
+        let totalQuestions = 0;
+        let completedQuestions = 0;
+
+        // 计算总题数
+        sections.forEach(section => {
+            totalQuestions += section.questions.length;
+        });
+
+        // 初始化
+        function init() {
+            // 初始化答案对象
+            sections.forEach((section, sectionIndex) => {
+                answers[sectionIndex] = {};
+                section.questions.forEach((question, questionIndex) => {
+                    if (question.type === 'checkbox') {
+                        answers[sectionIndex][questionIndex] = [];
+                    }
+                });
+            });
+            
+            // 生成其他阶段
+            generateSections();
+            // 更新显示
+            updateProgress();
+            updateStageMarkers();
+            updateTotalQuestions();
+        }
+
+        // 生成其他阶段
+        function generateSections() {
+            const container = document.querySelector('.survey-container');
+            const resultContainer = document.getElementById('result');
+            
+            for (let sectionIndex = 1; sectionIndex < sections.length; sectionIndex++) {
+                const section = sections[sectionIndex];
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section-container';
+                sectionDiv.id = `section-${sectionIndex}`;
+                sectionDiv.style.display = 'none';
+                
+                let questionsHtml = '';
+                section.questions.forEach((question, questionIndex) => {
+                    let questionContent = '';
+                    const questionNumber = getGlobalQuestionNumber(sectionIndex, questionIndex);
+                    
+                    if (question.type === 'rating') {
+                        const ratingsHtml = Array.from({length: 5}, (_, i) => `
+                            <div class="rating-item" onclick="selectRating(${sectionIndex}, ${questionIndex}, ${i})">
+                                <div class="rating-number">${i + 1}</div>
+                                <div class="rating-label">${['很差', '较差', '一般', '较好', '很好'][i]}</div>
+                            </div>
+                        `).join('');
+                        
+                        questionContent = `
+                            <div class="rating-container">
+                                <div class="rating-scale" id="rating-${sectionIndex}-${questionIndex}">
+                                    ${ratingsHtml}
+                                </div>
+                                <div class="rating-description" id="desc-${sectionIndex}-${questionIndex}">
+                                    请选择最符合您情况的选项
+                                </div>
+                            </div>
+                        `;
+                    } else if (question.type === 'checkbox') {
+                        const checkboxHtml = question.options.map((option, index) => `
+                            <div class="checkbox-option" onclick="toggleCheckbox(${sectionIndex}, ${questionIndex}, ${index})">
+                                <div class="checkbox-input"></div>
+                                <div class="checkbox-text">${option}</div>
+                            </div>
+                        `).join('');
+                        
+                        questionContent = `
+                            <div class="checkbox-container">
+                                <div class="checkbox-grid" id="checkbox-${sectionIndex}-${questionIndex}">
+                                    ${checkboxHtml}
+                                </div>
+                                <div class="checkbox-summary" id="summary-${sectionIndex}-${questionIndex}">
+                                    已选择 0 项${section.title === '生活方式' ? '生活习惯' : section.title === '心理状态' ? '心理症状' : '环境因素'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    questionsHtml += `
+                        <div class="question-group">
+                            <div class="question-header">
+                                <div class="question-number">问题 ${questionNumber}</div>
+                                <h3 class="question-title">
+                                    ${question.title}
+                                    <span class="required-indicator">*</span>
+                                </h3>
+                                <p class="question-subtitle">${question.subtitle}</p>
+                            </div>
+                            
+                            ${questionContent}
+                            
+                            <div class="validation-message" id="validation-${sectionIndex}-${questionIndex}">
+                                ${question.type === 'checkbox' ? '请至少选择一个选项' : '请选择最符合您情况的选项'}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                sectionDiv.innerHTML = `
+                    <div class="section-header">
+                        <div class="section-info">
+                            <div class="section-badge">阶段 ${sectionIndex + 1}</div>
+                            <h2 class="section-title">${section.title}</h2>
+                            <p class="section-subtitle">${section.subtitle}</p>
+                            <div class="section-progress">${section.questions.length} 个问题 · 预计 ${Math.ceil(section.questions.length * 1.5)} 分钟</div>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        ${questionsHtml}
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevSection()">
+                            <i class="fas fa-arrow-left"></i>
+                            上一阶段
+                        </button>
+                        <button class="nav-button primary" onclick="nextSection()" disabled>
+                            ${sectionIndex === sections.length - 1 ? '查看结果' : '下一阶段'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.insertBefore(sectionDiv, resultContainer);
+            }
+        }
+
+        // 获取全局问题编号
+        function getGlobalQuestionNumber(sectionIndex, questionIndex) {
+            let questionNumber = 1;
+            for (let i = 0; i < sectionIndex; i++) {
+                questionNumber += sections[i].questions.length;
+            }
+            return questionNumber + questionIndex;
+        }
+
+        // 选择评分
+        function selectRating(sectionIndex, questionIndex, rating) {
+            answers[sectionIndex][questionIndex] = rating;
+            
+            // 更新选项样式
+            const ratingContainer = document.getElementById(`rating-${sectionIndex}-${questionIndex}`);
+            const items = ratingContainer.querySelectorAll('.rating-item');
+            
+            items.forEach((item, index) => {
+                item.classList.toggle('selected', index === rating);
+            });
+            
+            // 更新描述
+            const desc = document.getElementById(`desc-${sectionIndex}-${questionIndex}`);
+            const question = sections[sectionIndex].questions[questionIndex];
+            if (desc && question.descriptions) {
+                desc.textContent = question.descriptions[rating];
+            }
+            
+            // 隐藏验证消息
+            const validation = document.getElementById(`validation-${sectionIndex}-${questionIndex}`);
+            if (validation) {
+                validation.classList.remove('show');
+            }
+            
+            updateNavigationButton();
+            updateProgress();
+        }
+
+        // 切换多选项
+        function toggleCheckbox(sectionIndex, questionIndex, optionIndex) {
+            if (!answers[sectionIndex][questionIndex]) {
+                answers[sectionIndex][questionIndex] = [];
+            }
+            
+            const currentAnswers = answers[sectionIndex][questionIndex];
+            const index = currentAnswers.indexOf(optionIndex);
+            
+            if (index > -1) {
+                currentAnswers.splice(index, 1);
+            } else {
+                currentAnswers.push(optionIndex);
+            }
+            
+            // 更新选项样式
+            const checkboxContainer = document.getElementById(`checkbox-${sectionIndex}-${questionIndex}`);
+            const options = checkboxContainer.querySelectorAll('.checkbox-option');
+            
+            options.forEach((option, i) => {
+                option.classList.toggle('selected', currentAnswers.includes(i));
+            });
+            
+            // 更新摘要
+            const summary = document.getElementById(`summary-${sectionIndex}-${questionIndex}`);
+            const sectionTitle = sections[sectionIndex].title;
+            let summaryText = '';
+            if (sectionTitle === '生活方式') {
+                summaryText = '生活习惯';
+            } else if (sectionTitle === '心理状态') {
+                summaryText = '心理症状';
+            } else if (sectionTitle === '环境适应') {
+                summaryText = '环境因素';
+            } else {
+                summaryText = '体质特征';
+            }
+            
+            if (summary) {
+                summary.textContent = `已选择 ${currentAnswers.length} 项${summaryText}`;
+            }
+            
+            // 隐藏验证消息
+            const validation = document.getElementById(`validation-${sectionIndex}-${questionIndex}`);
+            if (validation && currentAnswers.length > 0) {
+                validation.classList.remove('show');
+            }
+            
+            updateNavigationButton();
+            updateProgress();
+        }
+
+        // 下一阶段
+        function nextSection() {
+            // 验证当前阶段是否完成
+            if (!validateCurrentSection()) {
+                return;
+            }
+
+            if (currentSection < sections.length - 1) {
+                // 隐藏当前阶段
+                document.getElementById(`section-${currentSection}`).style.display = 'none';
+                
+                currentSection++;
+                
+                // 显示下一阶段
+                document.getElementById(`section-${currentSection}`).style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStageMarkers();
+                updateNavigationButton();
+            } else {
+                // 显示结果
+                document.getElementById(`section-${currentSection}`).style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStageMarkers();
+            }
+        }
+
+        // 上一阶段
+        function prevSection() {
+            if (currentSection > 0) {
+                // 隐藏当前阶段
+                document.getElementById(`section-${currentSection}`).style.display = 'none';
+                
+                currentSection--;
+                
+                // 显示上一阶段
+                document.getElementById(`section-${currentSection}`).style.display = 'block';
+                
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                updateProgress();
+                updateStageMarkers();
+                updateNavigationButton();
+            }
+        }
+
+        // 验证当前阶段
+        function validateCurrentSection() {
+            const section = sections[currentSection];
+            let isValid = true;
+            
+            section.questions.forEach((question, questionIndex) => {
+                const answer = answers[currentSection][questionIndex];
+                const validation = document.getElementById(`validation-${currentSection}-${questionIndex}`);
+                
+                if (question.type === 'rating') {
+                    if (answer === undefined) {
+                        if (validation) validation.classList.add('show');
+                        isValid = false;
+                    } else {
+                        if (validation) validation.classList.remove('show');
+                    }
+                } else if (question.type === 'checkbox') {
+                    if (!answer || answer.length === 0) {
+                        if (validation) validation.classList.add('show');
+                        isValid = false;
+                    } else {
+                        if (validation) validation.classList.remove('show');
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+
+        // 更新导航按钮
+        function updateNavigationButton() {
+            const nextBtn = document.querySelector(`#section-${currentSection} .nav-button.primary`);
+            if (nextBtn) {
+                const isCurrentSectionComplete = validateCurrentSection();
+                nextBtn.disabled = !isCurrentSectionComplete;
+            }
+        }
+
+        // 更新进度
+        function updateProgress() {
+            // 计算已完成问题数
+            let completed = 0;
+            sections.forEach((section, sectionIndex) => {
+                section.questions.forEach((question, questionIndex) => {
+                    const answer = answers[sectionIndex][questionIndex];
+                    if (question.type === 'rating' && answer !== undefined) {
+                        completed++;
+                    } else if (question.type === 'checkbox' && answer && answer.length > 0) {
+                        completed++;
+                    }
+                });
+            });
+            
+            const progress = (completed / totalQuestions) * 100;
+            const progressBarFill = document.getElementById('progressBarFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const completedQuestionsElement = document.getElementById('completedQuestions');
+            
+            if (progressBarFill) progressBarFill.style.width = `${progress}%`;
+            if (progressPercentage) progressPercentage.textContent = `${Math.round(progress)}%`;
+            if (completedQuestionsElement) completedQuestionsElement.textContent = completed;
+            
+            completedQuestions = completed;
+        }
+
+        // 更新阶段标记
+        function updateStageMarkers() {
+            const markers = document.querySelectorAll('.stage-marker');
+            const currentStageElement = document.getElementById('currentStage');
+            
+            if (currentStageElement) {
+                currentStageElement.textContent = currentSection + 1;
+            }
+            
+            markers.forEach((marker, index) => {
+                marker.classList.remove('active', 'completed');
+                
+                if (index < currentSection) {
+                    marker.classList.add('completed');
+                } else if (index === currentSection) {
+                    marker.classList.add('active');
+                }
+            });
+            
+            // 如果已完成所有阶段
+            if (currentSection >= sections.length) {
+                markers.forEach(marker => {
+                    marker.classList.remove('active');
+                    marker.classList.add('completed');
+                });
+                if (currentStageElement) {
+                    currentStageElement.textContent = '完成';
+                }
+            }
+        }
+
+        // 更新总题数显示
+        function updateTotalQuestions() {
+            const totalQuestionsElement = document.getElementById('totalQuestions');
+            if (totalQuestionsElement) {
+                totalQuestionsElement.textContent = totalQuestions;
+            }
+        }
+
+        // 生成报告
+        function generateReport() {
+            alert('报告生成功能演示 - 在实际应用中，这里会生成详细的PDF报告，包含所有维度的分析结果和个性化建议');
+        }
+
+        // 分享报告
+        function shareReport() {
+            alert('分享功能演示 - 在实际应用中，这里会提供多种分享方式，如微信、邮件等');
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
