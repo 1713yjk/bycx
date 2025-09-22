@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0.26mm厚度里的8个传感器：微型化设计的工程奇迹 - AZLG</title>
+    <meta name="description" content="深入解析 AZ Ring（az ring）如何在0.26mm超薄设计中集成8个高精度传感器：PPG光学传感器、三轴加速度计、温度传感器等，揭秘微型化传感器的技术挑战与解决方案。">
+    <meta name="keywords" content="az ring, AZ Ring, 微型化传感器, PPG传感器, 三轴加速度计, 温度传感器, 陀螺仪, 生物传感器, 智能戒指, AZLG">
+    <link rel="stylesheet" href="../assets/blog-styles.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "0.26mm厚度里的8个传感器：微型化设计的工程奇迹",
+      "author": {
+        "@type": "Organization",
+        "name": "深圳佰屹创新团队"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AZLG"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.azlg.com/blog/articles/biosensor-technology.html"
+      }
+    }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background-color: var(--oura-black); min-height: 100vh; }
+        body { background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%); }
+        .blog-container { background: transparent; }
+        .article-intro { background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(74, 144, 226, 0.1) 100%); border-left: 4px solid var(--oura-accent); padding: 24px; margin: 32px 0; border-radius: 12px; }
+        .intro-highlight { font-size: 18px; line-height: 1.7; color: var(--oura-white); margin: 0; font-style: italic; }
+        .tech-explanation { margin: 32px 0; }
+        .tech-point { background: var(--oura-gray); padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+        .tech-point h3 { color: var(--oura-accent); margin-bottom: 16px; font-size: 20px; }
+        .tech-point ul { margin: 16px 0; }
+        .tech-point li { margin-bottom: 12px; color: var(--oura-light-gray); }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 24px 0; }
+        .spec-item { background: var(--oura-gray); padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid var(--oura-blue); }
+        .spec-item .spec-value { color: var(--oura-blue); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .spec-item .spec-label { color: var(--oura-white); font-size: 16px; margin-bottom: 4px; }
+        .spec-item .spec-desc { color: var(--oura-light-gray); font-size: 14px; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 24px 0; }
+        .comparison-item { background: var(--oura-gray); padding: 20px; border-radius: 12px; }
+        .comparison-item h4 { color: var(--oura-white); margin-bottom: 16px; }
+        .comparison-item.winner { border-left: 4px solid var(--oura-green); }
+        .comparison-item.loser { border-left: 4px solid rgba(255, 107, 53, 0.6); }
+        .blog-article-meta { margin-bottom: 40px; padding: 24px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .blog-meta-tags { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .blog-meta-tags span { color: var(--oura-light-gray); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .blog-meta-tags i { color: var(--oura-accent); }
+        .blog-article-title { color: var(--oura-white); font-size: 28px; line-height: 1.3; margin: 30px 0 20px 0; font-weight: 700; display: block; width: 100%; clear: both; white-space: normal; text-align: left; }
+        .blog-article-meta { min-width: 100%; overflow-x: auto; }
+        @media (max-width: 1200px) { .blog-article-title { font-size: 26px; } }
+        @media (max-width: 900px) { .blog-article-title { font-size: 24px; } }
+        @media (max-width: 768px) { .blog-article-title { font-size: 22px; line-height: 1.4; } .specs-grid { grid-template-columns: 1fr; } }
+        .blog-article-excerpt { color: var(--oura-light-gray); font-size: 18px; line-height: 1.6; margin: 0 0 30px 0; display: block; width: 100%; clear: both; }
+        .tech-image-placeholder { margin: 32px 0; text-align: center; }
+        .image-placeholder { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; color: var(--oura-light-gray); overflow: hidden; }
+        .image-placeholder img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto; }
+        .image-placeholder small { display: block; margin-top: 12px; font-size: 13px; color: var(--oura-light-gray); font-style: italic; }
+        .image-placeholder small a { color: var(--oura-green); text-decoration: none; }
+        .image-placeholder small a:hover { text-decoration: underline; }
+        .blog-article-content h2 i { color: var(--oura-accent); margin-right: 12px; }
+        .blog-article-content strong { color: var(--oura-accent); font-weight: 600; }
+        .blog-article-content ul li { position: relative; padding-left: 8px; }
+        .blog-article-content ul li::before { content: "▸"; color: var(--oura-accent); font-weight: bold; position: absolute; left: -16px; }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="blog-container">
+        <div class="blog-breadcrumb">
+            <a href="../index.html">博客</a> > <a href="../index.html">传感器技术</a> > 微型化传感器设计
+        </div>
+
+        <div class="blog-article">
+            <div class="blog-article-meta">
+                <h1 class="blog-article-title">0.26mm厚度里的8个传感器：微型化设计的工程奇迹</h1>
+                <p class="blog-article-excerpt">深入解析AZ Ring如何在0.26mm超薄设计中集成8个高精度传感器：PPG光学传感器、三轴加速度计、温度传感器等，揭秘微型化传感器的技术挑战与解决方案。</p>
+            </div>
+
+            <div class="blog-article-content">
+                <!-- 引言部分 -->
+                <div class="article-intro">
+                    <p class="intro-highlight">想象一下，在一张纸的厚度（0.1mm）的2.6倍空间里，要塞进8个高精度传感器、处理芯片、天线和电池。这听起来像是不可能完成的任务，但AZ Ring做到了。这不仅仅是技术突破，更是对物理极限的挑战。</p>
+                </div>
+
+                <!-- 传感器阵列解析 -->
+                <h2><i class="fas fa-microchip"></i> 8个传感器的精密布局：每一毫米都是设计</h2>
+
+                <!-- 传感器布局图 -->
+                <div class="tech-image-placeholder">
+                    <div class="image-placeholder">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Sensor_array_layout.svg/800px-Sensor_array_layout.svg.png" alt="传感器阵列布局 | 微型化传感器设计 | AZ Ring（az ring）传感器分布" title="8个传感器的环形布局示意图" style="width:100%; max-width:600px; height:auto; background:white; padding:16px; border-radius:8px;"/>
+                        <small>图片来源：<a href="https://commons.wikimedia.org/wiki/File:Sensor_array_layout.svg" style="color:#7ed321;">Wikimedia Commons</a> - 传感器阵列布局示意图</small>
+                    </div>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <div class="spec-value">4+2</div>
+                        <div class="spec-label">PPG光学传感器</div>
+                        <div class="spec-desc">4个LED + 2个光电二极管</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-value">3轴</div>
+                        <div class="spec-label">加速度计</div>
+                        <div class="spec-desc">±16g量程，运动检测</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-value">±0.1°C</div>
+                        <div class="spec-label">温度传感器</div>
+                        <div class="spec-desc">医疗级精度体温监测</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <div class="spec-value">3轴</div>
+                        <div class="spec-label">陀螺仪</div>
+                        <div class="spec-desc">±2000dps，姿态识别</div>
+                    </div>
+                </div>
+
+                <div class="tech-explanation">
+                    <div class="tech-point">
+                        <h3>PPG光学传感器阵列：心率监测的核心</h3>
+                        <p>AZ Ring采用了4个LED + 2个光电二极管的创新布局，相比传统单LED设计有显著优势：</p>
+                        <ul>
+                            <li><strong>多波长检测</strong>：绿光（525nm）用于心率，红光（660nm）和红外光（940nm）用于血氧</li>
+                            <li><strong>环形分布</strong>：4个LED呈90度分布，确保任何佩戴角度都有最佳信号</li>
+                            <li><strong>差分检测</strong>：2个光电二极管实现差分信号处理，消除环境光干扰</li>
+                            <li><strong>自适应功率</strong>：根据皮肤颜色和厚度自动调节LED功率，节能30%</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-point">
+                        <h3>三轴加速度计：运动状态的精准捕捉</h3>
+                        <p>在0.26mm的空间限制下，我们选择了MEMS工艺的超小型加速度计：</p>
+                        <ul>
+                            <li><strong>超低功耗</strong>：正常模式下仅消耗12μA，待机模式下降至2μA</li>
+                            <li><strong>高精度检测</strong>：16位ADC，可检测到0.004g的微小运动</li>
+                            <li><strong>智能唤醒</strong>：运动检测阈值可编程，自动唤醒系统进行数据采集</li>
+                            <li><strong>抗干扰设计</strong>：内置数字滤波器，消除振动和冲击干扰</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-point">
+                        <h3>温度传感器：体温变化的敏感探测</h3>
+                        <p>医疗级温度传感器为健康监测提供关键数据支撑：</p>
+                        <ul>
+                            <li><strong>高精度测量</strong>：±0.1°C精度，满足医疗设备标准</li>
+                            <li><strong>快速响应</strong>：响应时间小于1秒，实时监测体温变化</li>
+                            <li><strong>低功耗设计</strong>：间歇式测量，平均功耗仅5μA</li>
+                            <li><strong>校准算法</strong>：自动补偿环境温度影响，确保测量准确性</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 微型化技术挑战 -->
+                <h2><i class="fas fa-cogs"></i> 微型化挑战：在物理极限中寻求突破</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item winner">
+                        <h4>AZ Ring 微型化设计</h4>
+                        <ul>
+                            <li>厚度：0.26mm</li>
+                            <li>宽度：7.8mm</li>
+                            <li>传感器数量：8个</li>
+                            <li>功耗：平均15mW</li>
+                            <li>信号质量：95%+</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item loser">
+                        <h4>传统智能手表</h4>
+                        <ul>
+                            <li>厚度：10-15mm</li>
+                            <li>宽度：40-45mm</li>
+                            <li>传感器数量：3-5个</li>
+                            <li>功耗：平均200-500mW</li>
+                            <li>信号质量：80-90%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tech-explanation">
+                    <div class="tech-point">
+                        <h3>空间优化：每一立方毫米的精打细算</h3>
+                        <p>在极限空间内实现高密度集成的关键技术：</p>
+                        <ul>
+                            <li><strong>3D堆叠设计</strong>：传感器采用垂直堆叠布局，最大化空间利用率</li>
+                            <li><strong>柔性电路板</strong>：使用超薄柔性PCB，厚度仅0.05mm</li>
+                            <li><strong>芯片级封装</strong>：传感器直接封装在芯片上，减少连接器体积</li>
+                            <li><strong>一体化天线</strong>：天线集成在PCB走线中，无需额外空间</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-point">
+                        <h3>信号完整性：微型化不妥协精度</h3>
+                        <p>在极小空间内保证信号质量的设计策略：</p>
+                        <ul>
+                            <li><strong>屏蔽设计</strong>：关键传感器采用微型屏蔽罩，防止相互干扰</li>
+                            <li><strong>差分信号</strong>：采用差分信号传输，提高抗干扰能力</li>
+                            <li><strong>滤波算法</strong>：硬件滤波+软件算法双重保障信号纯净度</li>
+                            <li><strong>校准机制</strong>：出厂前逐个校准，确保每个传感器精度一致</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 总结 -->
+                <div class="article-intro">
+                    <h2><i class="fas fa-flag-checkered"></i> 微型化的技术意义</h2>
+                    <p class="intro-highlight">0.26mm厚度里的8个传感器不仅仅是工程奇迹，更代表了智能穿戴设备的未来方向。当技术突破了物理极限，用户体验就有了无限可能。AZ Ring证明了：真正的创新，是在约束中寻找自由。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // 加载头部和底部
+        fetch('../components/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-placeholder').innerHTML = data;
+            });
+
+        fetch('../components/footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-placeholder').innerHTML = data;
+            });
+    </script>
+</body>
+</html>

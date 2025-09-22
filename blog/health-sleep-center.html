@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>睡眠质量评估 - 科学睡眠分析 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="基于国际睡眠医学标准，科学评估您的睡眠质量。包含快速睡眠自测和深度睡眠分析两种评估方式，提供个性化改善建议。">
+    
+    <!-- DNS预解析和preconnect优化 -->
+    <link rel="dns-prefetch" href="//cdn.staticfile.org">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.staticfile.org">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            /* 睡眠主题色彩 */
+            --sleep-quick-start: #2c3e50;
+            --sleep-quick-end: #3498db;
+            --sleep-deep-start: #8e44ad;
+            --sleep-deep-end: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
+            color: var(--oura-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 导航栏样式 */
+        .oura-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 0;
+        }
+        
+        .oura-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .oura-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+        
+        .oura-logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .oura-nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        
+        .oura-nav-link {
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .oura-nav-link:hover,
+        .oura-nav-link.active {
+            color: var(--oura-white);
+        }
+        
+        .oura-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--oura-accent);
+        }
+        
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .lang-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--oura-light-gray);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active,
+        .lang-btn:hover {
+            border-color: var(--oura-accent);
+            color: var(--oura-accent);
+        }
+        
+        .oura-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--oura-white);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .oura-mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--oura-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .oura-mobile-menu.active {
+            display: flex;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 60px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            margin-bottom: 30px;
+            transition: color 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .back-btn:hover {
+            color: var(--oura-accent);
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .title {
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--sleep-quick-start) 0%, var(--sleep-deep-end) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--oura-light-gray);
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .highlight-text {
+            color: var(--sleep-quick-end);
+            font-weight: 600;
+        }
+        
+        .sleep-intro {
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            margin: 60px 0;
+        }
+        
+        .sleep-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--sleep-quick-end);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sleep-title i {
+            margin-right: 12px;
+        }
+        
+        .sleep-content {
+            color: var(--oura-light-gray);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        /* 评估选项样式 */
+        .assessment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .assessment-card {
+            border-radius: 24px;
+            padding: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .assessment-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+        
+        .assessment-card:hover .card-decoration {
+            transform: scale(1.3);
+            opacity: 0.9;
+        }
+        
+        .sleep-quick-assessment {
+            background: linear-gradient(135deg, var(--sleep-quick-start) 0%, var(--sleep-quick-end) 100%);
+        }
+        
+        .sleep-deep-assessment {
+            background: linear-gradient(135deg, var(--sleep-deep-start) 0%, var(--sleep-deep-end) 100%);
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        
+        .card-icon i {
+            font-size: 32px;
+            color: var(--oura-white);
+        }
+        
+        .card-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--oura-white);
+            margin-bottom: 16px;
+        }
+        
+        .card-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .card-meta {
+            display: flex;
+            gap: 24px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+        }
+        
+        .card-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-meta i {
+            margin-right: 8px;
+        }
+        
+        .card-cta {
+            color: var(--oura-white);
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-cta i {
+            margin-left: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .assessment-card:hover .card-cta i {
+            transform: translateX(4px);
+        }
+        
+        .card-decoration {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .oura-nav-links,
+            .language-switcher {
+                display: none;
+            }
+            
+            .oura-mobile-toggle {
+                display: block;
+            }
+            
+            .container {
+                padding: 100px 16px 40px;
+            }
+            
+            .title {
+                font-size: 32px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .assessment-options {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .assessment-card {
+                padding: 32px 24px;
+            }
+            
+            .card-title {
+                font-size: 24px;
+            }
+            
+            .card-description {
+                font-size: 16px;
+            }
+            
+            .sleep-intro {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="oura-nav">
+        <div class="oura-container">
+            <div class="oura-nav-content">
+                <a href="../index.html" class="oura-logo">
+                    <img src="../产品资料与图片/logo.png" alt="深圳佰屹创新">
+                </a>
+                
+                <ul class="oura-nav-links">
+                    <li><a href="../index.html" class="oura-nav-link" data-zh="首页" data-en="Home">首页</a></li>
+                    <li><a href="../index.html#products" class="oura-nav-link" data-zh="产品" data-en="Products">产品</a></li>
+                    <li><a href="index.html" class="oura-nav-link" data-zh="技术博客" data-en="Tech Blog">技术博客</a></li>
+                    <li><a href="health-assessment.html" class="oura-nav-link active" data-zh="健康自测" data-en="Health Assessment">健康自测</a></li>
+                    <li><a href="../index.html#about" class="oura-nav-link" data-zh="关于" data-en="About">关于</a></li>
+                    <li><a href="../index.html#contact" class="oura-nav-link" data-zh="联系" data-en="Contact">联系</a></li>
+                </ul>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+                </div>
+                
+                <button class="oura-mobile-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="oura-mobile-menu" id="mobile-menu">
+                <a href="../index.html" class="oura-nav-link" data-zh="首页" data-en="Home">首页</a>
+                <a href="../index.html#products" class="oura-nav-link" data-zh="产品" data-en="Products">产品</a>
+                <a href="index.html" class="oura-nav-link" data-zh="技术博客" data-en="Tech Blog">技术博客</a>
+                <a href="health-assessment.html" class="oura-nav-link active" data-zh="健康自测" data-en="Health Assessment">健康自测</a>
+                <a href="../index.html#about" class="oura-nav-link" data-zh="关于" data-en="About">关于</a>
+                <a href="../index.html#contact" class="oura-nav-link" data-zh="联系" data-en="Contact">联系</a>
+                <div class="mobile-lang-switcher" style="padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 12px;">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <a href="health-assessment.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                返回健康自测中心
+            </a>
+            <h1 class="title">睡眠质量评估</h1>
+            <p class="subtitle">
+                基于匹兹堡睡眠质量指数（PSQI）国际权威标准，科学分析您的睡眠模式。
+                了解您的<span class="highlight-text">睡眠质量</span>，获得个性化改善建议。
+            </p>
+        </div>
+
+        <div class="sleep-intro">
+            <h3 class="sleep-title">
+                <i class="fas fa-certificate"></i>
+                匹兹堡睡眠质量指数（PSQI）
+            </h3>
+            <p class="sleep-content">
+                PSQI是国际公认的睡眠质量评估金标准，由匹兹堡大学医学院开发，在全球临床和研究中广泛应用超过30年。
+                该量表通过主观睡眠质量、入睡时间、睡眠时长、睡眠效率、睡眠障碍、催眠药物使用、日间功能障碍等7个维度，
+                科学全面地评估睡眠状况。我们的深度睡眠分析基于PSQI标准设计，为您提供专业可靠的睡眠健康评估。
+            </p>
+        </div>
+        
+        <div class="assessment-options">
+            <!-- 快速睡眠自测 -->
+            <a href="health-sleep-quick.html" class="assessment-card sleep-quick-assessment">
+                <div class="card-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <h3 class="card-title">快速睡眠自测</h3>
+                <p class="card-description">8个核心问题，快速评估您的睡眠质量，适合日常睡眠状况监测</p>
+                <div class="card-meta">
+                    <span><i class="fas fa-clock"></i>5-8 分钟</span>
+                    <span><i class="fas fa-signal"></i>基础级别</span>
+                </div>
+                <div class="card-cta">
+                    开始快速自测 <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="card-decoration"></div>
+            </a>
+
+            <!-- 深度睡眠分析 -->
+            <a href="health-sleep-deep.html" class="assessment-card sleep-deep-assessment">
+                <div class="card-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3 class="card-title">深度睡眠分析</h3>
+                <p class="card-description">基于PSQI标准的全面睡眠健康评估，包含30个专业问题，涵盖睡眠障碍筛查、生活方式分析，生成详细改善方案</p>
+                <div class="card-meta">
+                    <span><i class="fas fa-clock"></i>20-25 分钟</span>
+                    <span><i class="fas fa-signal"></i>专业级别</span>
+                </div>
+                <div class="card-cta">
+                    开始深度分析 <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="card-decoration"></div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // 语言切换功能
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-zh], [data-en], [data-tw]');
+            const buttons = document.querySelectorAll('.lang-btn');
+            
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.querySelectorAll(`.lang-btn`).forEach(button => {
+                if ((lang === 'zh' && button.textContent === '中文') ||
+                    (lang === 'en' && button.textContent === 'English')) {
+                    button.classList.add('active');
+                }
+            });
+            
+            localStorage.setItem('preferred-language', lang);
+        }
+
+        // 页面加载时恢复语言设置
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferred-language') || 'zh';
+            if (savedLang !== 'zh') {
+                switchLanguage(savedLang);
+            }
+        });
+    </script>
+</body>
+</html>

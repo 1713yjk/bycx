@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深度睡眠分析 - 睡眠质量评估 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="15-20分钟全面评估您的睡眠健康状况，包含睡眠障碍筛查、生活方式分析，生成详细的睡眠改善方案。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            /* 深度睡眠主题色彩 */
+            --sleep-deep-start: #8e44ad;
+            --sleep-deep-end: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--sleep-deep-start) 0%, var(--sleep-deep-end) 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 阶段指示器 */
+        .stage-indicators {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        
+        .stage-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stage-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .stage-dot.completed {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        /* 问题幻灯片 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .question-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stage-title {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+        
+        .question-number {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.7;
+            margin-bottom: 24px;
+        }
+        
+        .question-text {
+            font-size: 32px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 评分题样式 */
+        .rating-options {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .rating-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+            text-align: center;
+            will-change: transform;
+        }
+        
+        .rating-item:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .rating-item.selected {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rating-number {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .rating-item.selected .rating-number {
+            color: var(--sleep-deep-start);
+        }
+        
+        .rating-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .rating-item.selected .rating-label {
+            color: #111; /* Changed from var(--oura-white) */
+        }
+        
+        /* 多选题样式 */
+        .choice-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .choice-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            will-change: transform;
+        }
+        
+        .choice-option:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .choice-option.selected {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .choice-option span {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .choice-option.selected span {
+            color: #111; /* Added for selected state */
+        }
+        
+        /* 滑动条样式 */
+        .slider-container {
+            margin: 40px 0 60px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .slider {
+            width: 100%;
+            margin: 0 auto 30px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 1;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .current-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            min-height: 25px;
+            text-align: center;
+        }
+        
+        /* 导航按钮 */
+        .navigation {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .nav-button {
+            padding: 16px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-button:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.primary {
+            background: white;
+            color: var(--sleep-deep-start);
+            border-color: white;
+        }
+        
+        .nav-button.primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            display: none;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease;
+            overflow-y: auto;
+            max-height: 90vh;
+            padding: 20px;
+        }
+        
+        .result-container.hidden {
+            display: none;
+        }
+        
+        .result-header {
+            margin-bottom: 40px;
+        }
+        
+        .result-title {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .result-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .sleep-analysis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 12px;
+        }
+        
+        .card-score {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .card-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .sleep-recommendations {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendations-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid white;
+        }
+        
+        .recommendation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-content {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        .action-btn {
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--sleep-deep-start);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .typeform-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            
+            .typeform-progress,
+            .back-btn {
+                top: 20px;
+            }
+            
+            .typeform-progress {
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .back-btn {
+                left: 20px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .stage-indicators {
+                top: 20px;
+            }
+            
+            .rating-options {
+                gap: 12px;
+            }
+            
+            .rating-item {
+                min-width: 60px;
+                padding: 12px 16px;
+            }
+            
+            .choice-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .sleep-analysis-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="typeform-container">
+        <!-- 阶段指示器 -->
+        <div class="stage-indicators">
+            <div class="stage-dot active" data-stage="0"></div>
+            <div class="stage-dot" data-stage="1"></div>
+            <div class="stage-dot" data-stage="2"></div>
+            <div class="stage-dot" data-stage="3"></div>
+        </div>
+        
+        <!-- 进度指示器 -->
+        <div class="typeform-progress">
+            <div class="progress-circle"></div>
+            <div class="progress-text">
+                <span id="current-progress">1</span>/<span id="total-questions">30</span>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <a href="health-sleep-center.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回
+        </a>
+        
+        <!-- 第一个问题幻灯片 -->
+        <div id="slide-0" class="question-slide active">
+            <div class="stage-title">主观睡眠质量 · 第一阶段</div>
+            <div class="question-number">问题 1 / 30</div>
+            <h2 class="question-text">总的来说，过去一个月您的睡眠质量如何？</h2>
+            <div class="rating-options">
+                <div class="rating-item" onclick="selectRating(0, 1)">
+                    <div class="rating-number">1</div>
+                    <div class="rating-label">很差</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 2)">
+                    <div class="rating-number">2</div>
+                    <div class="rating-label">较差</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 3)">
+                    <div class="rating-number">3</div>
+                    <div class="rating-label">一般</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 4)">
+                    <div class="rating-number">4</div>
+                    <div class="rating-label">较好</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 5)">
+                    <div class="rating-number">5</div>
+                    <div class="rating-label">很好</div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" style="visibility: hidden;">
+                    <i class="fas fa-arrow-left"></i>
+                    上一题
+                </button>
+                <button class="nav-button primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                    下一题
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他问题幻灯片将通过JavaScript动态生成 -->
+        
+        <div id="result" class="result-container hidden">
+            <div class="result-header">
+                <h2 class="result-title">您的睡眠健康分析报告</h2>
+                <p class="result-subtitle">基于多维度评估的个性化睡眠改善方案</p>
+            </div>
+            
+            <div class="sleep-analysis-cards" id="analysisCards">
+                <!-- 分析卡片将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="sleep-recommendations" id="recommendationsContainer">
+                <h3 class="recommendations-title">🌙 个性化睡眠改善建议</h3>
+                <div id="recommendationsList">
+                    <!-- 建议列表将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="result-actions">
+                <button onclick="shareResult()" class="action-btn btn-primary">
+                    <i class="fas fa-share-alt"></i>
+                    分享结果
+                </button>
+                <a href="health-sleep-center.html" class="action-btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回睡眠测试
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 调试日志函数
+        function debugLog(...args) {
+            console.log('[Sleep Deep Debug]', ...args);
+        }
+
+        // 全局错误处理
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('页面错误:', {
+                message: message,
+                source: source,
+                line: lineno,
+                column: colno,
+                error: error
+            });
+            return false;
+        };
+
+        // 深度睡眠分析问卷数据（30题，基于PSQI匹兹堡睡眠质量指数）
+        const questionSections = {
+            subjective: {
+                name: '主观睡眠质量',
+                questions: [
+                    { text: '总的来说，过去一个月您的睡眠质量如何？', type: 'rating', labels: ['很差', '较差', '一般', '较好', '很好'] },
+                    { text: '您对目前睡眠状况的满意程度？', type: 'rating', labels: ['很不满意', '不太满意', '一般', '比较满意', '很满意'] },
+                    { text: '与以前相比，您现在的睡眠质量？', type: 'rating', labels: ['明显变差', '有所变差', '没有变化', '有所改善', '明显改善'] },
+                    { text: '您认为睡眠对您健康的重要性？', type: 'rating', labels: ['不重要', '不太重要', '一般', '比较重要', '非常重要'] },
+                    { text: '您是否担心自己的睡眠问题？', type: 'rating', labels: ['非常担心', '比较担心', '一般', '不太担心', '不担心'] },
+                    { text: '睡眠问题是否影响您的情绪？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '您是否因为睡眠问题而感到沮丧？', type: 'rating', labels: ['经常沮丧', '有时沮丧', '偶尔沮丧', '很少沮丧', '从不沮丧'] }
+                ]
+            },
+            latency: {
+                name: '入睡时间与效率',
+                questions: [
+                    { text: '过去一个月，您通常几点上床睡觉？', type: 'rating', labels: ['晚上12点后', '晚上11-12点', '晚上10-11点', '晚上9-10点', '晚上9点前'] },
+                    { text: '过去一个月，您通常需要多长时间才能入睡？', type: 'rating', labels: ['超过60分钟', '31-60分钟', '16-30分钟', '6-15分钟', '5分钟内'] },
+                    { text: '您躺在床上后，多久开始感到困倦？', type: 'rating', labels: ['超过1小时', '30-60分钟', '15-30分钟', '5-15分钟', '立即困倦'] },
+                    { text: '入睡困难的频率如何？', type: 'rating', labels: ['每晚都有', '每周3次以上', '每周1-2次', '每月1-2次', '从不'] },
+                    { text: '躺下后您的思绪活跃程度？', type: 'rating', labels: ['非常活跃', '比较活跃', '一般', '比较平静', '很快平静'] },
+                    { text: '您是否需要特殊方法才能入睡？', type: 'multiple', options: ['听音乐', '看书', '冥想', '数羊', '服药', '其他', '不需要'] },
+                    { text: '环境因素对您入睡的影响？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] }
+                ]
+            },
+            duration: {
+                name: '睡眠时长与连续性',
+                questions: [
+                    { text: '过去一个月，您每晚实际睡眠时间？', type: 'rating', labels: ['不足5小时', '5-6小时', '6-7小时', '7-8小时', '8小时以上'] },
+                    { text: '您通常几点起床？', type: 'rating', labels: ['上午8点后', '上午7-8点', '上午6-7点', '上午5-6点', '上午5点前'] },
+                    { text: '夜间醒来的频率？', type: 'rating', labels: ['每晚5次以上', '每晚3-4次', '每晚1-2次', '偶尔醒来', '很少醒来'] },
+                    { text: '夜间醒来后再次入睡的难度？', type: 'rating', labels: ['很难入睡', '比较困难', '一般', '比较容易', '很容易'] },
+                    { text: '早晨是否会过早醒来？', type: 'rating', labels: ['经常早醒', '有时早醒', '偶尔早醒', '很少早醒', '从不早醒'] },
+                    { text: '睡眠是否感觉连续完整？', type: 'rating', labels: ['很不连续', '不太连续', '一般', '比较连续', '很连续'] },
+                    { text: '您的睡眠深度如何？', type: 'rating', labels: ['很浅', '较浅', '一般', '较深', '很深'] },
+                    { text: '是否因为上厕所而夜间醒来？', type: 'rating', labels: ['每晚多次', '每晚1-2次', '每周几次', '很少', '从不'] }
+                ]
+            },
+            dysfunction: {
+                name: '日间功能与睡眠障碍',
+                questions: [
+                    { text: '早晨醒来时的精神状态？', type: 'rating', labels: ['很疲惫', '比较疲惫', '一般', '比较精神', '很精神'] },
+                    { text: '白天是否感到困倦？', type: 'rating', labels: ['经常困倦', '有时困倦', '偶尔困倦', '很少困倦', '从不困倦'] },
+                    { text: '白天是否需要小睡？', type: 'rating', labels: ['必须小睡', '经常小睡', '偶尔小睡', '很少小睡', '从不小睡'] },
+                    { text: '睡眠问题是否影响工作效率？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '是否因为睡不好而影响记忆力？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '是否有打鼾、呼吸暂停等问题？', type: 'multiple', options: ['大声打鼾', '呼吸暂停', '憋气', '鼻塞', '磨牙', '说梦话', '其他', '无'] },
+                    { text: '是否因为身体不适而影响睡眠？', type: 'multiple', options: ['疼痛', '心悸', '胃部不适', '头痛', '腿部不适', '发热', '其他', '无'] },
+                    { text: '过去一个月是否使用过助眠药物？', type: 'rating', labels: ['每天使用', '每周3次以上', '每周1-2次', '偶尔使用', '从不使用'] }
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let currentStage = 0;
+        let answers = [];
+        let allQuestions = [];
+
+        // 初始化所有问题
+        function initializeQuestions() {
+            allQuestions = [];
+            let questionIndex = 0;
+            
+            Object.keys(questionSections).forEach((sectionKey, stageIndex) => {
+                const section = questionSections[sectionKey];
+                section.questions.forEach((question, qIndex) => {
+                    allQuestions.push({
+                        ...question,
+                        section: sectionKey,
+                        sectionName: section.name,
+                        stageIndex: stageIndex,
+                        questionIndex: questionIndex,
+                        sectionQuestionIndex: qIndex
+                    });
+                    questionIndex++;
+                });
+            });
+            
+            // 初始化答案数组
+            answers = new Array(allQuestions.length).fill(null);
+            
+            debugLog('初始化问题完成', {
+                totalQuestions: allQuestions.length,
+                sections: Object.keys(questionSections).length
+            });
+        }
+
+        // 检查答案完整性并启用/禁用按钮
+        function checkAnswerCompleteness(questionIndex) {
+            const question = allQuestions[questionIndex];
+            const answer = answers[questionIndex];
+            let isComplete = false;
+            
+            if (question.type === 'rating') {
+                isComplete = answer !== null && answer !== undefined;
+            } else if (question.type === 'multiple') {
+                isComplete = Array.isArray(answer) && answer.length > 0;
+            } else if (question.type === 'slider') {
+                isComplete = answer !== null && answer !== undefined;
+            }
+            
+            // 更新当前问题的按钮状态
+            const currentSlide = document.getElementById(`slide-${questionIndex}`);
+            if (currentSlide) {
+                const nextBtn = currentSlide.querySelector('.nav-button.primary');
+                if (nextBtn) {
+                    nextBtn.disabled = !isComplete;
+                }
+            }
+            
+            debugLog(`问题 ${questionIndex + 1} 完整性检查:`, { isComplete, answer, questionType: question.type });
+        }
+
+        // 生成问题HTML
+        function generateQuestionHTML(question, questionIndex) {
+            const isLastQuestion = questionIndex === allQuestions.length - 1;
+            const stageInfo = `${question.sectionName} · 第${question.stageIndex + 1}阶段`;
+            
+            if (question.type === 'rating') {
+                const ratingOptions = question.labels.map((label, index) => `
+                    <div class="rating-item" onclick="selectRating(${questionIndex}, ${index + 1})">
+                        <div class="rating-number">${index + 1}</div>
+                        <div class="rating-label">${label}</div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="stage-title">${stageInfo}</div>
+                    <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                    <h2 class="question-text">${question.text}</h2>
+                    <div class="rating-options">
+                        ${ratingOptions}
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                            ${isLastQuestion ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (question.type === 'multiple') {
+                const choiceOptions = question.options.map(option => `
+                    <div class="choice-option" onclick="toggleChoice(${questionIndex}, '${option}')">
+                        <span>${option}</span>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="stage-title">${stageInfo}</div>
+                    <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                    <h2 class="question-text">${question.text}</h2>
+                    <div class="choice-options">
+                        ${choiceOptions}
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                            ${isLastQuestion ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (question.type === 'slider') {
+                return generateSlider(question, questionIndex);
+            }
+            
+            return '';
+        }
+
+        // 生成滑动条HTML
+        function generateSlider(question, questionIndex) {
+            const isLastQuestion = questionIndex === allQuestions.length - 1;
+            const stageInfo = `${question.sectionName} · 第${question.stageIndex + 1}阶段`;
+            
+            return `
+                <div class="stage-title">${stageInfo}</div>
+                <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                <h2 class="question-text">${question.text}</h2>
+                <div class="slider-container">
+                    <div class="current-value" id="current-value-${questionIndex}">${question.labels[1]}</div>
+                    <input type="range" class="slider" id="slider-${questionIndex}" min="1" max="${question.labels.length}" value="${Math.ceil(question.labels.length/2)}" 
+                           oninput="selectSlider(${questionIndex}, this.value)" onchange="selectSlider(${questionIndex}, this.value)">
+                    <div class="slider-labels">
+                        ${question.labels.map(label => `<span>${label}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                        <i class="fas fa-arrow-left"></i>
+                        上一题
+                    </button>
+                    <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                        ${isLastQuestion ? '查看结果' : '下一题'}
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // 选择评分
+        function selectRating(questionIndex, rating) {
+            answers[questionIndex] = rating;
+            
+            // 更新UI
+            const slide = document.getElementById(`slide-${questionIndex}`);
+            if (slide) {
+                const ratingItems = slide.querySelectorAll('.rating-item');
+                ratingItems.forEach((item, index) => {
+                    item.classList.toggle('selected', index === rating - 1);
+                });
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+            debugLog(`问题 ${questionIndex + 1} 评分选择: ${rating}`);
+        }
+
+        // 切换多选选项
+        function toggleChoice(questionIndex, choice) {
+            if (!Array.isArray(answers[questionIndex])) {
+                answers[questionIndex] = [];
+            }
+            
+            const choiceArray = answers[questionIndex];
+            const choiceIndex = choiceArray.indexOf(choice);
+            
+            if (choiceIndex > -1) {
+                choiceArray.splice(choiceIndex, 1);
+            } else {
+                choiceArray.push(choice);
+            }
+            
+            // 更新UI
+            const slide = document.getElementById(`slide-${questionIndex}`);
+            if (slide) {
+                const choiceOptions = slide.querySelectorAll('.choice-option');
+                choiceOptions.forEach(option => {
+                    const text = option.querySelector('span').textContent;
+                    option.classList.toggle('selected', choiceArray.includes(text));
+                });
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+            debugLog(`问题 ${questionIndex + 1} 多选切换: ${choice}`, answers[questionIndex]);
+        }
+
+        // 选择滑动条值
+        function selectSlider(questionIndex, value) {
+            const question = allQuestions[questionIndex];
+            answers[questionIndex] = parseInt(value);
+            
+            // 更新显示值
+            const currentValueElement = document.getElementById(`current-value-${questionIndex}`);
+            if (currentValueElement && question.labels) {
+                currentValueElement.textContent = question.labels[value - 1];
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+            debugLog(`问题 ${questionIndex + 1} 滑动条选择: ${value}`);
+        }
+
+        // 生成所有问题幻灯片
+        function generateSlides() {
+            const container = document.querySelector('.typeform-container');
+            
+            // 清除除第一个和结果容器外的所有幻灯片
+            const existingSlides = document.querySelectorAll('.question-slide');
+            for (let i = 1; i < existingSlides.length; i++) {
+                existingSlides[i].remove();
+            }
+            
+            // 更新第一个问题的内容
+            const firstSlide = document.getElementById('slide-0');
+            if (firstSlide && allQuestions[0]) {
+                firstSlide.innerHTML = generateQuestionHTML(allQuestions[0], 0);
+            }
+            
+            // 生成剩余的幻灯片
+            for (let i = 1; i < allQuestions.length; i++) {
+                const slide = document.createElement('div');
+                slide.id = `slide-${i}`;
+                slide.className = 'question-slide';
+                slide.innerHTML = generateQuestionHTML(allQuestions[i], i);
+                
+                container.insertBefore(slide, document.getElementById('result'));
+            }
+            
+            // 更新总问题数显示
+            const totalElement = document.getElementById('total-questions');
+            if (totalElement) {
+                totalElement.textContent = allQuestions.length;
+            }
+            
+            debugLog('所有问题幻灯片生成完成');
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < allQuestions.length - 1) {
+                // 隐藏当前问题
+                const currentSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion++;
+                
+                // 更新阶段
+                updateStage();
+                
+                // 显示下一题
+                const nextSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (nextSlide) nextSlide.classList.add('active');
+                
+                updateProgress();
+                
+                // 检查当前问题的答案状态
+                checkAnswerCompleteness(currentQuestion);
+            }
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 隐藏当前问题
+                const currentSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion--;
+                
+                // 更新阶段
+                updateStage();
+                
+                // 显示上一题
+                const prevSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (prevSlide) prevSlide.classList.add('active');
+                
+                updateProgress();
+                
+                // 检查当前问题的答案状态
+                checkAnswerCompleteness(currentQuestion);
+            }
+        }
+
+        // 更新阶段指示器
+        function updateStage() {
+            const newStage = allQuestions[currentQuestion].stageIndex;
+            
+            if (newStage !== currentStage) {
+                currentStage = newStage;
+                
+                const stageDots = document.querySelectorAll('.stage-dot');
+                stageDots.forEach((dot, index) => {
+                    dot.classList.remove('active', 'completed');
+                    if (index < currentStage) {
+                        dot.classList.add('completed');
+                    } else if (index === currentStage) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progressElement = document.getElementById('current-progress');
+            if (progressElement) {
+                progressElement.textContent = currentQuestion + 1;
+            }
+            
+            // 更新圆形进度
+            const progressCircle = document.querySelector('.progress-circle');
+            if (progressCircle) {
+                const percentage = ((currentQuestion + 1) / allQuestions.length) * 360;
+                progressCircle.style.background = `conic-gradient(#ffffff ${percentage}deg, transparent ${percentage}deg)`;
+            }
+        }
+
+        // 隐藏问卷元素但保持容器可见
+        function hideQuestionnaireElements() {
+            try {
+                const progress = document.querySelector('.typeform-progress');
+                if (progress) progress.style.display = 'none';
+                const backBtn = document.querySelector('.back-btn');
+                if (backBtn) backBtn.style.display = 'none';
+                const stageIndicators = document.querySelector('.stage-indicators');
+                if (stageIndicators) stageIndicators.style.display = 'none';
+                const slides = document.querySelectorAll('.question-slide');
+                slides.forEach(slide => {
+                    slide.style.display = 'none';
+                });
+                debugLog('问卷元素已隐藏');
+            } catch (error) {
+                console.error('隐藏问卷元素时出错:', error);
+            }
+        }
+
+        // 计算睡眠健康评分
+        function calculateSleepHealth() {
+            try {
+                debugLog('开始计算睡眠健康评分', answers);
+                
+                const sectionScores = {};
+                let totalScore = 0;
+                let validAnswers = 0;
+                
+                // 按阶段计算分数
+                Object.keys(questionSections).forEach((sectionKey, stageIndex) => {
+                    const section = questionSections[sectionKey];
+                    let sectionTotal = 0;
+                    let sectionCount = 0;
+                    
+                    section.questions.forEach((question, qIndex) => {
+                        const globalIndex = Object.keys(questionSections).slice(0, stageIndex).reduce((sum, key) => 
+                            sum + questionSections[key].questions.length, 0) + qIndex;
+                        
+                        const answer = answers[globalIndex];
+                        
+                        if (answer !== null && answer !== undefined) {
+                            let score = 0;
+                            
+                            if (question.type === 'rating') {
+                                score = answer;
+                            } else if (question.type === 'multiple') {
+                                score = Array.isArray(answer) ? Math.min(answer.length, 5) : 0;
+                            } else if (question.type === 'slider') {
+                                score = answer;
+                            }
+                            
+                            sectionTotal += score;
+                            sectionCount++;
+                            validAnswers++;
+                        }
+                    });
+                    
+                    if (sectionCount > 0) {
+                        sectionScores[sectionKey] = {
+                            score: Math.round((sectionTotal / (sectionCount * 5)) * 100),
+                            name: section.name,
+                            total: sectionTotal,
+                            count: sectionCount
+                        };
+                        totalScore += sectionTotal;
+                    }
+                });
+                
+                const maxPossibleScore = validAnswers * 5;
+                const finalScore = Math.round((totalScore / maxPossibleScore) * 100);
+                
+                debugLog('睡眠健康计算结果', {
+                    sectionScores,
+                    finalScore,
+                    totalScore,
+                    maxPossibleScore,
+                    validAnswers
+                });
+                
+                return {
+                    overallScore: finalScore,
+                    sectionScores: sectionScores,
+                    recommendations: generateRecommendations(sectionScores, finalScore)
+                };
+                
+            } catch (error) {
+                console.error('计算睡眠健康评分时出错:', error);
+                return {
+                    overallScore: 0,
+                    sectionScores: {},
+                    recommendations: []
+                };
+            }
+        }
+
+        // 生成个性化建议
+        function generateRecommendations(sectionScores, overallScore) {
+            const recommendations = [];
+            
+            // 基于总分的通用建议
+            if (overallScore >= 80) {
+                recommendations.push({
+                    title: '保持优秀习惯',
+                    content: '您的睡眠质量非常好！继续保持规律的作息时间和良好的睡眠环境。'
+                });
+            } else if (overallScore >= 60) {
+                recommendations.push({
+                    title: '优化睡眠质量',
+                    content: '您的睡眠质量良好，但仍有改善空间。建议关注睡前放松和环境优化。'
+                });
+            } else {
+                recommendations.push({
+                    title: '重点改善睡眠',
+                    content: '您的睡眠质量需要重点关注。建议咨询睡眠专家，制定系统的改善计划。'
+                });
+            }
+            
+            // 基于各阶段分数的针对性建议
+            Object.keys(sectionScores).forEach(sectionKey => {
+                const section = sectionScores[sectionKey];
+                
+                if (section.score < 70) {
+                    switch (sectionKey) {
+                        case 'basics':
+                            recommendations.push({
+                                title: '改善基础睡眠',
+                                content: '建议建立固定的睡前例行程序，确保睡眠环境安静、黑暗、凉爽。'
+                            });
+                            break;
+                        case 'disorders':
+                            recommendations.push({
+                                title: '睡眠障碍筛查',
+                                content: '建议咨询睡眠医学专家，进行专业的睡眠障碍评估和治疗。'
+                            });
+                            break;
+                        case 'lifestyle':
+                            recommendations.push({
+                                title: '调整生活方式',
+                                content: '减少睡前电子设备使用，限制咖啡因摄入，增加规律运动。'
+                            });
+                            break;
+                        case 'rhythm':
+                            recommendations.push({
+                                title: '调节生物钟',
+                                content: '保持固定的睡眠和起床时间，即使在周末也要尽量保持一致。'
+                            });
+                            break;
+                    }
+                }
+            });
+            
+            return recommendations;
+        }
+
+        // 显示结果
+        function showResult() {
+            try {
+                debugLog('开始显示结果');
+                
+                // 计算睡眠健康评分
+                const healthResult = calculateSleepHealth();
+                debugLog('睡眠健康评估结果', healthResult);
+                
+                // 隐藏问卷元素
+                hideQuestionnaireElements();
+                
+                // 显示结果容器
+                const resultContainer = document.getElementById('result');
+                if (resultContainer) {
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.style.display = 'block';
+                } else {
+                    throw new Error('结果容器未找到');
+                }
+                
+                // 生成分析卡片
+                generateAnalysisCards(healthResult);
+                
+                // 生成建议列表
+                generateRecommendationsList(healthResult.recommendations);
+                
+                debugLog('结果显示完成');
+                
+            } catch (error) {
+                console.error('显示结果时出错:', error);
+                alert('显示结果时出现错误，请重新测试');
+            }
+        }
+
+        // 生成分析卡片
+        function generateAnalysisCards(healthResult) {
+            const cardsContainer = document.getElementById('analysisCards');
+            if (!cardsContainer) return;
+            
+            let cardsHTML = `
+                <div class="analysis-card">
+                    <div class="card-icon">🌙</div>
+                    <div class="card-title">综合睡眠质量</div>
+                    <div class="card-score" style="color: ${healthResult.overallScore >= 70 ? '#7ed321' : '#ff6b35'}">${healthResult.overallScore}分</div>
+                    <div class="card-description">${getScoreDescription(healthResult.overallScore)}</div>
+                </div>
+            `;
+            
+            // 各阶段分数卡片
+            const sectionIcons = {
+                basics: '😴',
+                disorders: '🏥',
+                lifestyle: '🏃‍♂️',
+                rhythm: '🕐'
+            };
+            
+            Object.keys(healthResult.sectionScores).forEach(sectionKey => {
+                const section = healthResult.sectionScores[sectionKey];
+                cardsHTML += `
+                    <div class="analysis-card">
+                        <div class="card-icon">${sectionIcons[sectionKey] || '📊'}</div>
+                        <div class="card-title">${section.name}</div>
+                        <div class="card-score" style="color: ${section.score >= 70 ? '#7ed321' : '#ff6b35'}">${section.score}分</div>
+                        <div class="card-description">${getScoreDescription(section.score)}</div>
+                    </div>
+                `;
+            });
+            
+            cardsContainer.innerHTML = cardsHTML;
+        }
+
+        // 生成建议列表
+        function generateRecommendationsList(recommendations) {
+            const listContainer = document.getElementById('recommendationsList');
+            if (!listContainer) return;
+            
+            const listHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <div class="recommendation-title">${rec.title}</div>
+                    <div class="recommendation-content">${rec.content}</div>
+                </div>
+            `).join('');
+            
+            listContainer.innerHTML = listHTML;
+        }
+
+        // 获取分数描述
+        function getScoreDescription(score) {
+            if (score >= 85) return '优秀 - 睡眠质量很好';
+            if (score >= 70) return '良好 - 睡眠质量不错';
+            if (score >= 55) return '一般 - 有改善空间';
+            if (score >= 40) return '较差 - 需要关注';
+            return '很差 - 需要专业帮助';
+        }
+
+        // 分享结果
+        function shareResult() {
+            const shareText = '我刚完成了深度睡眠质量分析！获得了个性化的睡眠改善方案。快来测测你的睡眠质量吧！';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'AZ Ring 睡眠质量评估',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(err => console.log('分享失败:', err));
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareText + ' ' + window.location.href).then(() => {
+                    alert('结果已复制到剪贴板！');
+                }).catch(err => {
+                    console.log('复制失败:', err);
+                    alert('分享功能暂不可用');
+                });
+            }
+        }
+
+        // 初始化
+        function init() {
+            debugLog('开始初始化深度睡眠分析');
+            
+            // 初始化问题数据
+            initializeQuestions();
+            
+            // 生成所有问题幻灯片
+            generateSlides();
+            
+            // 更新进度显示
+            updateProgress();
+            
+            // 检查第一个问题的答案状态
+            checkAnswerCompleteness(currentQuestion);
+            
+            debugLog('深度睡眠分析初始化完成');
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
