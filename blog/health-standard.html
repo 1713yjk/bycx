@@ -571,6 +571,226 @@
             display: none;
         }
         
+        /* AI加载状态样式 */
+        .ai-loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .ai-loading-icon {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ff6b35;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .ai-brain-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+        
+        .ai-loading-text h4 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .ai-loading-text p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .progress-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .progress-dots span {
+            color: #ff6b35;
+            font-size: 24px;
+            animation: dot-bounce 1.4s ease-in-out infinite both;
+        }
+        
+        .progress-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .progress-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .progress-dots span:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* 结构化卡片样式 */
+        .constitution-analysis-cards {
+            display: grid;
+            gap: 24px;
+            margin-top: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%);
+            color: white;
+            padding: 20px 24px;
+            border-bottom: none;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-content {
+            padding: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .card-content p {
+            margin: 0 0 16px 0;
+            white-space: pre-wrap;
+        }
+
+        .card-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 体质评估结果卡片 */
+        .constitution-summary .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+
+        .constitution-summary .card-content {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 调理建议卡片 */
+        .recommendations-card .card-content {
+            padding: 0;
+        }
+
+        .recommendation-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .recommendation-section:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-section h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffa500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-section p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* 注意事项卡片 */
+        .precautions-card .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #e55039 100%);
+        }
+
+        .precautions-card .card-content {
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .constitution-analysis-cards {
+                gap: 16px;
+                margin-top: 20px;
+            }
+
+            .card-header {
+                padding: 16px 20px;
+            }
+
+            .card-header h3 {
+                font-size: 16px;
+            }
+
+            .card-content {
+                padding: 20px;
+            }
+
+            .recommendation-section {
+                padding: 16px 20px;
+            }
+
+            .recommendation-section h4 {
+                font-size: 15px;
+            }
+        }
+
+        .error-message {
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #fed7d7;
+            text-align: center;
+            margin: 20px 0;
+        }
+
         @media (max-width: 768px) {
             .constitution-result {
                 grid-template-columns: 1fr;
@@ -733,6 +953,11 @@
                 </div>
             </div>
             
+            <!-- AI分析与建议区域 -->
+            <div class="ai-analysis-section" id="aiAnalysisSection">
+                <!-- AI分析内容将通过JavaScript动态生成 -->
+            </div>
+            
             <div class="result-actions">
                 <a href="health-deep.html" class="action-btn btn-primary">
                     <i class="fas fa-microscope"></i>
@@ -758,11 +983,6 @@
             return false;
         };
 
-        // 调试日志函数
-        function debugLog(message, data = null) {
-            console.log('[标准评估]', message, data || '');
-        }
-
         // 安全的DOM元素获取
         function safeGetElement(id) {
             const element = document.getElementById(id);
@@ -771,8 +991,6 @@
             }
             return element;
         }
-
-        debugLog('页面脚本开始加载');
 
         // 隐藏问卷相关元素但保持容器可见
         function hideQuestionnaireElements() {
@@ -791,7 +1009,6 @@
                     slide.style.display = 'none';
                 });
                 
-                debugLog('问卷元素已隐藏');
             } catch (error) {
                 console.error('隐藏问卷元素时出错:', error);
             }
@@ -1085,6 +1302,24 @@
             // 显示调理建议
             displayRecommendations(scores);
             
+            // 显示AI分析加载状态
+            showAILoadingState();
+            
+            // 延迟一点时间让用户看到加载动画
+            setTimeout(async () => {
+                try {
+                    // 使用AI生成个性化建议
+                    const aiRecommendations = await generateAIRecommendations(scores, answers);
+                    
+                    // 显示AI生成的建议
+                    await displayAIRecommendations(aiRecommendations);
+                } catch (error) {
+                    console.error('AI分析生成失败:', error);
+                    // 显示备用建议
+                    await displayFallbackRecommendations(scores);
+                }
+            }, 1500); // 1.5秒延迟，让用户看到加载动画
+            
             // 保存结果
             saveResult(scores);
         }
@@ -1148,7 +1383,6 @@
                     return;
                 }
                 
-                debugLog('开始绘制雷达图', scores);
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const radius = Math.min(canvas.width, canvas.height) / 2 - 40; // 预留标签空间
@@ -1225,7 +1459,6 @@
                 ctx.fill();
             });
             
-            debugLog('雷达图绘制完成');
             
             } catch (error) {
                 console.error('绘制雷达图时出错:', error);
@@ -1363,6 +1596,543 @@
             }
         }
         
+
+        // AI分析状态管理
+        let isAIAnalysisInProgress = false;
+        let aiLoadingStartTime = 0;
+        const MIN_LOADING_TIME = 2000; // 最小显示2秒
+
+        // 显示AI分析加载状态
+        function showAILoadingState() {
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer) return;
+            
+            isAIAnalysisInProgress = true;
+            aiLoadingStartTime = Date.now();
+            
+            listContainer.innerHTML = `
+                <div class="ai-loading-container">
+                    <div class="ai-loading-icon">
+                        <div class="loading-spinner"></div>
+                        <div class="ai-brain-icon">🧠</div>
+                    </div>
+                    <div class="ai-loading-text">
+                        <h4>AI 正在深度分析您的中医体质...</h4>
+                        <p>基于您的60项详细问卷答案，AI中医专家正在为您生成个性化的体质解读和调理建议</p>
+                        <div class="loading-progress">
+                            <div class="progress-dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示AI生成的建议
+        async function displayAIRecommendations(aiResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            let contentHTML = '';
+            
+            if (aiResult.type === 'ai_generated') {
+                // 解析AI内容为结构化卡片
+                const parsedData = parseAIContentToCards(aiResult.content);
+                
+                if (parsedData) {
+                    // 生成结构化卡片HTML
+                    contentHTML = generateConstitutionCards(parsedData);
+                } else {
+                    // 如果解析失败，显示原始内容的格式化版本
+                    let formattedContent = aiResult.content;
+                    
+                    // 如果内容是JSON字符串，尝试格式化
+                    if (typeof formattedContent === 'string' && formattedContent.trim().startsWith('{')) {
+                        try {
+                            const jsonData = JSON.parse(formattedContent);
+                            formattedContent = JSON.stringify(jsonData, null, 2);
+                        } catch (e) {
+                            // 保持原始内容
+                        }
+                    }
+                    
+                    contentHTML = `
+                        <div class="ai-analysis-card" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 32px; margin: 32px 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <div class="ai-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🤖</div>
+                                <div>
+                                    <h3 style="margin: 0; color: white; font-size: 20px; font-weight: 700;">AI 专业中医体质分析</h3>
+                                    <p style="margin: 4px 0 0 0; color: rgba(255, 255, 255, 0.7); font-size: 14px;">基于传统中医理论的智能评估</p>
+                                </div>
+                            </div>
+                            <div style="color: white; line-height: 1.6; font-size: 14px; white-space: pre-wrap;">
+                                ${formattedContent}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // 显示备用建议
+                contentHTML = `
+                    <div class="ai-error-card" style="background: rgba(255, 107, 53, 0.1); border: 1px solid #ff6b35; border-radius: 16px; padding: 24px; text-align: center; margin: 32px 0;">
+                        <div style="font-size: 24px; margin-bottom: 12px;">⚠️</div>
+                        <div style="color: #ff6b35; font-weight: 600; margin-bottom: 8px;">AI分析暂时不可用</div>
+                        <div style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">为您提供传统中医调理建议</div>
+                    </div>
+                `;
+            }
+            
+            listContainer.innerHTML = contentHTML;
+        }
+
+        // 生成AI建议
+        async function generateAIRecommendations(scores, answers) {
+            try {
+                // 构建中医体质分析数据
+                const constitutionData = buildConstitutionAnalysisData(scores, answers);
+                
+                // 调用AI分析API
+                const aiResponse = await callProxyAPI('sk-9c3ff6da6d7a4278adb0906afb7bf556', constitutionData);
+                
+                return {
+                    type: 'ai_generated',
+                    content: aiResponse
+                };
+            } catch (error) {
+                console.error('AI分析调用失败:', error);
+                return {
+                    type: 'fallback',
+                    error: error.message,
+                    content: scores
+                };
+            }
+        }
+
+        // 构建中医体质分析数据
+        function buildConstitutionAnalysisData(scores, answers) {
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            const primaryConstitution = sortedScores[0];
+            const secondaryConstitution = sortedScores[1];
+            
+            // 计算体质特征摘要
+            const constitutionSummary = generateConstitutionSummary(scores);
+            
+            return {
+                primaryConstitution: {
+                    type: constitutionNames[primaryConstitution[0]],
+                    score: primaryConstitution[1]
+                },
+                secondaryConstitution: {
+                    type: constitutionNames[secondaryConstitution[0]], 
+                    score: secondaryConstitution[1]
+                },
+                allScores: Object.fromEntries(
+                    Object.entries(scores).map(([key, value]) => [constitutionNames[key], value])
+                ),
+                constitutionSummary: constitutionSummary,
+                totalQuestions: answers.length,
+                answeredQuestions: answers.filter(a => a !== undefined && a !== null).length
+            };
+        }
+
+        // 生成体质特征摘要
+        function generateConstitutionSummary(scores) {
+            const features = [];
+            
+            Object.entries(scores).forEach(([constitution, score]) => {
+                if (score >= 60) {
+                    const name = constitutionNames[constitution];
+                    if (constitution === 'pinghe') {
+                        features.push(`${name}特征明显(${score}分)`);
+                    } else {
+                        features.push(`${name}偏颇(${score}分)`);
+                    }
+                }
+            });
+            
+            return features.length > 0 ? features.join('、') : '体质相对平和';
+        }
+
+        // 通过代理服务调用AI API
+        async function callProxyAPI(apiKey, constitutionData) {
+            const PROXY_URL = 'https://www.520rpy.xyz/api/bailian';
+            
+            const prompt = `作为资深中医体质学专家，请基于九种体质理论对用户进行全面分析。
+
+用户中医体质评估数据：
+- 主要体质：${constitutionData.primaryConstitution.type} (${constitutionData.primaryConstitution.score}分)
+- 次要体质：${constitutionData.secondaryConstitution.type} (${constitutionData.secondaryConstitution.score}分)
+- 体质特征：${constitutionData.constitutionSummary}
+- 完成题目：${constitutionData.answeredQuestions}/${constitutionData.totalQuestions}题
+
+各体质得分详情：
+${Object.entries(constitutionData.allScores).map(([name, score]) => `${name}: ${score}分`).join('\n')}
+
+请按以下要求提供专业分析：
+
+1. **体质综合评估** (80字内)
+   - 主要体质特点和健康状况
+   - 体质偏颇程度和风险评估
+
+2. **个性化调理方案**
+   - 饮食调养：具体食物推荐和禁忌
+   - 运动养生：适合的运动方式和强度
+   - 生活起居：作息调理和环境要求
+   - 情志调节：心理调适和情绪管理
+   - 四季养生：不同季节的调理重点
+
+3. **中医药调理建议**
+   - 推荐的中成药或方剂
+   - 常用穴位和按摩方法
+   - 预防保健要点
+
+4. **生活注意事项**
+   - 需要特别注意的生活习惯
+   - 可能的健康风险提示
+   - 调理效果预期时间
+
+请用专业但通俗易懂的语言回答，重点突出实用性和可操作性。`;
+
+            const response = await fetch(PROXY_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API调用失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // 处理不同的响应格式，优先提取实际AI文本内容
+            let aiText = null;
+            
+            // 尝试提取data.output.text
+            if (data.output && data.output.text) {
+                aiText = data.output.text;
+            }
+            // 备用路径：data.content.output.text
+            else if (data.content && data.content.output && data.content.output.text) {
+                aiText = data.content.output.text;
+            }
+            // 其他可能的路径
+            else if (data.success && data.content) {
+                aiText = typeof data.content === 'string' ? data.content : JSON.stringify(data.content);
+            } else if (data.content) {
+                aiText = typeof data.content === 'string' ? data.content : JSON.stringify(data.content);
+            } else if (data.message) {
+                aiText = data.message;
+            } else if (data.result) {
+                aiText = data.result;
+            } else if (typeof data === 'string') {
+                aiText = data;
+            }
+            
+            // 确保返回的是字符串内容
+            if (aiText && typeof aiText === 'string') {
+                console.log('提取的AI文本内容:', aiText.substring(0, 200) + '...');
+                return aiText;
+            } else {
+                console.log('AI API响应格式:', data);
+                return JSON.stringify(data, null, 2);
+            }
+        }
+
+        // 解析AI内容为结构化卡片数据
+        function parseAIContentToCards(aiText) {
+            if (!aiText || typeof aiText !== 'string') {
+                return null;
+            }
+
+            const parsed = {
+                summary: '',
+                constitution: '',
+                recommendations: {
+                    diet: '',
+                    exercise: '',
+                    lifestyle: '',
+                    emotion: '',
+                    seasonal: '',
+                    medicine: ''
+                },
+                precautions: ''
+            };
+
+            // 按段落分割内容
+            const paragraphs = aiText.split('\n').filter(line => line.trim());
+            let currentSection = '';
+            let currentContent = [];
+
+            for (const line of paragraphs) {
+                const trimmedLine = line.trim();
+                
+                // 识别主要章节标题
+                if (trimmedLine.includes('体质综合评估') || trimmedLine.includes('综合评估')) {
+                    currentSection = 'summary';
+                    currentContent = [];
+                } else if (trimmedLine.includes('个性化调理方案') || trimmedLine.includes('调理方案')) {
+                    currentSection = 'recommendations';
+                    currentContent = [];
+                } else if (trimmedLine.includes('中医药调理') || trimmedLine.includes('中药调理')) {
+                    currentSection = 'medicine';
+                    currentContent = [];
+                } else if (trimmedLine.includes('生活注意事项') || trimmedLine.includes('注意事项')) {
+                    currentSection = 'precautions';
+                    currentContent = [];
+                }
+                // 识别子分类
+                else if (trimmedLine.includes('饮食调养') || trimmedLine.includes('饮食')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'diet';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('运动养生') || trimmedLine.includes('运动')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'exercise';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('生活起居') || trimmedLine.includes('起居')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'lifestyle';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('情志调节') || trimmedLine.includes('情绪')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'emotion';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('四季养生') || trimmedLine.includes('季节')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'seasonal';
+                        currentContent = [];
+                    }
+                }
+                // 收集内容
+                else if (trimmedLine && !trimmedLine.startsWith('**') && !trimmedLine.startsWith('#')) {
+                    currentContent.push(trimmedLine);
+                }
+
+                // 保存收集的内容
+                if (currentContent.length > 0) {
+                    const content = currentContent.join('\n');
+                    switch (currentSection) {
+                        case 'summary':
+                            parsed.summary = content;
+                            break;
+                        case 'diet':
+                            parsed.recommendations.diet = content;
+                            break;
+                        case 'exercise':
+                            parsed.recommendations.exercise = content;
+                            break;
+                        case 'lifestyle':
+                            parsed.recommendations.lifestyle = content;
+                            break;
+                        case 'emotion':
+                            parsed.recommendations.emotion = content;
+                            break;
+                        case 'seasonal':
+                            parsed.recommendations.seasonal = content;
+                            break;
+                        case 'medicine':
+                            parsed.recommendations.medicine = content;
+                            break;
+                        case 'precautions':
+                            parsed.precautions = content;
+                            break;
+                    }
+                }
+            }
+
+            // 如果没有找到明确的分段，尝试简单提取
+            if (!parsed.summary && !parsed.precautions) {
+                const lines = aiText.split('\n').filter(line => line.trim());
+                if (lines.length > 0) {
+                    // 前面几行作为总结
+                    parsed.summary = lines.slice(0, 3).join('\n');
+                    // 后面的内容作为建议
+                    if (lines.length > 3) {
+                        parsed.recommendations.diet = lines.slice(3).join('\n');
+                    }
+                }
+            }
+
+            return parsed;
+        }
+
+        // 生成体质分析卡片HTML
+        function generateConstitutionCards(parsedData) {
+            if (!parsedData) {
+                return '<div class="error-message">数据解析失败，请重试</div>';
+            }
+
+            let cardsHTML = '<div class="constitution-analysis-cards">';
+
+            // 体质评估结果卡片
+            if (parsedData.summary) {
+                cardsHTML += `
+                    <div class="card constitution-summary">
+                        <div class="card-header">
+                            <h3>🎯 体质评估结果</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>${parsedData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 调理建议卡片
+            const hasRecommendations = Object.values(parsedData.recommendations).some(content => content);
+            if (hasRecommendations) {
+                cardsHTML += `
+                    <div class="card recommendations-card">
+                        <div class="card-header">
+                            <h3>💊 个性化调理方案</h3>
+                        </div>
+                        <div class="card-content">
+                `;
+
+                // 饮食调养
+                if (parsedData.recommendations.diet) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🍎 饮食调养</h4>
+                            <p>${parsedData.recommendations.diet}</p>
+                        </div>
+                    `;
+                }
+
+                // 运动养生
+                if (parsedData.recommendations.exercise) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🏃‍♂️ 运动养生</h4>
+                            <p>${parsedData.recommendations.exercise}</p>
+                        </div>
+                    `;
+                }
+
+                // 生活起居
+                if (parsedData.recommendations.lifestyle) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🏠 生活起居</h4>
+                            <p>${parsedData.recommendations.lifestyle}</p>
+                        </div>
+                    `;
+                }
+
+                // 情志调节
+                if (parsedData.recommendations.emotion) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>😌 情志调节</h4>
+                            <p>${parsedData.recommendations.emotion}</p>
+                        </div>
+                    `;
+                }
+
+                // 四季养生
+                if (parsedData.recommendations.seasonal) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🌸 四季养生</h4>
+                            <p>${parsedData.recommendations.seasonal}</p>
+                        </div>
+                    `;
+                }
+
+                // 中医药调理
+                if (parsedData.recommendations.medicine) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🌿 中医药调理</h4>
+                            <p>${parsedData.recommendations.medicine}</p>
+                        </div>
+                    `;
+                }
+
+                cardsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 注意事项卡片
+            if (parsedData.precautions) {
+                cardsHTML += `
+                    <div class="card precautions-card">
+                        <div class="card-header">
+                            <h3>⚠️ 生活注意事项</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>${parsedData.precautions}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cardsHTML += '</div>';
+            return cardsHTML;
+        }
+
+        // 显示备用建议（当AI分析失败时）
+        async function displayFallbackRecommendations(constitutionResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            const primaryConstitution = Object.entries(constitutionResult).sort((a, b) => b[1] - a[1])[0][0];
+            
+            listContainer.innerHTML = `
+                <div class="ai-fallback-container" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 32px; margin: 32px 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="fallback-header" style="text-align: center; margin-bottom: 24px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🏥</div>
+                        <h3 style="color: white; margin: 0 0 8px 0;">传统中医调理建议</h3>
+                        <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 14px;">基于您的主要体质类型：${constitutionNames[primaryConstitution]}</p>
+                    </div>
+                    <div style="color: white; line-height: 1.6;">
+                        <p style="margin-bottom: 16px;">根据中医体质学理论，您的主要体质特点需要重点关注以下调理方向：</p>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">饮食调养：选择适合您体质的食物</li>
+                            <li style="margin-bottom: 8px;">生活起居：保持规律的作息时间</li>
+                            <li style="margin-bottom: 8px;">运动养生：选择合适的运动方式</li>
+                            <li style="margin-bottom: 8px;">情志调节：保持心情舒畅</li>
+                        </ul>
+                        <p style="color: rgba(255, 255, 255, 0.6); font-size: 12px; margin-top: 16px;">* AI分析暂时不可用，为您提供基础建议</p>
+                    </div>
+                </div>
+            `;
+        }
+
+
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', init);
     </script>
