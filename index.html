@@ -162,9 +162,9 @@ var _hmt = _hmt || [];
             --oura-green: #7ed321;
 
             /* 动态轮播图尺寸变量 */
-            --carousel-max-height: 900px;
+            --carousel-max-height: 95vh;
             --carousel-aspect-ratio: 16/9;
-            --carousel-min-height: 300px;
+            --carousel-min-height: 500px;
 
             /* 导航栏高度变量 */
             --nav-height: 80px;
@@ -343,6 +343,11 @@ var _hmt = _hmt || [];
 
         /* 移动端优化英雄区域 - 高优先级 */
         @media (max-width: 768px) {
+            :root {
+                --carousel-max-height: 60vh;
+                --carousel-min-height: 350px;
+            }
+
             .oura-hero {
                 min-height: auto !important;
                 align-items: center !important;
@@ -352,6 +357,11 @@ var _hmt = _hmt || [];
             .parallax-container {
                 padding: 0 !important;
                 margin: 0 !important;
+            }
+
+            .hero-carousel {
+                min-height: var(--carousel-min-height) !important;
+                max-height: var(--carousel-max-height) !important;
             }
         }
 
@@ -367,6 +377,30 @@ var _hmt = _hmt || [];
 
             .oura-hero-content {
                 padding-top: var(--nav-height) !important;
+            }
+        }
+
+        /* 平板端优化 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            :root {
+                --carousel-max-height: 70vh;
+                --carousel-min-height: 450px;
+            }
+        }
+
+        /* 桌面端优化 */
+        @media (min-width: 1025px) {
+            :root {
+                --carousel-max-height: 85vh;
+                --carousel-min-height: 600px;
+            }
+        }
+
+        /* 大屏幕优化 */
+        @media (min-width: 1920px) {
+            :root {
+                --carousel-max-height: 90vh;
+                --carousel-min-height: 800px;
             }
         }
 
@@ -589,6 +623,7 @@ var _hmt = _hmt || [];
             -webkit-aspect-ratio: var(--carousel-aspect-ratio); /* Safari兼容性 */
             max-height: var(--carousel-max-height);
             min-height: var(--carousel-min-height);
+            height: auto;
             min-width: 400px;
             max-width: 100vw;
             margin: 0 auto;
@@ -613,6 +648,8 @@ var _hmt = _hmt || [];
             position: relative;
             width: 100%;
             height: 100%;
+            max-height: var(--carousel-max-height);
+            min-height: var(--carousel-min-height);
         }
 
         .hero-carousel .carousel-container .carousel-track {
