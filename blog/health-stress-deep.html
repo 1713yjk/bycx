@@ -1447,10 +1447,11 @@
                 // 根据AI模式决定调用真实API还是使用模拟数据
                 let analysis;
                 if (useRealAI) {
-                    // 调用真实AI API
+                    // 调用真实AI API（使用与睡眠测试相同的代理服务器）
                     console.log('🤖 调用真实百炼AI（深度分析）...');
+                    const PROXY_URL = 'https://www.520rpy.xyz/api/bailian';
                     try {
-                        const response = await fetch('/api/bailian', {
+                        const response = await fetch(PROXY_URL, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
