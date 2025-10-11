@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ Ring 抽奖活动 - 赢取智能健康戒指 | AZ Ring</title>
+    <meta name="description" content="参与AZ Ring抽奖活动，有机会赢取智能健康戒指等豪礼！填写信息即可参与，每周开奖。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            --oura-gold: #f39c12;
+            --oura-purple: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
+            color: var(--oura-white);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .lottery-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: rgba(26, 26, 26, 0.95);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 头部区域 */
+        .lottery-header {
+            background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-gold) 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lottery-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="2" fill="white" opacity="0.1"/><circle cx="90" cy="90" r="2" fill="white" opacity="0.1"/><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
+            animation: sparkle 20s linear infinite;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+        
+        .lottery-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: bounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .lottery-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .lottery-description {
+            font-size: 16px;
+            opacity: 0.95;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .lottery-time {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .lottery-time i {
+            margin-right: 6px;
+        }
+        
+        /* 奖品展示 */
+        .prizes-section {
+            padding: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--oura-gold);
+        }
+        
+        .prizes-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .prize-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .prize-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+        
+        .prize-medal {
+            font-size: 32px;
+            min-width: 48px;
+            text-align: center;
+        }
+        
+        .prize-info {
+            flex: 1;
+        }
+        
+        .prize-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .prize-desc {
+            font-size: 13px;
+            color: var(--oura-light-gray);
+        }
+        
+        .prize-count {
+            font-size: 14px;
+            color: var(--oura-accent);
+            font-weight: 600;
+        }
+        
+        /* 表单区域 */
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-label .required {
+            color: var(--oura-accent);
+            margin-left: 4px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--oura-white);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--oura-accent);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .form-note {
+            font-size: 12px;
+            color: var(--oura-light-gray);
+            margin-top: 6px;
+        }
+        
+        /* 提交按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-gold) 100%);
+            border: none;
+            border-radius: 12px;
+            color: var(--oura-white);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+        }
+        
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .submit-btn.loading .spinner {
+            display: block;
+        }
+        
+        /* 提示信息 */
+        .message {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.show {
+            display: flex;
+        }
+        
+        .message.success {
+            background: rgba(126, 211, 33, 0.1);
+            border: 1px solid rgba(126, 211, 33, 0.3);
+            color: var(--oura-green);
+        }
+        
+        .message.error {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: var(--oura-accent);
+        }
+        
+        .message i {
+            font-size: 20px;
+        }
+        
+        /* 页脚 */
+        .lottery-footer {
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--oura-light-gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .lottery-footer a {
+            color: var(--oura-accent);
+            text-decoration: none;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+            
+            .lottery-container {
+                margin: 20px auto;
+            }
+            
+            .lottery-header {
+                padding: 30px 20px;
+            }
+            
+            .lottery-title {
+                font-size: 26px;
+            }
+            
+            .lottery-icon {
+                font-size: 48px;
+            }
+            
+            .prizes-section,
+            .form-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lottery-container">
+        <!-- 头部 -->
+        <div class="lottery-header">
+            <div class="lottery-icon">🎁</div>
+            <h1 class="lottery-title" id="activityTitle">AZ Ring 抽奖活动</h1>
+            <p class="lottery-description" id="activityDescription">参与即有机会赢取AZ Ring智能戒指等豪礼！</p>
+            <div class="lottery-time">
+                <i class="fas fa-calendar-check"></i>
+                <span id="drawDay">每周五</span> 开奖
+            </div>
+        </div>
+        
+        <!-- 奖品展示 -->
+        <div class="prizes-section">
+            <h2 class="section-title">
+                <i class="fas fa-trophy"></i>
+                丰厚奖品
+            </h2>
+            <div class="prizes-grid" id="prizesGrid">
+                <!-- 奖品将通过JS动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 表单 -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-edit"></i>
+                填写信息参与
+            </h2>
+            
+            <!-- 提示信息 -->
+            <div class="message" id="message">
+                <i></i>
+                <span id="messageText"></span>
+            </div>
+            
+            <form id="lotteryForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        姓名
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="nameInput" 
+                        name="name"
+                        placeholder="请输入您的姓名" 
+                        required
+                        maxlength="20"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        手机号
+                        <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="tel" 
+                        class="form-input" 
+                        id="phoneInput" 
+                        name="phone"
+                        placeholder="请输入您的手机号" 
+                        required
+                        pattern="1[3-9]\d{9}"
+                        maxlength="11"
+                    >
+                    <div class="form-note">用于中奖通知，请填写真实手机号</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        微信号
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="wechatInput" 
+                        name="wechat"
+                        placeholder="请输入您的微信号（选填）" 
+                        maxlength="30"
+                    >
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="spinner"></span>
+                    <i class="fas fa-paper-plane"></i>
+                    <span id="submitBtnText">立即参与</span>
+                </button>
+            </form>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="lottery-footer">
+            <p>本活动最终解释权归AZ Ring所有</p>
+            <p><a href="/">返回首页</a></p>
+        </div>
+    </div>
+    
+    <script>
+        // API配置
+        const API_BASE = '/api';
+        
+        // 页面加载时获取配置
+        let activityConfig = null;
+        
+        async function loadConfig() {
+            try {
+                const response = await fetch(`${API_BASE}/lottery-config`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    activityConfig = data.config;
+                    renderConfig();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                showMessage('加载活动信息失败，请刷新页面重试', 'error');
+            }
+        }
+        
+        // 渲染配置信息
+        function renderConfig() {
+            if (!activityConfig) return;
+            
+            // 更新活动信息
+            const { activity, prizes } = activityConfig;
+            
+            document.getElementById('activityTitle').textContent = activity.title;
+            document.getElementById('activityDescription').textContent = activity.description;
+            document.getElementById('drawDay').textContent = activity.drawDay;
+            
+            // 渲染奖品
+            const prizesGrid = document.getElementById('prizesGrid');
+            const prizesMedals = {
+                first: '🥇',
+                second: '🥈',
+                third: '🥉'
+            };
+            
+            prizesGrid.innerHTML = '';
+            
+            Object.entries(prizes).forEach(([level, prize]) => {
+                const prizeCard = document.createElement('div');
+                prizeCard.className = 'prize-card';
+                prizeCard.innerHTML = `
+                    <div class="prize-medal">${prizesMedals[level]}</div>
+                    <div class="prize-info">
+                        <div class="prize-name">${prize.name}</div>
+                        <div class="prize-desc">${prize.description}</div>
+                    </div>
+                    <div class="prize-count">${prize.count}名</div>
+                `;
+                prizesGrid.appendChild(prizeCard);
+            });
+        }
+        
+        // 显示消息
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('message');
+            const messageText = document.getElementById('messageText');
+            const icon = message.querySelector('i');
+            
+            message.className = 'message show ' + type;
+            messageText.textContent = text;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 表单提交
+        document.getElementById('lotteryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+            
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('nameInput').value.trim(),
+                phone: document.getElementById('phoneInput').value.trim(),
+                wechat: document.getElementById('wechatInput').value.trim()
+            };
+            
+            // 验证
+            if (!formData.name) {
+                showMessage('请输入姓名', 'error');
+                return;
+            }
+            
+            if (!formData.phone) {
+                showMessage('请输入手机号', 'error');
+                return;
+            }
+            
+            if (!/^1[3-9]\d{9}$/.test(formData.phone)) {
+                showMessage('手机号格式不正确', 'error');
+                return;
+            }
+            
+            // 提交中
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtnText.textContent = '提交中...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/lottery-submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message || '提交成功！祝您好运！', 'success');
+                    // 清空表单
+                    document.getElementById('lotteryForm').reset();
+                    
+                    // 3秒后可选择跳转到成功页面或保持当前页
+                    // setTimeout(() => {
+                    //     window.location.href = '/lottery-success.html';
+                    // }, 2000);
+                } else {
+                    showMessage(data.error || '提交失败，请重试', 'error');
+                }
+            } catch (error) {
+                console.error('提交失败:', error);
+                showMessage('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtnText.textContent = '立即参与';
+            }
+        });
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+        });
+    </script>
+</body>
+</html>
+
