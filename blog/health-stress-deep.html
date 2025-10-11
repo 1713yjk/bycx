@@ -778,8 +778,8 @@
             <!-- AI模式切换 -->
             <div class="debug-section">
                 <h4>🤖 AI模式</h4>
-                <button id="aiModeBtn" class="ai-mode-btn" onclick="toggleAIMode()">
-                    <span id="aiModeText">当前：模拟AI 🔄</span>
+                <button id="aiModeBtn" class="ai-mode-btn real-ai" onclick="toggleAIMode()">
+                    <span id="aiModeText">当前：真实AI ✅</span>
                 </button>
             </div>
             
@@ -891,7 +891,7 @@
         // 检测调试模式（支持URL参数和按钮切换）
         const urlParams = new URLSearchParams(window.location.search);
         let isDebugMode = urlParams.get('debug') === 'true';
-        let useRealAI = false; // AI模式：false=模拟AI, true=真实AI
+        let useRealAI = true; // AI模式：默认使用真实AI
         
         // 切换AI模式
         function toggleAIMode() {
@@ -931,10 +931,7 @@
                 debugBtn.classList.remove('active');
                 debugBtnText.textContent = '开启调试';
                 console.log('调试模式已关闭');
-                // 关闭调试时重置AI模式
-                if (useRealAI) {
-                    toggleAIMode();
-                }
+                // 注意：关闭调试时保持AI模式不变（默认使用真实AI）
             }
         }
         
