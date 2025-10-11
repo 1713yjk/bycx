@@ -1,0 +1,30 @@
+{
+  "name": "az-rings-ai-proxy",
+  "version": "1.0.0",
+  "description": "AI代理服务，为AZ Rings智能戒指健康评估系统提供百炼AI接口",
+  "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "echo 'This is a serverless project'"
+  },
+  "keywords": [
+    "vercel",
+    "serverless",
+    "ai-proxy",
+    "bailian",
+    "health-assessment"
+  ],
+  "author": "AZ Rings Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/az-rings-website.git"
+  },
+  "dependencies": {
+    "ali-oss": "^6.18.0"
+  },
+  "devDependencies": {}
+}
