@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ Ring 新年抽奖活动 - 奢华智能健康戒指 | AZ Ring</title>
+    <meta name="description" content="参与AZ Ring新年抽奖活动，赢取价值999元的智能健康戒指。极致轻盈3g，7天超长续航，24小时健康监测。">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 100 900;
+            font-display: swap;
+            src: url('fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --luxury-black: #0a0a0a;
+            --luxury-dark: #1a1a1a;
+            --luxury-white: #ffffff;
+            --luxury-gray: #666666;
+            --luxury-light-gray: #999999;
+            --luxury-accent: #ff6b35;
+            --luxury-accent-light: #ff8a65;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--luxury-black);
+            color: var(--luxury-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-back {
+            color: var(--luxury-light-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-back:hover {
+            color: var(--luxury-white);
+        }
+        
+        .nav-logo {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Hero Section - 第1屏：分屏布局 */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 100px 40px 80px;
+            position: relative;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .hero-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .hero-product {
+            max-width: 700px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .hero-product img {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 40px 80px rgba(255, 107, 53, 0.15));
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .hero-product:hover img {
+            transform: scale(1.05);
+        }
+        
+        .hero-right {
+            display: flex;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--luxury-accent);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .hero-title {
+            font-size: clamp(56px, 10vw, 110px);
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+            line-height: 0.95;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--luxury-light-gray);
+            margin-bottom: 48px;
+            font-weight: 400;
+            line-height: 1.8;
+            max-width: 500px;
+        }
+        
+        /* 新的内联倒计时样式 */
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .countdown-inline {
+            text-align: left;
+            padding: 20px 0;
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            color: var(--luxury-gray);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .countdown-display {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--luxury-accent);
+            font-family: 'Inter', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .countdown-display span {
+            display: inline-block;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .hero-cta {
+            display: inline-block;
+            padding: 18px 48px;
+            background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-accent-light));
+            color: var(--luxury-white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4);
+        }
+        
+        .hero-specs {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+        
+        .spec-item {
+            text-align: left;
+            padding-left: 20px;
+            border-left: 2px solid rgba(255, 107, 53, 0.3);
+        }
+        
+        .spec-value {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--luxury-white), var(--luxury-light-gray));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .spec-label {
+            font-size: 13px;
+            color: var(--luxury-gray);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        /* Features Section - 第2屏 */
+        .features {
+            min-height: 100vh;
+            padding: 120px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
+            font-size: 16px;
+            color: var(--luxury-gray);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .feature-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .feature-card:hover .feature-image {
+            transform: scale(1.05);
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .feature-desc {
+            font-size: 14px;
+            color: var(--luxury-gray);
+            line-height: 1.8;
+        }
+        
+        /* Winners History Section - 往期中奖名单 */
+        .winners-history {
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.01);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .winners-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .winners-ticker-wrap {
+            margin: 60px 0;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            height: 120px;
+            position: relative;
+        }
+
+        .winners-ticker {
+            display: flex;
+            animation: tickerScroll 30s linear infinite;
+            align-items: center;
+            height: 100%;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .winner-item {
+            display: flex;
+            align-items: center;
+            margin-right: 80px;
+            white-space: nowrap;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .winner-item:hover {
+            opacity: 1;
+        }
+
+        .winner-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-accent-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 16px;
+            font-size: 14px;
+        }
+
+        .winner-info {
+            margin-right: 16px;
+        }
+
+        .winner-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--luxury-white);
+            margin-bottom: 4px;
+        }
+
+        .winner-prize {
+            font-size: 14px;
+            color: var(--luxury-light-gray);
+        }
+
+        .winner-date {
+            font-size: 12px;
+            color: var(--luxury-gray);
+            opacity: 0.7;
+        }
+
+        .winners-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--luxury-accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--luxury-gray);
+            letter-spacing: 0.05em;
+        }
+        
+        /* Lottery Section - 第3屏 */
+        .lottery {
+            min-height: 100vh;
+            padding: 120px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lottery-container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .prizes {
+            margin-bottom: 60px;
+        }
+        
+        .prize-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .prize-item:last-child {
+            border-bottom: none;
+        }
+        
+        .prize-info {
+            flex: 1;
+        }
+        
+        .prize-level {
+            font-size: 14px;
+            color: var(--luxury-gray);
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+        
+        .prize-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .prize-value {
+            font-size: 14px;
+            color: var(--luxury-light-gray);
+        }
+        
+        .prize-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            opacity: 0.8;
+        }
+        
+        /* Form */
+        .form {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: var(--luxury-gray);
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--luxury-white);
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: var(--luxury-white);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-note {
+            font-size: 12px;
+            color: var(--luxury-gray);
+            margin-top: 8px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-accent-light));
+            border: none;
+            border-radius: 50px;
+            color: var(--luxury-white);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-btn.loading {
+            position: relative;
+        }
+        
+        .submit-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin-left: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Share Rewards - 重新设计的分享奖励 */
+        .share-rewards {
+            margin-top: 40px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .share-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .share-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--luxury-accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .share-info {
+            flex: 1;
+        }
+
+        .share-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--luxury-white);
+            margin: 0 0 8px 0;
+        }
+
+        .share-desc {
+            font-size: 14px;
+            color: var(--luxury-light-gray);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .share-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .share-method {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--luxury-white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .share-method:hover {
+            background: rgba(255, 107, 53, 0.08);
+            border-color: rgba(255, 107, 53, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .method-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-progress {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-text,
+        .progress-bonus {
+            font-size: 13px;
+            color: var(--luxury-gray);
+        }
+
+        .progress-text strong,
+        .progress-bonus strong {
+            color: var(--luxury-accent);
+            font-weight: 600;
+        }
+        
+        /* Message */
+        .message {
+            margin-top: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.success {
+            background: rgba(126, 211, 33, 0.1);
+            border: 1px solid rgba(126, 211, 33, 0.3);
+            color: #7ed321;
+        }
+        
+        .message.error {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: var(--luxury-accent);
+        }
+        
+        /* Social Follow Section - 社交媒体关注 */
+        .social-follow {
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.008);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .social-title {
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--luxury-white);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .social-subtitle {
+            font-size: 16px;
+            color: var(--luxury-light-gray);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .social-platforms {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .social-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 107, 53, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
+        }
+
+        .social-qr {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .social-qr:hover {
+            transform: scale(1.1);
+        }
+
+        .social-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .qr-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-qr:hover .qr-overlay {
+            opacity: 1;
+        }
+
+        .social-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .platform-name {
+            font-size: 12px;
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+
+        .social-info {
+            flex: 1;
+        }
+
+        .platform-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--luxury-white);
+            margin-bottom: 8px;
+        }
+
+        .platform-desc {
+            font-size: 14px;
+            color: var(--luxury-light-gray);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .platform-stats {
+            margin-bottom: 12px;
+        }
+
+        .followers {
+            font-size: 12px;
+            color: var(--luxury-gray);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .platform-benefits {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .benefit-tag {
+            font-size: 12px;
+            color: var(--luxury-accent);
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .social-bonus {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 107, 53, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .bonus-text {
+            font-size: 16px;
+            color: var(--luxury-light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 0;
+        }
+
+        .bonus-icon {
+            font-size: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+            }
+        }
+
+        /* QR Code Modal - 二维码弹窗 */
+        .qr-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .qr-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-modal-content {
+            background: var(--luxury-dark);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            max-width: 400px;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .qr-modal-content img {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .qr-modal-text {
+            font-size: 16px;
+            color: var(--luxury-light-gray);
+            margin: 0;
+        }
+
+        .qr-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--luxury-white);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .qr-modal-close:hover {
+            color: var(--luxury-accent);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: var(--luxury-gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 100px 40px 60px;
+            }
+            
+            .hero-left {
+                order: 1;
+                padding: 20px;
+            }
+            
+            .hero-right {
+                order: 2;
+                padding: 20px;
+            }
+            
+            .hero-content {
+                text-align: center;
+                margin: 0 auto;
+            }
+            
+            .hero-specs {
+                justify-content: center;
+            }
+            
+            .spec-item {
+                text-align: center;
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid rgba(255, 107, 53, 0.3);
+                padding-top: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 20px;
+            }
+            
+            .hero {
+                padding: 80px 20px 40px;
+                gap: 32px;
+            }
+            
+            .hero-left,
+            .hero-right {
+                padding: 0;
+            }
+            
+            .winners-ticker-wrap {
+                height: 100px;
+            }
+            
+            .winners-stats {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .winners-ticker {
+                animation-duration: 40s;
+            }
+            
+            .form-actions {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .countdown-inline {
+                text-align: center;
+                padding: 16px 0;
+            }
+            
+            .countdown-display {
+                font-size: 18px;
+            }
+            
+            .share-rewards {
+                padding: 20px;
+                margin-top: 30px;
+            }
+            
+            .share-methods {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .progress-info {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .social-follow {
+                padding: 60px 20px;
+            }
+            
+            .social-platforms {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .social-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .social-qr {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .qr-modal-content {
+                margin: 20px;
+                padding: 30px;
+            }
+            
+            .qr-modal-content img {
+                width: 240px;
+                height: 240px;
+            }
+            
+            .hero-specs {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .spec-value {
+                font-size: 36px;
+            }
+            
+            .features,
+            .lottery {
+                padding: 80px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-back">← 返回首页</a>
+            <div class="nav-logo">AZ RING</div>
+            <div style="width: 80px;"></div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section - 第1屏：分屏布局 -->
+    <section class="hero" id="hero">
+        <div class="hero-left">
+            <div class="hero-product">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/双戒指.png" alt="AZ Ring 智能健康戒指">
+            </div>
+        </div>
+        
+        <div class="hero-right">
+            <div class="hero-content">
+                <div class="hero-label">2025 特别活动</div>
+                <h1 class="hero-title">AZ Ring<br><span style="white-space: nowrap;">智能健康戒指</span></h1>
+                <p class="hero-subtitle">参与抽奖，赢取价值999元的智能健康戒指<br>活动期间：2025年1月20日 - 12月31日</p>
+                <a href="#lottery" class="hero-cta">立即参与抽奖</a>
+                
+                <div class="hero-specs">
+                    <div class="spec-item">
+                        <div class="spec-value">3g</div>
+                        <div class="spec-label">极致轻盈</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">7天</div>
+                        <div class="spec-label">超长续航</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-value">5ATM</div>
+                        <div class="spec-label">防水防尘</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section - 第2屏 -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">为什么选择 AZ Ring</h2>
+            <p class="section-subtitle">科技与美学的完美融合</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示1.jpg" alt="极致轻盈" class="feature-image">
+                <h3 class="feature-title">极致轻盈</h3>
+                <p class="feature-desc">仅重3g，佩戴无感。钛金属机身搭配PVD涂层，既轻盈又耐用，适合全天候佩戴。</p>
+            </div>
+            
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/睡眠2.jpg" alt="睡眠守护" class="feature-image">
+                <h3 class="feature-title">睡眠守护</h3>
+                <p class="feature-desc">15+项专业睡眠分析，精准追踪深睡、浅睡、REM阶段，提供个性化改善建议。</p>
+            </div>
+            
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示2.jpg" alt="全天监测" class="feature-image">
+                <h3 class="feature-title">全天监测</h3>
+                <p class="feature-desc">24小时心率、血氧、压力监测，实时掌握身体状态，预警健康风险。</p>
+            </div>
+            
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/瑜伽.png" alt="运动追踪" class="feature-image">
+                <h3 class="feature-title">运动追踪</h3>
+                <p class="feature-desc">支持几十种运动模式，自动识别运动状态，记录步数、距离、卡路里等完整数据。</p>
+            </div>
+            
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" alt="AI洞察" class="feature-image">
+                <h3 class="feature-title">AI洞察</h3>
+                <p class="feature-desc">基于专业健康模型与AI分析，生成个性化健康卡片和定制化建议方案。</p>
+            </div>
+            
+            <div class="feature-card">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png" alt="奢华工艺" class="feature-image">
+                <h3 class="feature-title">奢华工艺</h3>
+                <p class="feature-desc">宝格丽珠宝设计师操刀设计，奢雅金与典雅黑两款经典配色，时尚与科技兼得。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Winners History Section - 往期中奖名单 -->
+    <section class="winners-history" id="winners-history">
+        <div class="winners-container">
+            <div class="section-header">
+                <h2 class="section-title">往期中奖名单</h2>
+                <p class="section-subtitle">真实透明，每周准时开奖</p>
+            </div>
+            
+            <div class="winners-ticker-wrap">
+                <div class="winners-ticker" id="winnersTicker">
+                    <!-- 动态生成中奖者信息 -->
+                </div>
+            </div>
+            
+            <div class="winners-stats">
+                <div class="stat-item">
+                    <span class="stat-value">1,247</span>
+                    <span class="stat-label">累计参与人数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">89</span>
+                    <span class="stat-label">累计中奖人数</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">¥26,847</span>
+                    <span class="stat-label">累计奖品价值</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Lottery Section - 第3屏 -->
+    <section class="lottery" id="lottery">
+        <div class="lottery-container">
+            <div class="section-header">
+                <h2 class="section-title">丰厚奖品</h2>
+                <p class="section-subtitle">每周五开奖</p>
+            </div>
+            
+            <div class="prizes">
+                <div class="prize-item">
+                    <div class="prize-info">
+                        <div class="prize-level">一等奖</div>
+                        <div class="prize-name">AZ Ring 智能戒指</div>
+                        <div class="prize-value">价值 ¥999 · 1名</div>
+                    </div>
+                    <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png" alt="金色戒指" class="prize-image">
+                </div>
+                
+                <div class="prize-item">
+                    <div class="prize-info">
+                        <div class="prize-level">二等奖</div>
+                        <div class="prize-name">健康大礼包</div>
+                        <div class="prize-value">价值 ¥299 · 5名</div>
+                    </div>
+                </div>
+                
+                <div class="prize-item">
+                    <div class="prize-info">
+                        <div class="prize-level">三等奖</div>
+                        <div class="prize-name">精美礼品</div>
+                        <div class="prize-value">价值 ¥99 · 20名</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form">
+                <form id="lotteryForm">
+                    <div class="form-group">
+                        <label class="form-label">姓名</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="nameInput" 
+                            name="name"
+                            placeholder="请输入您的姓名" 
+                            required
+                            maxlength="20"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">手机号</label>
+                        <input 
+                            type="tel" 
+                            class="form-input" 
+                            id="phoneInput" 
+                            name="phone"
+                            placeholder="请输入您的手机号" 
+                            required
+                            pattern="1[3-9]\d{9}"
+                            maxlength="11"
+                        >
+                        <div class="form-note">用于中奖通知，请填写真实手机号</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">微信号（选填）</label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="wechatInput" 
+                            name="wechat"
+                            placeholder="请输入您的微信号" 
+                            maxlength="30"
+                        >
+                    </div>
+                    
+                    <!-- 新的表单底部布局 -->
+                    <div class="form-actions">
+                        <div class="countdown-inline">
+                            <div class="countdown-label">开奖倒计时</div>
+                            <div class="countdown-display" id="countdownTimer">
+                                <span id="days">0</span>天 <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span id="submitBtnText">立即参与抽奖</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- 重新设计的分享奖励功能 -->
+                <div class="share-rewards">
+                    <div class="share-header">
+                        <i data-feather="users" class="share-icon"></i>
+                        <div class="share-info">
+                            <h4 class="share-title">邀请好友参与</h4>
+                            <p class="share-desc">邀请好友，获得额外中奖机会</p>
+                        </div>
+                    </div>
+                    
+                    <div class="share-methods">
+                        <button class="share-method" onclick="shareToWechat()">
+                            <i data-feather="message-circle" class="method-icon"></i>
+                            <span class="method-text">微信好友</span>
+                        </button>
+                        <button class="share-method" onclick="shareToMoments()">
+                            <i data-feather="share-2" class="method-icon"></i>
+                            <span class="method-text">朋友圈</span>
+                        </button>
+                        <button class="share-method" onclick="shareToWeibo()">
+                            <i data-feather="send" class="method-icon"></i>
+                            <span class="method-text">微博</span>
+                        </button>
+                    </div>
+                    
+                    <div class="share-progress" id="shareProgress" style="display: none;">
+                        <div class="progress-info">
+                            <span class="progress-text">已邀请 <strong id="inviteCount">0</strong> 位好友</span>
+                            <span class="progress-bonus">获得 <strong id="bonusChances">0</strong>% 额外机会</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Social Follow Section - 社交媒体关注 -->
+    <section class="social-follow" id="social-follow">
+        <div class="social-container">
+            <div class="section-header">
+                <h3 class="social-title">关注我们，获取更多健康资讯</h3>
+                <p class="social-subtitle">第一时间了解活动信息和中奖结果</p>
+            </div>
+            
+            <div class="social-platforms">
+                <div class="social-item">
+                    <div class="social-qr" onclick="enlargeQR('xiaohongshu')">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/小红书二维码.png" alt="小红书二维码" id="xiaohongshuQR">
+                        <div class="qr-overlay">
+                            <div class="social-icon xiaohongshu">📱</div>
+                            <span class="platform-name">小红书</span>
+                        </div>
+                    </div>
+                    <div class="social-info">
+                        <h4 class="platform-title">@AZLG</h4>
+                        <p class="platform-desc">产品测评 | 健康科普 | 用户分享</p>
+                        <div class="platform-stats">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-item">
+                    <div class="social-qr" onclick="enlargeQR('wechat')">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg" alt="微信公众号二维码" id="wechatQR">
+                        <div class="qr-overlay">
+                            <div class="social-icon wechat">💬</div>
+                            <span class="platform-name">公众号</span>
+                        </div>
+                    </div>
+                    <div class="social-info">
+                        <h4 class="platform-title">AZ Ring智能健康</h4>
+                        <p class="platform-desc">抽奖信息 | 中奖通知 | 健康管理</p>
+                        <div class="platform-benefits">
+                            <span class="benefit-tag">开奖提醒</span>
+                            <span class="benefit-tag">专属福利</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+          
+        </div>
+    </section>
+
+    <!-- QR Code Modal - 二维码放大弹窗 -->
+    <div class="qr-modal" id="qrModal" onclick="closeQRModal()">
+        <div class="qr-modal-content">
+            <img src="" alt="二维码" id="modalQRImage">
+            <p class="qr-modal-text" id="modalQRText"></p>
+            <button class="qr-modal-close" onclick="closeQRModal()">×</button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">本活动最终解释权归 AZ Ring 所有</p>
+    </footer>
+    
+    <script>
+        const API_BASE = '/api';
+        
+        // 倒计时功能
+        function initCountdown() {
+            function getNextFriday8PM() {
+                const now = new Date();
+                const nextFriday = new Date();
+                const currentDay = now.getDay(); // 0=Sunday, 5=Friday
+                
+                // 计算距离下个周五的天数
+                let daysUntilFriday = (5 - currentDay + 7) % 7;
+                if (daysUntilFriday === 0) {
+                    // 如果今天是周五，检查时间
+                    if (now.getHours() >= 20) {
+                        daysUntilFriday = 7; // 下周五
+                    }
+                }
+                
+                nextFriday.setDate(now.getDate() + daysUntilFriday);
+                nextFriday.setHours(20, 0, 0, 0); // 8PM
+                
+                return nextFriday;
+            }
+            
+            function updateCountdown() {
+                const endTime = getNextFriday8PM();
+                const now = new Date();
+                const timeDiff = endTime - now;
+                
+                if (timeDiff > 0) {
+                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                    
+                    document.getElementById('days').textContent = days;
+                    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+                } else {
+                    document.getElementById('countdownTimer').innerHTML = '🎉 开奖进行中...';
+                }
+            }
+            
+            // 立即执行一次
+            updateCountdown();
+            // 每秒更新
+            setInterval(updateCountdown, 1000);
+        }
+        
+        // 往期中奖名单数据
+        const winnersData = [
+            { name: '张**', prize: 'AZ Ring 智能戒指', date: '2025-01-10', avatar: '张' },
+            { name: '李**', prize: '健康大礼包', date: '2025-01-10', avatar: '李' },
+            { name: '王**', prize: '精美礼品', date: '2025-01-10', avatar: '王' },
+            { name: '陈**', prize: 'AZ Ring 智能戒指', date: '2025-01-03', avatar: '陈' },
+            { name: '刘**', prize: '健康大礼包', date: '2025-01-03', avatar: '刘' },
+            { name: '赵**', prize: '精美礼品', date: '2025-01-03', avatar: '赵' },
+            { name: '孙**', prize: '健康大礼包', date: '2025-01-03', avatar: '孙' },
+            { name: '周**', prize: 'AZ Ring 智能戒指', date: '2024-12-27', avatar: '周' },
+            { name: '吴**', prize: '精美礼品', date: '2024-12-27', avatar: '吴' },
+            { name: '郑**', prize: '健康大礼包', date: '2024-12-27', avatar: '郑' }
+        ];
+
+        function generateWinnersList() {
+            const ticker = document.getElementById('winnersTicker');
+            if (!ticker) return;
+            
+            // 重复数据以实现无缝滚动
+            const extendedData = [...winnersData, ...winnersData];
+            
+            ticker.innerHTML = extendedData.map(winner => `
+                <div class="winner-item">
+                    <div class="winner-avatar">${winner.avatar}</div>
+                    <div class="winner-info">
+                        <div class="winner-name">${winner.name}</div>
+                        <div class="winner-prize">获得 ${winner.prize}</div>
+                    </div>
+                    <div class="winner-date">${winner.date}</div>
+                </div>
+            `).join('');
+        }
+        
+        // 分享功能
+        let shareStats = {
+            inviteCount: 0,
+            bonusChances: 0
+        };
+
+        function loadShareStats() {
+            const saved = localStorage.getItem('azring-share-stats');
+            if (saved) {
+                shareStats = JSON.parse(saved);
+                updateShareStatsDisplay();
+            }
+        }
+
+        function saveShareStats() {
+            localStorage.setItem('azring-share-stats', JSON.stringify(shareStats));
+        }
+
+        function updateShareStatsDisplay() {
+            const inviteCountEl = document.getElementById('inviteCount');
+            const bonusChancesEl = document.getElementById('bonusChances');
+            
+            if (inviteCountEl) inviteCountEl.textContent = shareStats.inviteCount;
+            if (bonusChancesEl) bonusChancesEl.textContent = Math.floor(shareStats.inviteCount / 5) * 20; // 每5个邀请=20%额外机会
+        }
+
+        function incrementShareStats() {
+            shareStats.inviteCount++;
+            shareStats.bonusChances = Math.floor(shareStats.inviteCount * 0.2); // 每5个邀请增加1次机会
+            updateShareStatsDisplay();
+            saveShareStats();
+            
+            // 显示奖励提示
+            showMessage(`成功分享！您已邀请${shareStats.inviteCount}位好友，获得${shareStats.bonusChances}次额外机会`, 'success');
+        }
+
+        function shareToWechat() {
+            const shareUrl = window.location.href;
+            const shareTitle = 'AZ Ring智能戒指抽奖活动';
+            const shareDesc = '参与抽奖，赢取价值999元的AZ Ring智能健康戒指！';
+            
+            // 检测是否在微信环境
+            if (navigator.userAgent.includes('MicroMessenger')) {
+                // 微信内分享
+                showMessage('请点击右上角菜单，选择"分享给朋友"', 'success');
+            } else {
+                // 复制链接到剪贴板
+                copyToClipboard(shareUrl);
+                showMessage('链接已复制到剪贴板，快去微信分享给好友吧！', 'success');
+            }
+            
+            // 模拟分享成功（实际应用中需要验证分享是否成功）
+            setTimeout(() => {
+                incrementShareStats();
+            }, 1000);
+        }
+
+        function shareToMoments() {
+            const shareUrl = window.location.href;
+            const shareTitle = 'AZ Ring智能戒指抽奖活动';
+            
+            if (navigator.userAgent.includes('MicroMessenger')) {
+                showMessage('请点击右上角菜单，选择"分享到朋友圈"', 'success');
+                setTimeout(() => {
+                    incrementShareStats();
+                }, 1000);
+            } else {
+                copyToClipboard(shareUrl);
+                showMessage('链接已复制，请在微信中分享到朋友圈！', 'success');
+                setTimeout(() => {
+                    incrementShareStats();
+                }, 1000);
+            }
+        }
+
+        function shareToWeibo() {
+            const shareUrl = encodeURIComponent(window.location.href);
+            const shareTitle = encodeURIComponent('AZ Ring智能戒指抽奖活动 - 参与抽奖，赢取价值999元的智能健康戒指！');
+            const weiboUrl = `https://service.weibo.com/share/share.php?url=${shareUrl}&title=${shareTitle}&pic=&searchPic=false`;
+            
+            // 打开微博分享窗口
+            const shareWindow = window.open(weiboUrl, 'weibo-share', 'width=600,height=400,scrollbars=yes,resizable=yes');
+            
+            if (shareWindow) {
+                // 检测分享窗口是否关闭（用户完成分享）
+                const checkClosed = setInterval(() => {
+                    if (shareWindow.closed) {
+                        clearInterval(checkClosed);
+                        incrementShareStats();
+                    }
+                }, 1000);
+                
+                // 15秒后停止检测
+                setTimeout(() => {
+                    clearInterval(checkClosed);
+                }, 15000);
+            } else {
+                showMessage('请允许弹窗，以便正常分享到微博', 'error');
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).catch(() => {
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('复制失败:', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // 社交媒体二维码功能
+        function enlargeQR(platform) {
+            const modal = document.getElementById('qrModal');
+            const modalImage = document.getElementById('modalQRImage');
+            const modalText = document.getElementById('modalQRText');
+            
+            let imageSrc, text;
+            
+            if (platform === 'xiaohongshu') {
+                imageSrc = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/小红书二维码.png';
+                text = '扫码关注小红书 @AZLG';
+            } else if (platform === 'wechat') {
+                imageSrc = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg';
+                text = '扫码关注微信公众号「AZ Ring智能健康」';
+            }
+            
+            modalImage.src = imageSrc;
+            modalText.textContent = text;
+            modal.classList.add('show');
+            
+            // 防止body滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeQRModal() {
+            const modal = document.getElementById('qrModal');
+            modal.classList.remove('show');
+            
+            // 恢复body滚动
+            document.body.style.overflow = '';
+        }
+
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeQRModal();
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // 表单提交
+        document.getElementById('lotteryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+            const message = document.getElementById('message');
+            
+            const formData = {
+                name: document.getElementById('nameInput').value.trim(),
+                phone: document.getElementById('phoneInput').value.trim(),
+                wechat: document.getElementById('wechatInput').value.trim()
+            };
+            
+            // 验证
+            if (!formData.name) {
+                showMessage('请输入姓名', 'error');
+                return;
+            }
+            
+            if (!formData.phone || !/^1[3-9]\d{9}$/.test(formData.phone)) {
+                showMessage('请输入正确的手机号', 'error');
+                return;
+            }
+            
+            // 提交中
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtnText.textContent = '提交中';
+            
+            try {
+                const response = await fetch(`${API_BASE}/lottery-submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message || '提交成功！祝您好运！', 'success');
+                    document.getElementById('lotteryForm').reset();
+                } else {
+                    showMessage(data.error || '提交失败，请重试', 'error');
+                }
+            } catch (error) {
+                console.error('提交失败:', error);
+                showMessage('网络错误，请检查网络连接后重试', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtnText.textContent = '提交参与';
+            }
+        });
+        
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message show ${type}`;
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 页面加载完成后初始化功能
+        document.addEventListener('DOMContentLoaded', function() {
+            initCountdown();
+            generateWinnersList();
+            loadShareStats();
+            
+            // 初始化Feather Icons
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
+
+
