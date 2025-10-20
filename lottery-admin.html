@@ -558,6 +558,30 @@
         
         <!-- 内容区域 -->
         <div class="admin-content">
+            <!-- 期次管理面板 -->
+            <div class="panel" style="margin-bottom: 30px;">
+                <div class="panel-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    期次管理
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">当前期次</div>
+                        <div style="font-size: 24px; font-weight: 600; color: var(--accent);" id="currentPeriodInfo">加载中...</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">活动状态</div>
+                        <div style="font-size: 18px; font-weight: 500;" id="activityStatusInfo">检测中...</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">期次选择</div>
+                        <select id="periodSelector" style="width: 100%; padding: 8px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 14px;">
+                            <option value="">全部期次</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <!-- 概览页面 -->
             <div class="section active" id="dashboard">
                 <div class="stats-grid" id="statsGrid">
@@ -642,14 +666,8 @@
                     </div>
                     
                     <div class="actions-row">
-                        <button class="btn btn-warning btn-small" onclick="openDrawModal('first')">
-                            🥇 抽取一等奖
-                        </button>
-                        <button class="btn btn-info btn-small" onclick="openDrawModal('second')">
-                            🥈 抽取二等奖
-                        </button>
-                        <button class="btn btn-success btn-small" onclick="openDrawModal('third')">
-                            🥉 抽取三等奖
+                        <button class="btn btn-warning btn-small" onclick="openDrawModal()">
+                            🎁 抽取幸运奖（2人）
                         </button>
                     </div>
                     
@@ -662,6 +680,7 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <th>期次</th>
                                     <th>抽奖ID</th>
                                     <th>奖品等级</th>
                                     <th>中奖人数</th>
@@ -671,7 +690,7 @@
                             </thead>
                             <tbody id="drawHistoryTable">
                                 <tr>
-                                    <td colspan="5" class="loading">暂无抽奖历史</td>
+                                    <td colspan="6" class="loading">暂无抽奖历史</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -730,7 +749,8 @@
                     class="form-input" 
                     id="drawCount"
                     min="1"
-                    value="1"
+                    max="10"
+                    value="2"
                 >
             </div>
             
@@ -747,7 +767,96 @@
         const API_BASE = '/api';
         let adminPassword = '';
         let currentPage = 1;
-        let currentDrawLevel = '';
+        let selectedPeriodId = null; // 选中的期次ID，null表示全部
+        
+        // 期次计算功能（与前端一致）
+        function calculateCurrentPeriod() {
+            const baseDate = new Date('2025-01-20'); // 第1期起始日期（周一）
+            const now = new Date();
+            
+            const diffTime = now - baseDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const periodId = Math.floor(diffDays / 7) + 1;
+            
+            const periodStartDays = (periodId - 1) * 7;
+            const periodStart = new Date(baseDate);
+            periodStart.setDate(baseDate.getDate() + periodStartDays);
+            
+            const periodEnd = new Date(periodStart);
+            periodEnd.setDate(periodStart.getDate() + 6);
+            
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            return {
+                periodId: periodId,
+                periodName: `第${periodId}期（${formatDate(periodStart)}至${formatDate(periodEnd)}）`,
+                startDate: periodStart,
+                endDate: periodEnd
+            };
+        }
+        
+        // 活动状态判断
+        function getActivityStatus() {
+            const now = new Date();
+            const day = now.getDay();
+            const hour = now.getHours();
+            
+            if ((day === 5 && hour >= 20) || day === 6 || day === 0) {
+                return 'ended';
+            }
+            return 'active';
+        }
+        
+        // 生成期次选择器选项
+        function generatePeriodOptions() {
+            const currentPeriod = calculateCurrentPeriod();
+            const selector = document.getElementById('periodSelector');
+            
+            // 生成从第1期到当前期次的选项
+            let options = '<option value="">全部期次</option>';
+            for (let i = currentPeriod.periodId; i >= 1; i--) {
+                const baseDate = new Date('2025-01-20');
+                const periodStartDays = (i - 1) * 7;
+                const periodStart = new Date(baseDate);
+                periodStart.setDate(baseDate.getDate() + periodStartDays);
+                
+                const periodEnd = new Date(periodStart);
+                periodEnd.setDate(periodStart.getDate() + 6);
+                
+                const formatDate = (date) => {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                };
+                
+                const periodName = `第${i}期（${formatDate(periodStart)}至${formatDate(periodEnd)}）`;
+                const selected = i === currentPeriod.periodId ? 'selected' : '';
+                options += `<option value="${i}" ${selected}>${periodName}</option>`;
+            }
+            
+            selector.innerHTML = options;
+        }
+        
+        // 更新期次信息显示
+        function updatePeriodInfo() {
+            const periodInfo = calculateCurrentPeriod();
+            const status = getActivityStatus();
+            
+            document.getElementById('currentPeriodInfo').textContent = periodInfo.periodName;
+            
+            const statusEl = document.getElementById('activityStatusInfo');
+            if (status === 'active') {
+                statusEl.innerHTML = '<span style="color: var(--success);">● 进行中</span>';
+            } else {
+                statusEl.innerHTML = '<span style="color: var(--warning);">● 已结束</span>';
+            }
+        }
         
         // 登录
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -855,7 +964,13 @@
         // 加载用户列表
         async function loadUsers(page = 1) {
             try {
-                const response = await fetch(`${API_BASE}/lottery-list?password=${adminPassword}&page=${page}&pageSize=20`);
+                // 构建URL，添加期次筛选
+                let url = `${API_BASE}/lottery-list?password=${adminPassword}&page=${page}&pageSize=20`;
+                if (selectedPeriodId) {
+                    url += `&periodId=${selectedPeriodId}`;
+                }
+                
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -904,14 +1019,8 @@
         }
         
         // 打开抽奖模态框
-        function openDrawModal(level) {
-            currentDrawLevel = level;
-            const levelNames = {
-                'first': '一等奖',
-                'second': '二等奖',
-                'third': '三等奖'
-            };
-            document.getElementById('drawModalTitle').textContent = `抽取${levelNames[level]}`;
+        function openDrawModal() {
+            document.getElementById('drawModalTitle').textContent = '抽取幸运奖';
             document.getElementById('drawModal').classList.add('show');
             document.getElementById('drawAlert').classList.remove('show');
         }
@@ -932,6 +1041,9 @@
                 return;
             }
             
+            // 获取当前期次信息
+            const periodInfo = calculateCurrentPeriod();
+            
             try {
                 const response = await fetch(`${API_BASE}/lottery-draw`, {
                     method: 'POST',
@@ -941,8 +1053,10 @@
                     },
                     body: JSON.stringify({
                         mode: 'auto',
-                        prizeLevel: currentDrawLevel,
-                        count: count
+                        prizeLevel: 'lucky', // 固定为幸运奖
+                        count: count,
+                        period: periodInfo.periodName,
+                        periodId: periodInfo.periodId
                     })
                 });
                 
@@ -1033,8 +1147,27 @@
         
         // 初始化
         function initDashboard() {
+            // 生成期次选择器
+            generatePeriodOptions();
+            
+            // 更新期次信息
+            updatePeriodInfo();
+            
+            // 加载统计数据
             loadStats();
         }
+        
+        // 期次选择器change事件
+        document.addEventListener('DOMContentLoaded', () => {
+            const periodSelector = document.getElementById('periodSelector');
+            if (periodSelector) {
+                periodSelector.addEventListener('change', (e) => {
+                    selectedPeriodId = e.target.value ? parseInt(e.target.value) : null;
+                    // 重新加载用户列表
+                    loadUsers(1);
+                });
+            }
+        });
         
         // 页面加载时检查登录状态
         document.addEventListener('DOMContentLoaded', () => {
