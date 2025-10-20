@@ -6,6 +6,14 @@
     <title>AZ Ring 新年抽奖活动 - 奢华智能健康戒指 | AZ Ring</title>
     <meta name="description" content="参与AZ Ring新年抽奖活动，赢取价值999元的智能健康戒指。极致轻盈3g，7天超长续航，24小时健康监测。">
     
+    <!-- Open Graph 分享配置 - 用于微信、Facebook等社交平台 -->
+    <meta property="og:title" content="AZ Ring智能戒指抽奖活动">
+    <meta property="og:description" content="参与抽奖，赢取价值999元的AZ Ring智能健康戒指！每周五20:00开奖，幸运奖2名。">
+    <meta property="og:image" content="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png">
+    <meta property="og:url" content="https://azlg.cn/lottery-v2-luxury.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AZ Ring">
+    
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     
@@ -151,7 +159,7 @@
             font-weight: 300;
             letter-spacing: -0.04em;
             margin-bottom: 24px;
-            line-height: 0.95;
+            line-height: 1.15;
         }
         
         .hero-subtitle {
@@ -964,7 +972,7 @@
         .qr-modal-close:hover {
             color: var(--luxury-accent);
         }
-        
+
         /* Footer */
         .footer {
             padding: 40px;
@@ -1150,7 +1158,7 @@
             <div class="hero-content">
                 <div class="hero-label">2025 特别活动</div>
                 <h1 class="hero-title">AZ Ring<br><span style="white-space: nowrap;">智能健康戒指</span></h1>
-                <p class="hero-subtitle">参与抽奖，赢取价值999元的智能健康戒指<br>活动期间：2025年1月20日 - 12月31日</p>
+                <p class="hero-subtitle">参与抽奖，赢取价值999元的智能健康戒指<br><span id="heroCurrentPeriod">加载中...</span> · 每周一至周五开放 · 每周五20:00开奖</p>
                 <a href="#lottery" class="hero-cta">立即参与抽奖</a>
                 
                 <div class="hero-specs">
@@ -1186,7 +1194,7 @@
             </div>
             
             <div class="feature-card">
-                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" alt="睡眠守护" class="feature-image">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/睡眠2.jpg" alt="睡眠守护" class="feature-image">
                 <h3 class="feature-title">睡眠守护</h3>
                 <p class="feature-desc">15+项专业睡眠分析，精准追踪深睡、浅睡、REM阶段，提供个性化改善建议。</p>
             </div>
@@ -1198,7 +1206,7 @@
             </div>
             
             <div class="feature-card">
-                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" alt="运动追踪" class="feature-image">
+                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/瑜伽.png" alt="运动追踪" class="feature-image">
                 <h3 class="feature-title">运动追踪</h3>
                 <p class="feature-desc">支持几十种运动模式，自动识别运动状态，记录步数、距离、卡路里等完整数据。</p>
             </div>
@@ -1254,32 +1262,19 @@
             <div class="section-header">
                 <h2 class="section-title">丰厚奖品</h2>
                 <p class="section-subtitle">每周五开奖</p>
+                <p class="section-subtitle" id="currentPeriodDisplay" style="margin-top: 8px; color: var(--luxury-accent); font-weight: 500;">
+                    当前期次：加载中...
+                </p>
             </div>
             
             <div class="prizes">
                 <div class="prize-item">
                     <div class="prize-info">
-                        <div class="prize-level">一等奖</div>
+                        <div class="prize-level">幸运奖</div>
                         <div class="prize-name">AZ Ring 智能戒指</div>
-                        <div class="prize-value">价值 ¥999 · 1名</div>
+                        <div class="prize-value">价值 ¥999 · 2名</div>
                     </div>
                     <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png" alt="金色戒指" class="prize-image">
-                </div>
-                
-                <div class="prize-item">
-                    <div class="prize-info">
-                        <div class="prize-level">二等奖</div>
-                        <div class="prize-name">健康大礼包</div>
-                        <div class="prize-value">价值 ¥299 · 5名</div>
-                    </div>
-                </div>
-                
-                <div class="prize-item">
-                    <div class="prize-info">
-                        <div class="prize-level">三等奖</div>
-                        <div class="prize-name">精美礼品</div>
-                        <div class="prize-value">价值 ¥99 · 20名</div>
-                    </div>
                 </div>
             </div>
             
@@ -1442,32 +1437,111 @@
     <script>
         const API_BASE = '/api';
         
+        // 期次计算功能
+        function calculateCurrentPeriod() {
+            const baseDate = new Date('2025-01-20'); // 第1期起始日期（周一）
+            const now = new Date();
+            
+            // 计算从基准日期到现在经过的天数
+            const diffTime = now - baseDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // 计算当前是第几期（每7天一期）
+            const periodId = Math.floor(diffDays / 7) + 1;
+            
+            // 计算当前期次的起止日期
+            const periodStartDays = (periodId - 1) * 7;
+            const periodStart = new Date(baseDate);
+            periodStart.setDate(baseDate.getDate() + periodStartDays);
+            
+            const periodEnd = new Date(periodStart);
+            periodEnd.setDate(periodStart.getDate() + 6); // 加6天到周日
+            
+            // 格式化日期
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            return {
+                periodId: periodId,
+                periodName: `第${periodId}期（${formatDate(periodStart)}至${formatDate(periodEnd)}）`,
+                startDate: periodStart,
+                endDate: periodEnd
+            };
+        }
+        
+        // 活动状态判断
+        function getActivityStatus() {
+            const now = new Date();
+            const day = now.getDay(); // 0=周日, 1=周一, ..., 5=周五
+            const hour = now.getHours();
+            
+            // 周五20:00之后 或 周六周日：活动已结束
+            if ((day === 5 && hour >= 20) || day === 6 || day === 0) {
+                return 'ended'; // 本期已结束
+            }
+            
+            // 周一到周五20:00前：活动进行中
+            return 'active'; // 活动进行中
+        }
+        
         // 倒计时功能
         function initCountdown() {
-            function getNextFriday8PM() {
+            // 获取本周五20:00的时间
+            function getThisFriday8PM() {
                 const now = new Date();
-                const nextFriday = new Date();
-                const currentDay = now.getDay(); // 0=Sunday, 5=Friday
+                const friday = new Date(now);
+                const currentDay = now.getDay();
                 
-                // 计算距离下个周五的天数
-                let daysUntilFriday = (5 - currentDay + 7) % 7;
-                if (daysUntilFriday === 0) {
-                    // 如果今天是周五，检查时间
-                    if (now.getHours() >= 20) {
-                        daysUntilFriday = 7; // 下周五
-                    }
-                }
+                // 计算到本周五的天数
+                const daysUntilFriday = (5 - currentDay + 7) % 7;
+                friday.setDate(now.getDate() + daysUntilFriday);
+                friday.setHours(20, 0, 0, 0);
                 
-                nextFriday.setDate(now.getDate() + daysUntilFriday);
-                nextFriday.setHours(20, 0, 0, 0); // 8PM
+                return friday;
+            }
+            
+            // 获取下周一00:00的时间
+            function getNextMonday() {
+                const now = new Date();
+                const monday = new Date(now);
+                const currentDay = now.getDay();
                 
-                return nextFriday;
+                // 计算到下周一的天数
+                let daysUntilMonday = (1 - currentDay + 7) % 7;
+                if (daysUntilMonday === 0) daysUntilMonday = 7;
+                
+                monday.setDate(now.getDate() + daysUntilMonday);
+                monday.setHours(0, 0, 0, 0);
+                
+                return monday;
             }
             
             function updateCountdown() {
-                const endTime = getNextFriday8PM();
                 const now = new Date();
-                const timeDiff = endTime - now;
+                const status = getActivityStatus();
+                const countdownLabel = document.querySelector('.countdown-label');
+                
+                let targetTime;
+                
+                if (status === 'active') {
+                    // 活动进行中，显示开奖倒计时
+                    targetTime = getThisFriday8PM();
+                    if (countdownLabel) {
+                        countdownLabel.textContent = '开奖倒计时';
+                    }
+                } else {
+                    // 活动已结束，显示下期活动倒计时
+                    targetTime = getNextMonday();
+                    if (countdownLabel) {
+                        countdownLabel.textContent = '下期活动倒计时';
+                    }
+                }
+                
+                const timeDiff = targetTime - now;
                 
                 if (timeDiff > 0) {
                     const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
@@ -1480,7 +1554,7 @@
                     document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
                     document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
                 } else {
-                    document.getElementById('countdownTimer').innerHTML = '🎉 开奖进行中...';
+                    document.getElementById('countdownTimer').innerHTML = '🎉 正在更新...';
                 }
             }
             
@@ -1492,16 +1566,16 @@
         
         // 往期中奖名单数据
         const winnersData = [
-            { name: '张**', prize: 'AZ Ring 智能戒指', date: '2025-01-10', avatar: '张' },
-            { name: '李**', prize: '健康大礼包', date: '2025-01-10', avatar: '李' },
-            { name: '王**', prize: '精美礼品', date: '2025-01-10', avatar: '王' },
-            { name: '陈**', prize: 'AZ Ring 智能戒指', date: '2025-01-03', avatar: '陈' },
-            { name: '刘**', prize: '健康大礼包', date: '2025-01-03', avatar: '刘' },
-            { name: '赵**', prize: '精美礼品', date: '2025-01-03', avatar: '赵' },
-            { name: '孙**', prize: '健康大礼包', date: '2025-01-03', avatar: '孙' },
-            { name: '周**', prize: 'AZ Ring 智能戒指', date: '2024-12-27', avatar: '周' },
-            { name: '吴**', prize: '精美礼品', date: '2024-12-27', avatar: '吴' },
-            { name: '郑**', prize: '健康大礼包', date: '2024-12-27', avatar: '郑' }
+            { name: '张**', prize: '幸运奖', date: '2025-01-17', avatar: '张' },
+            { name: '李**', prize: '幸运奖', date: '2025-01-17', avatar: '李' },
+            { name: '王**', prize: '幸运奖', date: '2025-01-10', avatar: '王' },
+            { name: '陈**', prize: '幸运奖', date: '2025-01-10', avatar: '陈' },
+            { name: '刘**', prize: '幸运奖', date: '2025-01-03', avatar: '刘' },
+            { name: '赵**', prize: '幸运奖', date: '2025-01-03', avatar: '赵' },
+            { name: '孙**', prize: '幸运奖', date: '2024-12-27', avatar: '孙' },
+            { name: '周**', prize: '幸运奖', date: '2024-12-27', avatar: '周' },
+            { name: '吴**', prize: '幸运奖', date: '2024-12-20', avatar: '吴' },
+            { name: '郑**', prize: '幸运奖', date: '2024-12-20', avatar: '郑' }
         ];
 
         function generateWinnersList() {
@@ -1554,9 +1628,34 @@
             shareStats.bonusChances = Math.floor(shareStats.inviteCount * 0.2); // 每5个邀请增加1次机会
             updateShareStatsDisplay();
             saveShareStats();
+        }
+
+        // 尝试唤起微信APP
+        function tryOpenWechat() {
+            // 检测是否在微信环境
+            if (navigator.userAgent.includes('MicroMessenger')) {
+                return false;
+            }
             
-            // 显示奖励提示
-            showMessage(`成功分享！您已邀请${shareStats.inviteCount}位好友，获得${shareStats.bonusChances}次额外机会`, 'success');
+            // 尝试唤起微信
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                // iOS 系统
+                window.location.href = 'weixin://';
+            } else {
+                // Android 系统，使用 iframe 方式
+                const iframe = document.createElement('iframe');
+                iframe.src = 'weixin://';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                setTimeout(() => {
+                    try {
+                        document.body.removeChild(iframe);
+                    } catch (e) {}
+                }, 2000);
+            }
+            
+            return true;
         }
 
         function shareToWechat() {
@@ -1566,32 +1665,38 @@
             
             // 检测是否在微信环境
             if (navigator.userAgent.includes('MicroMessenger')) {
-                // 微信内分享
-                showMessage('请点击右上角菜单，选择"分享给朋友"', 'success');
+                // 微信内分享：引导用户点击右上角
+                showMessage('请点击右上角 "···" 菜单，选择"分享给朋友"', 'success');
+                setTimeout(() => {
+                    incrementShareStats();
+                }, 1000);
             } else {
-                // 复制链接到剪贴板
+                // 外部浏览器：复制链接并尝试打开微信
                 copyToClipboard(shareUrl);
-                showMessage('链接已复制到剪贴板，快去微信分享给好友吧！', 'success');
+                tryOpenWechat();
+                showMessage('链接已复制！正在打开微信...', 'success');
+                setTimeout(() => {
+                    incrementShareStats();
+                }, 1000);
             }
-            
-            // 模拟分享成功（实际应用中需要验证分享是否成功）
-            setTimeout(() => {
-                incrementShareStats();
-            }, 1000);
         }
 
         function shareToMoments() {
             const shareUrl = window.location.href;
             const shareTitle = 'AZ Ring智能戒指抽奖活动';
             
+            // 检测是否在微信环境
             if (navigator.userAgent.includes('MicroMessenger')) {
-                showMessage('请点击右上角菜单，选择"分享到朋友圈"', 'success');
+                // 微信内分享：引导用户点击右上角
+                showMessage('请点击右上角 "···" 菜单，选择"分享到朋友圈"', 'success');
                 setTimeout(() => {
                     incrementShareStats();
                 }, 1000);
             } else {
+                // 外部浏览器：复制链接并尝试打开微信
                 copyToClipboard(shareUrl);
-                showMessage('链接已复制，请在微信中分享到朋友圈！', 'success');
+                tryOpenWechat();
+                showMessage('链接已复制！正在打开微信...', 'success');
                 setTimeout(() => {
                     incrementShareStats();
                 }, 1000);
@@ -1706,18 +1811,47 @@
             });
         });
         
+        // 更新活动状态UI
+        function updateActivityStatusUI() {
+            const status = getActivityStatus();
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+            
+            if (status === 'ended') {
+                // 活动已结束，禁用提交按钮
+                submitBtn.disabled = true;
+                submitBtnText.textContent = '活动已结束，敬请期待下期';
+            } else {
+                // 活动进行中，启用提交按钮
+                submitBtn.disabled = false;
+                submitBtnText.textContent = '立即参与抽奖';
+            }
+        }
+        
         // 表单提交
         document.getElementById('lotteryForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // 检查活动状态
+            const status = getActivityStatus();
+            if (status === 'ended') {
+                showMessage('活动已结束，请等待下期活动开始', 'error');
+                return;
+            }
             
             const submitBtn = document.getElementById('submitBtn');
             const submitBtnText = document.getElementById('submitBtnText');
             const message = document.getElementById('message');
             
+            // 获取当前期次信息
+            const periodInfo = calculateCurrentPeriod();
+            
             const formData = {
                 name: document.getElementById('nameInput').value.trim(),
                 phone: document.getElementById('phoneInput').value.trim(),
-                wechat: document.getElementById('wechatInput').value.trim()
+                wechat: document.getElementById('wechatInput').value.trim(),
+                period: periodInfo.periodName,
+                periodId: periodInfo.periodId
             };
             
             // 验证
@@ -1759,7 +1893,9 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('loading');
-                submitBtnText.textContent = '提交参与';
+                submitBtnText.textContent = '立即参与抽奖';
+                // 重新检查活动状态
+                updateActivityStatusUI();
             }
         });
         
@@ -1775,8 +1911,32 @@
         
         // 页面加载完成后初始化功能
         document.addEventListener('DOMContentLoaded', function() {
+            // 显示当前期次
+            const periodInfo = calculateCurrentPeriod();
+            const periodDisplay = document.getElementById('currentPeriodDisplay');
+            if (periodDisplay) {
+                periodDisplay.textContent = `当前期次：${periodInfo.periodName}`;
+            }
+            
+            // 更新Hero区域的期次信息
+            const heroCurrentPeriod = document.getElementById('heroCurrentPeriod');
+            if (heroCurrentPeriod) {
+                heroCurrentPeriod.textContent = periodInfo.periodName;
+            }
+            
+            // 初始化倒计时
             initCountdown();
+            
+            // 更新活动状态UI
+            updateActivityStatusUI();
+            
+            // 每分钟检查一次活动状态
+            setInterval(updateActivityStatusUI, 60000);
+            
+            // 生成中奖名单
             generateWinnersList();
+            
+            // 加载分享统计
             loadShareStats();
             
             // 初始化Feather Icons
