@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速睡眠自测 - 睡眠质量评估 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="5-8分钟快速评估您的睡眠质量，基于国际睡眠医学标准的智能睡眠健康评估。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 健康数据管理系统 -->
+    <script src="js/health-data-manager.js"></script>
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            /* 睡眠主题色彩 */
+            --sleep-primary: #2c3e50;
+            --sleep-secondary: #3498db;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--sleep-primary) 0%, var(--sleep-secondary) 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 圆形进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        /* 问题幻灯片 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .question-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-number {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 24px;
+        }
+        
+        .question-text {
+            font-size: 36px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 滑动条样式 */
+        .slider-container {
+            margin: 40px 0 60px;
+        }
+        
+        .slider {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 1;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .slider-labels span {
+            flex: 1;
+            text-align: center;
+            padding: 0 8px;
+        }
+        
+        .current-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            min-height: 25px;
+        }
+        
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .nav-button {
+            padding: 16px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .nav-button:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.primary {
+            background: white;
+            color: var(--sleep-primary);
+            border-color: white;
+        }
+        
+        .nav-button.primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            display: none;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .result-container.hidden {
+            display: none;
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 32px;
+        }
+        
+        .result-title {
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 24px;
+        }
+        
+        .result-description {
+            font-size: 20px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 48px;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--sleep-primary);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .typeform-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 28px;
+                margin-bottom: 40px;
+            }
+            
+            .typeform-progress,
+            .back-btn {
+                top: 20px;
+            }
+            
+            .typeform-progress {
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .back-btn {
+                left: 20px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .slider-labels {
+                font-size: 12px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="typeform-container">
+        <!-- 进度指示器 -->
+        <div class="typeform-progress">
+            <div class="progress-circle"></div>
+            <div class="progress-text">
+                <span id="current-progress">1</span>/<span id="total-questions">8</span>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <a href="health-sleep-center.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回
+        </a>
+        
+        <!-- 问题幻灯片 -->
+        <div id="slide-0" class="question-slide active">
+            <div class="question-number">问题 1 / 8</div>
+            <h2 class="question-text">通常情况下，您需要多长时间才能入睡？</h2>
+            <div class="slider-container">
+                <div class="current-value" id="current-value-0">15分钟左右</div>
+                <input type="range" class="slider" id="slider-0" min="1" max="5" value="3" 
+                       oninput="updateSliderValue(0, this.value)" onchange="selectAnswer(0, this.value)">
+                <div class="slider-labels">
+                    <span>5分钟内</span>
+                    <span>10-15分钟</span>
+                    <span>15-30分钟</span>
+                    <span>30-60分钟</span>
+                    <span>超过1小时</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button primary" onclick="nextQuestion()">下一题</button>
+            </div>
+        </div>
+        
+        <!-- 结果显示 -->
+        <div id="result" class="result-container hidden">
+            <div class="result-icon" id="resultIcon">🌙</div>
+            <h2 class="result-title" id="resultTitle">您的睡眠质量评估</h2>
+            <p class="result-description" id="resultDescription">基于您的回答，我们为您分析出了睡眠质量特征。</p>
+            <div class="result-actions">
+                <a href="health-sleep-deep.html" class="action-btn btn-primary">
+                    <i class="fas fa-star"></i>
+                    进行深度分析
+                </a>
+                <a href="health-sleep-center.html" class="action-btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回睡眠测试
+                </a>
+                <a href="health-assessment.html?showDashboard=true" class="action-btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    返回测试中心
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 调试日志函数
+        function debugLog(...args) {
+            console.log('[Sleep Quick Debug]', ...args);
+        }
+
+        // 安全获取元素
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`元素未找到: ${id}`);
+            }
+            return element;
+        }
+
+        // 全局错误处理
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('页面错误:', {
+                message: message,
+                source: source,
+                line: lineno,
+                column: colno,
+                error: error
+            });
+            return false;
+        };
+
+        // 隐藏问卷相关元素但保持容器可见
+        function hideQuestionnaireElements() {
+            try {
+                const progress = document.querySelector('.typeform-progress');
+                if (progress) progress.style.display = 'none';
+                const backBtn = document.querySelector('.back-btn');
+                if (backBtn) backBtn.style.display = 'none';
+                const slides = document.querySelectorAll('.question-slide');
+                slides.forEach(slide => {
+                    slide.style.display = 'none';
+                });
+                debugLog('问卷元素已隐藏');
+            } catch (error) {
+                console.error('隐藏问卷元素时出错:', error);
+            }
+        }
+
+        // 快速睡眠自测问题数据
+        const questions = [
+            {
+                text: "通常情况下，您需要多长时间才能入睡？",
+                labels: ["5分钟内", "10-15分钟", "15-30分钟", "30-60分钟", "超过1小时"],
+                values: [5, 4, 3, 2, 1]
+            },
+            {
+                text: "过去一个月，您平均每晚睡几个小时？",
+                labels: ["不足5小时", "5-6小时", "6-7小时", "7-8小时", "超过8小时"],
+                values: [1, 2, 3, 5, 4]
+            },
+            {
+                text: "您在夜间醒来的频率如何？",
+                labels: ["从不醒来", "很少醒来", "偶尔醒来", "经常醒来", "总是醒来"],
+                values: [5, 4, 3, 2, 1]
+            },
+            {
+                text: "您对自己的睡眠深度感觉如何？",
+                labels: ["很浅", "较浅", "一般", "较深", "很深"],
+                values: [1, 2, 3, 4, 5]
+            },
+            {
+                text: "早上醒来时，您的精神状态如何？",
+                labels: ["很疲惫", "较疲惫", "一般", "较精神", "很精神"],
+                values: [1, 2, 3, 4, 5]
+            },
+            {
+                text: "白天您感到困倦的频率？",
+                labels: ["从不困倦", "很少困倦", "偶尔困倦", "经常困倦", "总是困倦"],
+                values: [5, 4, 3, 2, 1]
+            },
+            {
+                text: "您对目前睡眠质量的整体满意度？",
+                labels: ["很不满意", "不太满意", "一般", "比较满意", "很满意"],
+                values: [1, 2, 3, 4, 5]
+            },
+            {
+                text: "睡眠问题对您日常生活的影响程度？",
+                labels: ["严重影响", "明显影响", "轻微影响", "很少影响", "完全不影响"],
+                values: [1, 2, 3, 4, 5]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        
+        // 保存进度到localStorage
+        function saveProgress() {
+            try {
+                const progressData = {
+                    currentQuestion: currentQuestion,
+                    answers: answers,
+                    timestamp: new Date().toISOString(),
+                    completed: false
+                };
+                localStorage.setItem('sleepQuickAssessmentProgress', JSON.stringify(progressData));
+                debugLog('进度已保存', progressData);
+            } catch (error) {
+                console.warn('保存进度失败:', error);
+            }
+        }
+
+        // 从localStorage恢复进度
+        function restoreProgress() {
+            try {
+                const savedProgress = localStorage.getItem('sleepQuickAssessmentProgress');
+                if (savedProgress) {
+                    const progressData = JSON.parse(savedProgress);
+                    debugLog('找到保存的进度', progressData);
+                    
+                    // 检查是否已完成
+                    if (progressData.completed) {
+                        debugLog('测试已完成，显示结果选项');
+                        if (confirm('您已完成过这个睡眠测试，是否查看之前的结果？\n点击"确定"查看结果，点击"取消"重新开始测试。')) {
+                            showPreviousResult();
+                            return true;
+                        } else {
+                            // 清除旧数据重新开始
+                            localStorage.removeItem('sleepQuickAssessmentProgress');
+                            localStorage.removeItem('sleepQuickAssessmentResult');
+                            return false;
+                        }
+                    }
+                    
+                    // 恢复未完成的进度
+                    if (progressData.answers && progressData.currentQuestion !== undefined) {
+                        if (confirm(`发现未完成的睡眠测试（进度：${progressData.currentQuestion + 1}/${questions.length}），是否继续？\n点击"确定"继续测试，点击"取消"重新开始。`)) {
+                            currentQuestion = Math.min(progressData.currentQuestion, questions.length - 1);
+                            answers = progressData.answers || [];
+                            
+                            // 确保答案数组长度正确
+                            while (answers.length < questions.length) {
+                                answers.push(3); // 默认值
+                            }
+                            
+                            debugLog('进度已恢复', {currentQuestion, answers});
+                            return true;
+                        } else {
+                            localStorage.removeItem('sleepQuickAssessmentProgress');
+                            return false;
+                        }
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.warn('恢复进度失败:', error);
+                localStorage.removeItem('sleepQuickAssessmentProgress');
+                return false;
+            }
+        }
+
+        // 显示之前的结果
+        function showPreviousResult() {
+            try {
+                const savedResult = localStorage.getItem('sleepQuickAssessmentResult');
+                if (savedResult) {
+                    const resultData = JSON.parse(savedResult);
+                    debugLog('显示保存的结果', resultData);
+                    
+                    // 隐藏问卷相关元素，但保持容器可见
+                    hideQuestionnaireElements();
+                    
+                    const resultContainer = safeGetElement('result');
+                    if (resultContainer) {
+                        resultContainer.classList.remove('hidden');
+                        resultContainer.style.display = 'block'; // 确保显示
+                    } else {
+                        throw new Error('结果容器未找到');
+                    }
+                    
+                    // 更新结果显示
+                    const resultIcon = safeGetElement('resultIcon');
+                    const resultTitle = safeGetElement('resultTitle');
+                    const resultDescription = safeGetElement('resultDescription');
+                    
+                    if (resultIcon) resultIcon.textContent = resultData.result.icon;
+                    if (resultTitle) resultTitle.textContent = resultData.result.title;
+                    if (resultDescription) resultDescription.textContent = resultData.result.description;
+                    
+                    debugLog('结果显示元素更新完成');
+                }
+            } catch (error) {
+                console.error('显示之前结果失败:', error);
+                alert('无法显示之前的结果，请重新测试');
+            }
+        }
+
+        // 初始化
+        function init() {
+            debugLog('开始初始化');
+            
+            // 尝试恢复进度
+            const restored = restoreProgress();
+            
+            if (!restored) {
+                // 初始化答案数组
+                answers = new Array(questions.length).fill(3);
+                debugLog('初始化答案数组', answers);
+            }
+            
+            // 生成所有问题幻灯片
+            generateSlides();
+            
+            // 更新显示
+            updateQuestionDisplay();
+            updateProgress();
+            
+            debugLog('初始化完成');
+        }
+
+        // 生成问题幻灯片
+        function generateSlides() {
+            const container = document.querySelector('.typeform-container');
+            
+            // 清除除了第一个幻灯片外的所有幻灯片
+            const existingSlides = document.querySelectorAll('.question-slide');
+            for (let i = 1; i < existingSlides.length; i++) {
+                existingSlides[i].remove();
+            }
+            
+            // 生成剩余的幻灯片
+            for (let i = 1; i < questions.length; i++) {
+                const slide = document.createElement('div');
+                slide.id = `slide-${i}`;
+                slide.className = 'question-slide';
+                
+                slide.innerHTML = `
+                    <div class="question-number">问题 ${i + 1} / ${questions.length}</div>
+                    <h2 class="question-text">${questions[i].text}</h2>
+                    <div class="slider-container">
+                        <div class="current-value" id="current-value-${i}">${questions[i].labels[2]}</div>
+                        <input type="range" class="slider" id="slider-${i}" min="1" max="5" value="3" 
+                               oninput="updateSliderValue(${i}, this.value)" onchange="selectAnswer(${i}, this.value)">
+                        <div class="slider-labels">
+                            ${questions[i].labels.map(label => `<span>${label}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="nav-button" onclick="prevQuestion()">上一题</button>
+                        <button class="nav-button primary" onclick="${i === questions.length - 1 ? 'showResult()' : 'nextQuestion()'}">${i === questions.length - 1 ? '查看结果' : '下一题'}</button>
+                    </div>
+                `;
+                
+                container.insertBefore(slide, document.getElementById('result'));
+            }
+            
+            // 更新总问题数显示
+            const totalElement = safeGetElement('total-questions');
+            if (totalElement) {
+                totalElement.textContent = questions.length;
+            }
+        }
+
+        // 更新滑动条显示值
+        function updateSliderValue(questionIndex, value) {
+            const currentValueElement = safeGetElement(`current-value-${questionIndex}`);
+            if (currentValueElement && questions[questionIndex]) {
+                currentValueElement.textContent = questions[questionIndex].labels[value - 1];
+            }
+        }
+
+        // 选择答案
+        function selectAnswer(questionIndex, value) {
+            answers[questionIndex] = parseInt(value);
+            updateSliderValue(questionIndex, value);
+            saveProgress();
+            debugLog(`问题 ${questionIndex + 1} 答案: ${value}`);
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                // 隐藏当前问题
+                const currentSlide = safeGetElement(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion++;
+                
+                // 显示下一题
+                const nextSlide = safeGetElement(`slide-${currentQuestion}`);
+                if (nextSlide) nextSlide.classList.add('active');
+                
+                updateProgress();
+                updateQuestionDisplay();
+                saveProgress();
+            }
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 隐藏当前问题
+                const currentSlide = safeGetElement(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion--;
+                
+                // 显示上一题
+                const prevSlide = safeGetElement(`slide-${currentQuestion}`);
+                if (prevSlide) prevSlide.classList.add('active');
+                
+                updateProgress();
+                updateQuestionDisplay();
+                saveProgress();
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progressElement = safeGetElement('current-progress');
+            if (progressElement) {
+                progressElement.textContent = currentQuestion + 1;
+            }
+            
+            // 更新圆形进度
+            const progressCircle = document.querySelector('.progress-circle');
+            if (progressCircle) {
+                const percentage = ((currentQuestion + 1) / questions.length) * 360;
+                progressCircle.style.background = `conic-gradient(#ffffff ${percentage}deg, transparent ${percentage}deg)`;
+            }
+        }
+
+        // 更新问题显示状态
+        function updateQuestionDisplay() {
+            // 恢复滑动条的值
+            if (answers[currentQuestion] !== undefined) {
+                const slider = safeGetElement(`slider-${currentQuestion}`);
+                if (slider) {
+                    slider.value = answers[currentQuestion];
+                    updateSliderValue(currentQuestion, answers[currentQuestion]);
+                }
+            }
+        }
+
+        // 计算睡眠质量评分
+        function calculateSleepQuality() {
+            try {
+                debugLog('开始计算睡眠质量', answers);
+                
+                // 过滤有效答案
+                const validAnswers = answers.filter(answer => answer !== undefined && answer !== null);
+                
+                if (validAnswers.length === 0) {
+                    console.warn('没有有效答案');
+                    return {
+                        score: 0,
+                        level: '未评估',
+                        icon: '❓',
+                        title: '评估未完成',
+                        description: '请完成所有问题后再查看结果。'
+                    };
+                }
+                
+                // 计算加权总分
+                let totalScore = 0;
+                let maxScore = 0;
+                
+                for (let i = 0; i < Math.min(validAnswers.length, questions.length); i++) {
+                    const questionValue = questions[i].values[validAnswers[i] - 1] || validAnswers[i];
+                    totalScore += questionValue;
+                    maxScore += 5;
+                }
+                
+                // 转换为百分制
+                const finalScore = Math.round((totalScore / maxScore) * 100);
+                
+                debugLog('睡眠质量计算结果', {
+                    totalScore,
+                    maxScore,
+                    finalScore,
+                    validAnswers: validAnswers.length
+                });
+                
+                // 睡眠质量等级判定
+                let level, icon, title, description;
+                
+                if (finalScore >= 85) {
+                    level = '优秀';
+                    icon = '🌟';
+                    title = '睡眠质量优秀';
+                    description = '恭喜！您的睡眠质量非常好，请保持良好的睡眠习惯。建议继续维持规律作息，适度运动，营造良好的睡眠环境。';
+                } else if (finalScore >= 70) {
+                    level = '良好';
+                    icon = '😊';
+                    title = '睡眠质量良好';
+                    description = '您的睡眠质量总体良好，但仍有改善空间。建议关注睡前放松、减少电子设备使用，优化睡眠环境温度和光线。';
+                } else if (finalScore >= 55) {
+                    level = '一般';
+                    icon = '😐';
+                    title = '睡眠质量一般';
+                    description = '您的睡眠质量处于中等水平，建议调整作息时间，建立固定的睡前例行程序，避免咖啡因和大餐影响睡眠。';
+                } else if (finalScore >= 40) {
+                    level = '较差';
+                    icon = '😟';
+                    title = '睡眠质量较差';
+                    description = '您的睡眠质量需要改善。建议咨询医生排除睡眠障碍，同时改善睡眠环境，学习放松技巧，考虑认知行为疗法。';
+                } else {
+                    level = '很差';
+                    icon = '😴';
+                    title = '睡眠质量很差';
+                    description = '您的睡眠质量存在明显问题，强烈建议咨询睡眠专科医生。可能需要进行详细的睡眠监测和专业治疗。';
+                }
+                
+                return {
+                    score: finalScore,
+                    level,
+                    icon,
+                    title,
+                    description
+                };
+                
+            } catch (error) {
+                console.error('计算睡眠质量时出错:', error);
+                return {
+                    score: 0,
+                    level: '计算错误',
+                    icon: '⚠️',
+                    title: '评估出错',
+                    description: '抱歉，计算过程中出现错误，请重新测试。'
+                };
+            }
+        }
+
+        // 显示结果
+        function showResult() {
+            try {
+                debugLog('开始显示结果');
+                
+                // 计算睡眠质量
+                const result = calculateSleepQuality();
+                debugLog('睡眠质量评估结果', result);
+                
+                // 保存结果
+                const resultData = {
+                    result: result,
+                    answers: answers,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // 保留旧格式（向后兼容）
+                localStorage.setItem('sleepQuickAssessmentResult', JSON.stringify(resultData));
+                debugLog('测试结果已保存（旧格式）');
+                
+                // 保存到统一健康数据系统
+                if (window.healthDataManager) {
+                    window.healthDataManager.saveTestResult(
+                        'sleep',                  // testType
+                        '睡眠快速评估',          // testName
+                        result.score,             // score
+                        result.level,             // level
+                        resultData                // details
+                    );
+                    debugLog('✅ 测试结果已保存到统一系统');
+                }
+                
+                // 标记为已完成
+                const progressData = {
+                    currentQuestion: questions.length - 1,
+                    answers: answers,
+                    timestamp: new Date().toISOString(),
+                    completed: true
+                };
+                localStorage.setItem('sleepQuickAssessmentProgress', JSON.stringify(progressData));
+                
+                // 隐藏问卷元素
+                hideQuestionnaireElements();
+                
+                // 显示结果
+                const resultContainer = safeGetElement('result');
+                if (!resultContainer) {
+                    throw new Error('结果容器未找到');
+                }
+                
+                resultContainer.classList.remove('hidden');
+                resultContainer.style.display = 'block';
+                
+                // 更新结果内容
+                const resultIcon = safeGetElement('resultIcon');
+                const resultTitle = safeGetElement('resultTitle');
+                const resultDescription = safeGetElement('resultDescription');
+                
+                if (resultIcon) resultIcon.textContent = result.icon;
+                if (resultTitle) resultTitle.textContent = result.title;
+                if (resultDescription) resultDescription.textContent = result.description;
+                
+                debugLog('结果显示完成');
+                
+            } catch (error) {
+                console.error('显示结果时出错:', error);
+                alert('显示结果时出现错误，请重新测试');
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

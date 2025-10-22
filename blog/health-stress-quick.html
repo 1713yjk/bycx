@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速压力筛查 - 压力与情绪健康测试 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="2-3分钟快速评估您的压力感知水平，基于PSS-10国际权威压力量表。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 健康数据管理系统 -->
+    <script src="js/health-data-manager.js"></script>
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --stress-primary: #16a085;
+            --stress-secondary: #1abc9c;
+            --oura-white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--stress-primary) 0%, var(--stress-secondary) 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 圆形进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        
+        .debug-info {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #444;
+        }
+        
+        /* 问题幻灯片 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .question-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-number {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 24px;
+        }
+        
+        .question-text {
+            font-size: 32px;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 48px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 选项按钮样式 */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 40px auto 60px;
+            max-width: 600px;
+        }
+        
+        .option-btn {
+            padding: 20px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .option-btn:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
+        }
+        
+        .option-btn.selected {
+            background: white;
+            color: var(--stress-primary);
+            border-color: white;
+        }
+        
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .nav-button {
+            padding: 16px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .nav-button:hover:not(:disabled) {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.primary {
+            background: white;
+            color: var(--stress-primary);
+            border-color: white;
+        }
+        
+        .nav-button.primary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            display: none;
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            animation: fadeInUp 0.8s ease;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-container.active {
+            display: block;
+        }
+        
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 32px;
+        }
+        
+        .result-score {
+            font-size: 64px;
+            font-weight: 300;
+            margin-bottom: 16px;
+        }
+        
+        .result-level {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            padding: 12px 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        .result-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            opacity: 0.95;
+        }
+        
+        .result-description {
+            font-size: 18px;
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .result-suggestions {
+            text-align: left;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+        }
+        
+        .result-suggestions h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .result-suggestions ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .result-suggestions li {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            padding-left: 28px;
+            position: relative;
+        }
+        
+        .result-suggestions li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .product-recommendations {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .product-recommendations h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        .recommendation-item {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .recommendation-item i {
+            font-size: 20px;
+            margin-top: 4px;
+        }
+        
+        .recommendation-item div h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .recommendation-item div p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--stress-primary);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+        
+        .disclaimer {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 24px;
+            line-height: 1.6;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .typeform-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 24px;
+                margin-bottom: 32px;
+            }
+            
+            .typeform-progress,
+            .back-btn {
+                top: 20px;
+            }
+            
+            .typeform-progress {
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .back-btn {
+                left: 20px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .option-btn {
+                font-size: 16px;
+                padding: 16px 24px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .result-container {
+                padding: 24px;
+            }
+            
+            .result-score {
+                font-size: 48px;
+            }
+            
+            .result-level {
+                font-size: 24px;
+            }
+            
+            .result-title {
+                font-size: 24px;
+            }
+            
+            .result-description {
+                font-size: 16px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="typeform-container">
+        <!-- 进度指示器 -->
+        <div class="typeform-progress">
+            <div class="progress-circle" id="progress-circle"></div>
+            <div class="progress-text">
+                <span id="current-progress">1</span>/<span id="total-questions">10</span>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <a href="health-stress-emotion.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回
+        </a>
+        
+        <!-- 问题幻灯片（将由JavaScript动态生成） -->
+        <div id="questions-container"></div>
+        
+        <!-- 结果显示 -->
+        <div id="result" class="result-container">
+            <div class="result-icon" id="resultIcon">🧘</div>
+            <div class="result-score" id="resultScore">0</div>
+            <div class="result-level" id="resultLevel">压力等级</div>
+            <h2 class="result-title" id="resultTitle">您的压力评估结果</h2>
+            <div class="result-description" id="resultDescription"></div>
+            
+            <div class="result-suggestions" id="resultSuggestions">
+                <h3>💡 改善建议</h3>
+                <ul id="suggestionsList"></ul>
+            </div>
+            
+            <div class="product-recommendations">
+                <h3>🎯 AZ Ring 可以帮助您</h3>
+                <div class="recommendation-item">
+                    <i class="fas fa-spa"></i>
+                    <div>
+                        <h4>冥想与正念练习</h4>
+                        <p>APP内置多种冥想课程，帮助您快速放松，缓解压力</p>
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <i class="fas fa-heart-pulse"></i>
+                    <div>
+                        <h4>HRV压力监测</h4>
+                        <p>实时监测心率变异性，客观了解身体的压力状态</p>
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <i class="fas fa-moon"></i>
+                    <div>
+                        <h4>睡眠质量分析</h4>
+                        <p>优质睡眠是缓解压力的关键，戒指帮您全面监测睡眠</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-actions">
+                <a href="health-stress-standard.html" class="action-btn btn-primary">
+                    <i class="fas fa-chart-line"></i>
+                    进行标准评估
+                </a>
+                <a href="health-stress-emotion.html" class="action-btn btn-secondary">
+                    <i class="fas fa-redo"></i>
+                    重新测试
+                </a>
+                <a href="health-assessment.html?showDashboard=true" class="action-btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    返回测试中心
+                </a>
+            </div>
+            
+            <div class="disclaimer">
+                <strong>重要提示：</strong>本测试基于国际权威的压力感知量表（PSS-10），仅供自我了解和参考使用。
+                测试结果不能替代专业的心理咨询或医疗诊断。如果您持续感到压力过大或情绪困扰，建议寻求专业帮助。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PSS-10 压力感知量表题目
+        const questions = [
+            {
+                text: "过去一个月，您有多频繁地感到难以控制生活中的重要事情？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            },
+            {
+                text: "过去一个月，您有多频繁地对处理个人问题感到有信心？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: true
+            },
+            {
+                text: "过去一个月，您有多频繁地感觉事情正朝着您期望的方向发展？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: true
+            },
+            {
+                text: "过去一个月，您有多频繁地感到压力或紧张？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            },
+            {
+                text: "过去一个月，您有多频繁地感到难以应对必须完成的事情？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            },
+            {
+                text: "过去一个月，您有多频繁地能够成功应对生活中的烦心事？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: true
+            },
+            {
+                text: "过去一个月，您有多频繁地感到愤怒？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            },
+            {
+                text: "过去一个月，您有多频繁地发现自己在思考必须完成的事情？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            },
+            {
+                text: "过去一个月，您有多频繁地能够控制自己的情绪？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: true
+            },
+            {
+                text: "过去一个月，您有多频繁地觉得困难堆积如山，无法克服？",
+                options: ["从不", "几乎不", "有时", "经常", "总是"],
+                reverse: false
+            }
+        ];
+
+        // 状态管理
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        
+        // 初始化问题
+        function initQuestions() {
+            const container = document.getElementById('questions-container');
+            questions.forEach((q, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.id = `slide-${index}`;
+                slideDiv.className = `question-slide ${index === 0 ? 'active' : ''}`;
+                
+                slideDiv.innerHTML = `
+                    <div class="question-number">问题 ${index + 1} / ${questions.length}</div>
+                    <h2 class="question-text">${q.text}</h2>
+                    <div class="options-container" id="options-${index}">
+                        ${q.options.map((option, optIndex) => `
+                            <button class="option-btn" onclick="selectAnswer(${index}, ${optIndex})">${option}</button>
+                        `).join('')}
+                    </div>
+                    <div class="nav-buttons">
+                        ${index > 0 ? `<button class="nav-button" onclick="prevQuestion()">上一题</button>` : ''}
+                        <button class="nav-button primary" id="next-btn-${index}" onclick="nextQuestion()" disabled>
+                            ${index === questions.length - 1 ? '查看结果' : '下一题'}
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(slideDiv);
+            });
+            
+            updateProgress();
+        }
+        
+        // 选择答案
+        function selectAnswer(questionIndex, optionIndex) {
+            answers[questionIndex] = optionIndex;
+            
+            // 更新按钮样式
+            const optionsContainer = document.getElementById(`options-${questionIndex}`);
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === optionIndex) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+            
+            // 启用下一题按钮
+            const nextBtn = document.getElementById(`next-btn-${questionIndex}`);
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) {
+                alert('请选择一个选项');
+                return;
+            }
+            
+            if (currentQuestion < questions.length - 1) {
+                document.getElementById(`slide-${currentQuestion}`).classList.remove('active');
+                currentQuestion++;
+                document.getElementById(`slide-${currentQuestion}`).classList.add('active');
+                updateProgress();
+            } else {
+                // 显示结果
+                showResult();
+            }
+        }
+        
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                document.getElementById(`slide-${currentQuestion}`).classList.remove('active');
+                currentQuestion--;
+                document.getElementById(`slide-${currentQuestion}`).classList.add('active');
+                updateProgress();
+            }
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            document.getElementById('current-progress').textContent = currentQuestion + 1;
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            const degrees = (progress / 100) * 360;
+            document.getElementById('progress-circle').style.background = 
+                `conic-gradient(#ffffff ${degrees}deg, transparent ${degrees}deg)`;
+        }
+        
+        // 计算分数
+        function calculateScore() {
+            let total = 0;
+            answers.forEach((answer, index) => {
+                if (questions[index].reverse) {
+                    // 反向计分题
+                    total += (4 - answer);
+                } else {
+                    // 正向计分题
+                    total += answer;
+                }
+            });
+            return total;
+        }
+        
+        // 获取压力等级和描述
+        function getStressLevel(score) {
+            if (score <= 13) {
+                return {
+                    level: "压力较小",
+                    icon: "😊",
+                    color: "#7ed321",
+                    title: "您的压力水平较低",
+                    description: "您的压力水平较低，整体处于比较放松的状态。您能够较好地应对日常生活中的各种挑战，保持这种积极的生活状态非常重要。",
+                    suggestions: [
+                        "继续保持规律的作息和健康的生活方式",
+                        "适当的运动和社交活动有助于维持良好状态",
+                        "可以尝试冥想等放松练习，进一步提升身心健康",
+                        "定期使用AZ Ring的HRV功能，监测身体状态"
+                    ]
+                };
+            } else if (score <= 26) {
+                return {
+                    level: "中等压力",
+                    icon: "😐",
+                    color: "#ff6b35",
+                    title: "您目前承受着中等程度的压力",
+                    description: "您目前承受着中等程度的压力，这在现代生活中是比较常见的。虽然您能够应对大部分情况，但有时可能会感到有些吃力。适当的压力管理可以帮助您更好地平衡生活。",
+                    suggestions: [
+                        "识别压力源，尝试解决或调整应对方式",
+                        "保证充足的睡眠，建议每晚7-8小时",
+                        "每天安排20-30分钟的放松时间",
+                        "适度运动可以有效释放压力",
+                        "使用AZ Ring的冥想课程，进行正念练习",
+                        "关注HRV数据变化，了解身体的压力反应"
+                    ]
+                };
+            } else {
+                return {
+                    level: "压力较大",
+                    icon: "😰",
+                    color: "#e74c3c",
+                    title: "您目前承受的压力较大",
+                    description: "您目前承受的压力较大，可能经常感到紧张、焦虑或难以应对。这种状态如果持续存在，可能会影响您的身心健康。建议您重视压力管理，必要时寻求专业支持。",
+                    suggestions: [
+                        "优先处理最重要的事情，学会说"不"",
+                        "建立规律的作息，保证充足休息",
+                        "寻求社会支持，与信任的人倾诉",
+                        "考虑学习压力管理技巧或寻求专业咨询",
+                        "使用AZ Ring的HRV监测功能，了解身体的压力反应",
+                        "每天进行冥想或呼吸训练，至少15-20分钟",
+                        "如果压力持续影响生活，请寻求专业心理咨询"
+                    ]
+                };
+            }
+        }
+        
+        // 显示结果
+        function showResult() {
+            // 隐藏问题和进度
+            document.querySelectorAll('.question-slide').forEach(slide => {
+                slide.style.display = 'none';
+            });
+            document.querySelector('.typeform-progress').style.display = 'none';
+            document.querySelector('.back-btn').style.display = 'none';
+            
+            // 计算分数
+            const score = calculateScore();
+            const result = getStressLevel(score);
+            
+            // 显示结果
+            document.getElementById('resultIcon').textContent = result.icon;
+            document.getElementById('resultScore').textContent = `${score} 分`;
+            document.getElementById('resultLevel').textContent = result.level;
+            document.getElementById('resultLevel').style.background = result.color;
+            document.getElementById('resultTitle').textContent = result.title;
+            document.getElementById('resultDescription').textContent = result.description;
+            
+            // 显示建议列表
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = result.suggestions.map(s => `<li>${s}</li>`).join('');
+            
+            // 显示结果容器
+            document.getElementById('result').classList.add('active');
+            
+            // 保存结果到localStorage
+            saveResult(score, result.level);
+        }
+        
+        // 保存结果
+        function saveResult(score, level) {
+            const result = {
+                testType: 'stress-quick',
+                score: score,
+                level: level,
+                maxScore: 40,
+                date: new Date().toISOString(),
+                answers: answers
+            };
+            
+            try {
+                // 保留旧格式（向后兼容）
+                localStorage.setItem('stressQuickResult', JSON.stringify(result));
+                console.log('测试结果已保存（旧格式）');
+                
+                // 保存到统一健康数据系统
+                if (window.healthDataManager) {
+                    window.healthDataManager.saveTestResult(
+                        'stress',              // testType
+                        '压力快速评估',       // testName
+                        score,                 // score
+                        level,                 // level
+                        result                 // details
+                    );
+                    console.log('✅ 测试结果已保存到统一系统');
+                }
+            } catch (e) {
+                console.error('保存结果失败:', e);
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+            console.log('题目数量：', questions.length);
+            initQuestions();
+            console.log('问题初始化完成');
+        });
+    </script>
+</body>
+</html>
+

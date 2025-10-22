@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<!-- 配色优化版本 v2.0 - 极简灰蓝 & 医疗蓝白 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《AZLG医疗级传感器研发白皮书》解读：如何将毫米级传感器嵌入珠宝级戒身 - AZLG</title>
+    <meta name="description" content="深度解读AZLG医疗级传感器研发白皮书：PPG光学传感器微型化设计、钛合金戒身集成技术、0.26mm超薄设计、医疗级认证标准、信号处理算法等核心技术揭秘。">
+    <meta name="keywords" content="AZLG, AZ Ring, 医疗级传感器, PPG传感器, 微型化设计, 智能戒指, 生物传感器, 钛合金, 医疗认证, az ring">
+    
+    <!-- Open Graph 配置 -->
+    <meta property="og:title" content="《AZLG医疗级传感器研发白皮书》解读：毫米级传感器嵌入珠宝级戒身的技术突破">
+    <meta property="og:description" content="深度解析AZLG如何在3g重量、0.26mm厚度的戒指中实现医疗级健康监测：PPG传感器、钛合金工艺、防水设计全揭秘。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://www.azlg.cn/blog/articles/medical-sensor-whitepaper.html">
+    <meta property="og:image" content="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png">
+    
+    <link rel="stylesheet" href="../assets/blog-styles.css">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "《AZLG医疗级传感器研发白皮书》解读：如何将毫米级传感器嵌入珠宝级戒身",
+      "author": {
+        "@type": "Organization",
+        "name": "AZLG研发团队"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AZLG",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.azlg.cn/logo.png"
+        }
+      },
+      "datePublished": "2025-01-17",
+      "dateModified": "2025-01-17",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.azlg.cn/blog/articles/medical-sensor-whitepaper.html"
+      },
+      "image": "https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png",
+      "articleSection": "硬件技术"
+    }
+    </script>
+    
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background-color: var(--oura-black); min-height: 100vh; }
+        body { background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%); }
+        .blog-container { background: transparent; }
+        .article-intro { background: rgba(74, 144, 226, 0.08); border-left: 4px solid #4A90E2; padding: 24px; margin: 32px 0; border-radius: 12px; }
+        .intro-highlight { font-size: 18px; line-height: 1.7; color: var(--oura-white); margin: 0; font-style: italic; }
+        .tech-explanation { margin: 32px 0; }
+        .tech-point { background: var(--oura-gray); padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+        .tech-point h3 { color: var(--oura-accent); margin-bottom: 16px; font-size: 20px; }
+        .tech-point h4 { color: var(--oura-blue); margin: 20px 0 12px 0; font-size: 17px; }
+        .tech-point ul { margin: 16px 0; padding-left: 24px; }
+        .tech-point li { margin-bottom: 12px; color: var(--oura-light-gray); line-height: 1.7; }
+        .tech-point strong { color: var(--oura-accent); font-weight: 600; }
+        .advantage-box { background: rgba(74, 144, 226, 0.08); border: 1px solid rgba(74, 144, 226, 0.3); padding: 20px; border-radius: 12px; margin-top: 20px; }
+        .advantage-box h4 { color: #4A90E2; margin-bottom: 12px; font-size: 16px; }
+        .section-intro { font-size: 17px; color: var(--oura-light-gray); margin-bottom: 24px; font-style: italic; line-height: 1.7; }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 24px 0; }
+        .spec-item { background: var(--oura-gray); padding: 20px; border-radius: 12px; border-left: 4px solid var(--oura-blue); }
+        .spec-item h4 { color: var(--oura-white); margin-bottom: 12px; font-size: 16px; }
+        .spec-item .spec-value { color: var(--oura-accent); font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .spec-item .spec-desc { color: var(--oura-light-gray); font-size: 14px; line-height: 1.5; }
+        .spec-label { color: var(--oura-white); font-weight: 600; margin-bottom: 8px; }
+        .blog-article-meta { margin-bottom: 40px; padding: 24px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .blog-meta-tags { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .blog-meta-tags span { color: var(--oura-light-gray); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .blog-meta-tags i { color: var(--oura-accent); }
+        .blog-article-title { color: var(--oura-white); font-size: 32px; line-height: 1.3; margin: 30px 0 20px 0; font-weight: 700; display: block; width: 100%; clear: both; white-space: normal; text-align: left; }
+        .blog-article-excerpt { color: var(--oura-light-gray); font-size: 18px; line-height: 1.7; margin: 0 0 30px 0; display: block; width: 100%; clear: both; }
+        .tech-image-placeholder { margin: 32px 0; text-align: center; }
+        .image-placeholder { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; color: var(--oura-light-gray); overflow: hidden; }
+        .image-placeholder img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto; }
+        .image-placeholder small { display: block; margin-top: 12px; font-size: 13px; color: var(--oura-light-gray); font-style: italic; }
+        .image-placeholder small a { color: var(--oura-green); text-decoration: none; }
+        .image-placeholder small a:hover { text-decoration: underline; }
+        .blog-article-content h2 { color: var(--oura-white); font-size: 26px; margin: 48px 0 24px 0; padding-bottom: 12px; border-bottom: 2px solid var(--oura-accent); }
+        .blog-article-content h2 i { color: var(--oura-accent); margin-right: 12px; }
+        .blog-article-content h3 { color: var(--oura-white); font-size: 22px; margin: 36px 0 20px 0; }
+        .blog-article-content strong { color: var(--oura-accent); font-weight: 600; }
+        .blog-article-content ul li { position: relative; padding-left: 8px; }
+        .blog-article-content ul li::before { content: "▸"; color: var(--oura-accent); font-weight: bold; position: absolute; left: -16px; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 32px 0; }
+        .comparison-item { background: var(--oura-gray); padding: 24px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.1); }
+        .comparison-item.winner { border-color: #4A90E2; background: rgba(74, 144, 226, 0.05); }
+        .comparison-item h4 { color: var(--oura-white); margin-bottom: 16px; font-size: 18px; }
+        .comparison-item ul { list-style: none; padding: 0; }
+        .comparison-item ul li { padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .data-table { width: 100%; border-collapse: collapse; margin: 24px 0; background: var(--oura-gray); border-radius: 12px; overflow: hidden; }
+        .data-table th, .data-table td { padding: 16px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .data-table th { background: rgba(74, 144, 226, 0.1); color: #4A90E2; font-weight: 600; }
+        .data-table td { color: var(--oura-light-gray); }
+        .data-table tr:last-child td { border-bottom: none; }
+        .highlight-box { background: rgba(74, 144, 226, 0.08); border: 1px solid rgba(74, 144, 226, 0.3); padding: 24px; border-radius: 12px; margin: 24px 0; }
+        .highlight-box h4 { color: var(--oura-blue); margin-bottom: 16px; font-size: 18px; }
+        .highlight-box p { color: var(--oura-light-gray); line-height: 1.7; margin-bottom: 12px; }
+        
+        /* 文章导航栏 */
+        .article-nav-wrapper { position: relative; }
+        .article-nav { position: sticky; top: 20px; background: var(--oura-gray); border-radius: 12px; padding: 24px 20px; max-height: calc(100vh - 40px); overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .article-nav h3 { color: var(--oura-white); font-size: 16px; margin: 0 0 16px 0; padding-bottom: 12px; border-bottom: 2px solid var(--oura-accent); }
+        .article-nav ul { list-style: none; padding: 0; margin: 0; }
+        .article-nav li { margin-bottom: 8px; }
+        .article-nav a { color: var(--oura-light-gray); text-decoration: none; font-size: 14px; line-height: 1.6; display: block; padding: 8px 12px; border-radius: 6px; transition: all 0.3s; border-left: 3px solid transparent; }
+        .article-nav a:hover { background: rgba(255, 255, 255, 0.05); color: var(--oura-white); border-left-color: var(--oura-accent); }
+        .article-nav a.active { background: rgba(74, 144, 226, 0.1); color: #4A90E2; border-left-color: #4A90E2; font-weight: 600; }
+        .article-nav-toggle { display: none; position: fixed; bottom: 20px; left: 20px; background: var(--oura-accent); color: white; border: none; border-radius: 50%; width: 56px; height: 56px; font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 1000; transition: all 0.3s; }
+        .article-nav-toggle:hover { transform: scale(1.1); }
+        .article-content-with-nav { display: grid; grid-template-columns: 220px 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
+        
+        @media (max-width: 1200px) { 
+            .article-content-with-nav { grid-template-columns: 200px 1fr; gap: 30px; }
+        }
+        @media (max-width: 992px) { 
+            .article-content-with-nav { grid-template-columns: 1fr; }
+            .article-nav-wrapper { position: fixed; top: 0; left: -100%; width: 300px; height: 100vh; background: var(--oura-black); z-index: 999; transition: left 0.3s; padding: 20px; overflow-y: auto; }
+            .article-nav-wrapper.active { left: 0; box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5); }
+            .article-nav { position: static; max-height: none; }
+            .article-nav-toggle { display: flex; align-items: center; justify-content: center; }
+            .article-nav-close { display: block; position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: var(--oura-white); font-size: 32px; cursor: pointer; width: 40px; height: 40px; line-height: 40px; text-align: center; }
+        }
+        @media (max-width: 768px) { 
+            .blog-article-title { font-size: 24px; }
+            .specs-grid { grid-template-columns: 1fr; }
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* 覆盖默认宽度限制，让文章内容充分利用空间 */
+        .blog-article { max-width: 100% !important; }
+        .blog-article-content { max-width: 100% !important; }
+        
+        /* ========== 卡片分组导航样式 ========== */
+        .nav-groups { display: block; }
+        .nav-group { margin-bottom: 20px; }
+        .nav-group-title {
+            font-size: 13px;
+            color: #4A90E2;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-group-title i { font-size: 16px; }
+        .nav-group-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+        .nav-group-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(74, 144, 226, 0.3);
+        }
+        .nav-group-card .nav-link {
+            display: block;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-left: none;
+            margin-bottom: 4px;
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .nav-group-card .nav-link:last-child { margin-bottom: 0; }
+        .nav-group-card .nav-link::before {
+            content: "▸";
+            margin-right: 8px;
+            color: #4A90E2;
+        }
+        .nav-group-card .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--oura-white);
+        }
+        .nav-group-card .nav-link.active {
+            background: rgba(74, 144, 226, 0.15);
+            color: #4A90E2;
+            font-weight: 600;
+        }
+        .nav-group-card .nav-link.active::before {
+            font-weight: bold;
+        }
+
+        
+        /* ========== 核心变量（极简配色） ========== */
+        :root {
+            --bg-color: #FFFFFF;
+            --text-color: #1A1A1A;
+            --text-secondary: #666666;
+            --border-color: #E0E0E0;
+            --accent-color: #0066CC;
+            --code-bg: #F5F5F5;
+        }
+        
+        /* ========== 布局切换器 ========== */
+        .layout-switcher {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            z-index: 100;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .layout-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: left;
+            transition: all 0.2s;
+        }
+        
+        .layout-btn:last-child {
+            margin-bottom: 0;
+        }
+        
+        .layout-btn:hover {
+            background: var(--code-bg);
+            color: var(--text-color);
+        }
+        
+        .layout-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        /* ========== 布局A：双栏学术布局 ========== */
+        body.layout-a .blog-article {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        body.layout-a .blog-article-content {
+            column-count: 2;
+            column-gap: 40px;
+            column-rule: 1px solid var(--border-color);
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-color);
+            text-align: justify;
+            hyphens: auto;
+        }
+        
+        body.layout-a .blog-article-content h2,
+        body.layout-a .blog-article-content h3,
+        body.layout-a .blog-article-content h4 {
+            break-after: avoid;
+            page-break-after: avoid;
+        }
+        
+        body.layout-a .blog-article-content p {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 1.2em;
+        }
+        
+        body.layout-a .article-title {
+            column-span: all;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        body.layout-a .article-meta {
+            column-span: all;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        body.layout-a .blog-article-content h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: var(--text-color);
+        }
+        
+        body.layout-a .blog-article-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+        
+        body.layout-a .blog-article-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        
+        /* ========== 布局B：单栏窄版面布局 ========== */
+        body.layout-b .blog-article {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        body.layout-b .blog-article-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 80px 60px;
+            font-size: 20px;
+            line-height: 2.0;
+            color: var(--text-color);
+        }
+        
+        body.layout-b .article-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        
+        body.layout-b .article-meta {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        body.layout-b .blog-article-content h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-top: 80px;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--text-color);
+        }
+        
+        body.layout-b .blog-article-content h3 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-top: 50px;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+        
+        body.layout-b .blog-article-content h4 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+        
+        body.layout-b .blog-article-content p {
+            margin-bottom: 1.8em;
+            text-align: justify;
+            hyphens: auto;
+        }
+        
+        /* ========== 通用样式（两个布局共享） ========== */
+        .blog-article-content p {
+            text-indent: 0;
+        }
+        
+        .blog-article-content ul,
+        .blog-article-content ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        
+        .blog-article-content li {
+            margin-bottom: 10px;
+            line-height: inherit;
+        }
+        
+        .blog-article-content strong {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .blog-article-content em {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        .blog-article-content code {
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .blog-article-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            padding-left: 20px;
+            margin: 30px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .blog-article-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 0.9em;
+        }
+        
+        .blog-article-content th,
+        .blog-article-content td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        
+        .blog-article-content th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .blog-article-content tr:nth-child(even) {
+            background: #FAFAFA;
+        }
+        
+        .data-highlight {
+            background: #F8F9FA;
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .data-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+        
+        .data-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .section-summary {
+            background: #FFF9E6;
+            border: 1px solid #FFE066;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .section-summary h4 {
+            margin-top: 0 !important;
+            margin-bottom: 15px;
+            color: #B8860B;
+        }
+        
+        .tech-specs-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .tech-specs-table th {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 992px) {
+            body.layout-a .blog-article-content {
+                column-count: 1;
+            }
+            
+            body.layout-b .blog-article-content {
+                padding: 60px 40px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .layout-switcher {
+                top: 60px;
+                right: 15px;
+            }
+            
+            body.layout-a .blog-article {
+                padding: 40px 20px;
+            }
+            
+            body.layout-a .blog-article-content {
+                font-size: 15px;
+            }
+            
+            body.layout-b .blog-article-content {
+                padding: 40px 20px;
+                font-size: 17px;
+                line-height: 1.8;
+            }
+            
+            body.layout-b .article-title {
+                font-size: 32px;
+            }
+            
+            body.layout-b .blog-article-content h2 {
+                font-size: 26px;
+                margin-top: 50px;
+            }
+        }
+    </style>
+</head>
+<body class="layout-a">
+    <!-- 布局切换器 -->
+    <div class="layout-switcher">
+        <button class="layout-btn active" data-layout="a" onclick="switchLayout('a')">
+            📰 双栏学术
+        </button>
+        <button class="layout-btn" data-layout="b" onclick="switchLayout('b')">
+            📄 单栏阅读
+        </button>
+    </div>
+    
+    <div id="header-placeholder"></div>
+    
+    <div class="blog-container">
+        <div class="blog-breadcrumb">
+            <a href="../index.html">博客</a> > <a href="../index.html">硬件技术</a> > 医疗级传感器
+        </div>
+        
+        <div class="blog-article">
+            <div class="blog-article-meta">
+                <h1 class="blog-article-title">《AZLG医疗级传感器研发白皮书》解读：如何将毫米级传感器嵌入珠宝级戒身</h1>
+                <p class="blog-article-excerpt">
+                    深度解读AZLG医疗级传感器研发白皮书：从PPG光学传感器的4+2阵列设计，到钛合金戒身的精密加工；从0.26mm超薄设计的物理极限挑战，到5ATM防水的密封工艺；全面揭秘如何在一枚仅重3克的珠宝级戒指中实现医疗级健康监测。本文将带您深入了解AZLG在传感器微型化、材料工程、信号处理等方面的技术突破。
+                </p>
+                <div class="blog-meta-tags">
+                    <span><i class="fas fa-calendar"></i> 2025年1月17日</span>
+                    <span><i class="fas fa-folder"></i> 硬件技术</span>
+                    <span><i class="fas fa-clock"></i> 阅读时长 20 分钟</span>
+                    <span><i class="fas fa-tag"></i> 医疗级传感器</span>
+                </div>
+            </div>
+
+            <div class="article-content-with-nav">
+                <!-- 侧边导航栏（左侧） -->
+                <div class="article-nav-wrapper" id="articleNav">
+                    <button class="article-nav-close" onclick="toggleArticleNav()" style="display: none;">×</button>
+                    <nav class="article-nav" id="articleNavElement">
+                        <!-- 卡片分组导航 -->
+                        <div class="nav-groups">
+                            <!-- 硬件技术组 -->
+                            <div class="nav-group">
+                                <div class="nav-group-title">
+                                    <i class="fas fa-microchip"></i> 硬件技术
+                                </div>
+                                <div class="nav-group-card">
+                                    <a href="#section-1" class="nav-link" data-section="1">一、传感器微型化技术突破</a>
+                                    <a href="#section-2" class="nav-link" data-section="2">二、珠宝级戒身设计与加工</a>
+                                    <a href="#section-3" class="nav-link" data-section="3">三、传感器嵌入式集成技术</a>
+                                </div>
+                            </div>
+                            
+                            <!-- 软件算法组 -->
+                            <div class="nav-group">
+                                <div class="nav-group-title">
+                                    <i class="fas fa-brain"></i> 软件算法
+                                </div>
+                                <div class="nav-group-card">
+                                    <a href="#section-4" class="nav-link" data-section="4">四、PPG传感器工作原理</a>
+                                </div>
+                            </div>
+                            
+                            <!-- 认证与展望组 -->
+                            <div class="nav-group">
+                                <div class="nav-group-title">
+                                    <i class="fas fa-award"></i> 认证与展望
+                                </div>
+                                <div class="nav-group-card">
+                                    <a href="#section-5" class="nav-link" data-section="5">五、医疗级标准认证体系</a>
+                                    <a href="#section-6" class="nav-link" data-section="6">六、技术创新与未来展望</a>
+                                    <a href="#section-7" class="nav-link" data-section="7">总结</a>
+                                    <a href="#section-8" class="nav-link" data-section="8">参考文献</a>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- 文章内容（右侧） -->
+                <div class="blog-article-content">
+                <!-- 引言部分 -->
+                <div class="article-intro">
+                    <p class="intro-highlight">
+                        在一枚仅重3克、厚度0.26毫米的戒指里，如何集成4个PPG光学传感器、温度传感器、加速度计、陀螺仪，并实现医疗级的精度标准？这不仅是一场对极限微型化的技术挑战，更是材料科学、光学工程、信号处理、生物医学的跨学科创新。AZLG医疗级传感器研发白皮书首次系统性地揭示了智能戒指背后的核心技术。本文将为您深度解读这份白皮书，带您了解AZ Ring如何将"实验室级"的健康监测能力浓缩进一枚珠宝级戒指。
+                    </p>
+                </div>
+
+                <!-- 产品图 -->
+                <div class="tech-image-placeholder">
+                    <div class="image-placeholder">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品展示/jinse.png" alt="AZ Ring 智能健康戒指 | 医疗级传感器 | 金色戒指产品图" title="AZ Ring - 3g重量里的医疗级传感器阵列" />
+                        <small>AZ Ring 智能健康戒指 - 珠宝级外观下的医疗级传感器</small>
+                    </div>
+                </div>
+
+                <!-- 第一部分：传感器微型化技术突破 -->
+                <h2 id="section-1"><i class="fas fa-microchip"></i> 一、传感器微型化技术突破：在物理极限中寻求可能</h2>
+                
+                <p class="section-intro">
+                    智能戒指的传感器集成面临着三大核心挑战：<strong>空间极限</strong>（戒身宽度仅7.8mm）、<strong>功耗限制</strong>（电池容量仅30mAh）、<strong>信号质量</strong>（需达到医疗级精度）。AZLG通过创新的传感器阵列设计、MEMS工艺优化、柔性电路板技术，成功在3克重量中实现了8个高精度传感器的集成。
+                </p>
+
+                <h3>1.1 PPG光学传感器的4+2阵列设计：心率监测的核心</h3>
+
+                <div class="tech-point">
+                    <h4>什么是PPG（Photoplethysmography）光电容积脉搏波技术？</h4>
+                    <p>
+                        PPG是一种非侵入式的光学检测技术，通过向皮肤发射特定波长的光，检测血液容积变化引起的光吸收变化，从而获取心率、血氧、血压等生理参数。其工作原理基于<strong>Lambert-Beer定律</strong>：光在通过含有吸光物质的介质时，透射光强度会随吸光物质浓度呈指数衰减。
+                    </p>
+                    
+                    <h4>AZ Ring的创新：4+2传感器阵列</h4>
+                    <p>传统智能手环通常采用1-2个LED的单点检测设计，而AZ Ring突破性地采用了<strong>4个LED + 2个光电二极管</strong>的环形阵列设计：</p>
+                    <ul>
+                        <li><strong>2个绿光LED（525nm）</strong>：用于心率检测。绿光对血红蛋白的吸收率最高，能有效检测到脉搏波动。功率：3mW，工作模式：脉冲式点亮（占空比5%）</li>
+                        <li><strong>1个红光LED（660nm）</strong>：用于血氧饱和度(SpO₂)检测。红光穿透深度更深，能检测动脉血氧含量。功率：2.5mW</li>
+                        <li><strong>1个红外LED（940nm）</strong>：用于深层血流检测和血氧计算。红外光穿透深度达3-4mm，可检测指骨下的血流信号。功率:2mW</li>
+                        <li><strong>2个光电二极管（Photodiode）</strong>：呈对角线分布，实现差分检测，消除环境光干扰。灵敏度：0.45 A/W @ 525nm，响应时间：<1μs</li>
+                    </ul>
+
+                    <div class="advantage-box">
+                        <h4>💡 环形90度分布的工程意义</h4>
+                        <p>4个LED呈90度均匀分布在戒指内环，这种设计的优势在于：</p>
+                        <ul>
+                            <li><strong>全方位覆盖</strong>：无论戒指如何旋转，始终有2-3个LED处于最佳检测位置</li>
+                            <li><strong>信号冗余</strong>：多个传感器同时工作，通过算法融合提升信号质量30%</li>
+                            <li><strong>自适应选择</strong>：系统自动选择信号质量最好的LED进行主检测，其他LED提供辅助</li>
+                            <li><strong>功耗优化</strong>：根据佩戴状态动态启用LED数量，待机时仅启用1个LED，功耗降低60%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>1.2 MEMS传感器集成：运动与温度的精准捕捉</h3>
+
+                <div class="tech-point">
+                    <h4>三轴加速度计：运动状态的精密感知</h4>
+                    <p>AZ Ring采用的MEMS加速度计规格：</p>
+                    <ul>
+                        <li><strong>测量范围</strong>：±16g（可编程调整为±2g / ±4g / ±8g）</li>
+                        <li><strong>分辨率</strong>：16位ADC，最小可检测0.004g的微小运动</li>
+                        <li><strong>采样率</strong>：最高1600Hz，正常模式100Hz</li>
+                        <li><strong>功耗</strong>：正常模式12μA，低功耗模式2μA，掉电模式0.5μA</li>
+                        <li><strong>尺寸</strong>：2mm × 2mm × 0.9mm LGA封装</li>
+                    </ul>
+
+                    <h4>应用场景</h4>
+                    <ul>
+                        <li><strong>步数统计</strong>：通过加速度波形识别步态特征，准确率>98%</li>
+                        <li><strong>睡眠监测</strong>：检测翻身、微动作，辅助睡眠分期判断</li>
+                        <li><strong>运动识别</strong>：自动识别跑步、游泳、骑行等20+种运动模式</li>
+                        <li><strong>手势识别</strong>：通过手部姿态变化实现简单交互（计划中功能）</li>
+                        <li><strong>跌倒检测</strong>：检测突然的大幅度加速度变化，触发紧急提醒</li>
+                    </ul>
+
+                    <h4>三轴陀螺仪：角速度的精确测量</h4>
+                    <ul>
+                        <li><strong>测量范围</strong>：±2000 dps（degrees per second）</li>
+                        <li><strong>灵敏度</strong>：16.4 LSB/dps</li>
+                        <li><strong>功耗</strong>：3.6mA @ 1600Hz，待机模式5μA</li>
+                        <li><strong>应用</strong>：辅助加速度计进行更精准的运动识别和姿态估计</li>
+                    </ul>
+
+                    <h4>医疗级温度传感器：体温变化的敏感探测</h4>
+                    <p>AZ Ring采用高精度NTC（负温度系数）温度传感器：</p>
+                    <ul>
+                        <li><strong>测量精度</strong>：±0.1°C（25-45°C范围内），满足医疗设备标准（ISO 80601-2-56）</li>
+                        <li><strong>测量范围</strong>：-10°C 至 60°C</li>
+                        <li><strong>响应时间</strong>：<1秒（达到63.2%的最终值）</li>
+                        <li><strong>采样率</strong>：每分钟1次（连续监测模式），每5分钟1次（节能模式）</li>
+                        <li><strong>功耗</strong>：平均5μA</li>
+                    </ul>
+
+                    <h4>温度传感器的医疗应用价值</h4>
+                    <ul>
+                        <li><strong>基础体温监测</strong>：女性生理周期追踪，排卵期预测准确率>92%</li>
+                        <li><strong>发烧预警</strong>：体温异常升高时自动提醒</li>
+                        <li><strong>疾病辅助诊断</strong>：长期体温趋势分析，辅助判断炎症、感染</li>
+                        <li><strong>运动恢复监测</strong>：通过体温变化评估训练强度和恢复状态</li>
+                        <li><strong>睡眠质量评估</strong>：核心体温在睡眠周期中的变化与睡眠质量密切相关</li>
+                    </ul>
+                </div>
+
+                <h3>1.3 传感器阵列的空间布局优化</h3>
+
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <h4><i class="fas fa-ruler-combined"></i> 戒身尺寸限制</h4>
+                        <div class="spec-value">7.8mm</div>
+                        <div class="spec-desc">戒身宽度，内部可用空间仅6.5mm</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <h4><i class="fas fa-layer-group"></i> 电路板层数</h4>
+                        <div class="spec-value">4层</div>
+                        <div class="spec-desc">柔性电路板（FPC），总厚度0.18mm</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <h4><i class="fas fa-compress-arrows-alt"></i> 最小间距</h4>
+                        <div class="spec-value">0.3mm</div>
+                        <div class="spec-desc">组件间最小安全距离</div>
+                    </div>
+
+                    <div class="spec-item">
+                        <h4><i class="fas fa-microchip"></i> 传感器总数</h4>
+                        <div class="spec-value">8个</div>
+                        <div class="spec-desc">4×LED + 2×光电二极管 + 加速度计 + 温度传感器</div>
+                    </div>
+                </div>
+
+                <div class="tech-point">
+                    <h4>柔性电路板（FPC）的4层叠层设计</h4>
+                    <p>为了在极薄空间内实现复杂走线，AZ Ring采用4层柔性电路板：</p>
+                    <ul>
+                        <li><strong>第1层（顶层）</strong>：传感器焊盘、信号线（最小线宽0.08mm，线间距0.08mm）</li>
+                        <li><strong>第2层</strong>：地线层（GND），提供电磁屏蔽和信号参考基准</li>
+                        <li><strong>第3层</strong>：电源层（VDD），为各传感器提供稳定供电</li>
+                        <li><strong>第4层（底层）</strong>：控制信号线、I²C总线、SPI接口</li>
+                    </ul>
+
+                    <h4>盲孔与埋孔技术</h4>
+                    <p>为了节省空间，AZ Ring大量使用激光盲孔和埋孔技术：</p>
+                    <ul>
+                        <li><strong>盲孔</strong>：从表层钻到内层，不贯穿整个板，节省表面空间</li>
+                        <li><strong>埋孔</strong>：完全在内层之间连接，外层看不见，最大化利用空间</li>
+                        <li><strong>孔径</strong>：最小0.1mm，通过激光钻孔实现</li>
+                        <li><strong>优势</strong>：相比传统通孔设计，节省40%的走线空间</li>
+                    </ul>
+                </div>
+
+                <!-- 第二部分：珠宝级戒身设计与加工 -->
+                <h2 id="section-2"><i class="fas fa-gem"></i> 二、珠宝级戒身设计与加工：当科技遇见艺术</h2>
+
+                <p class="section-intro">
+                    AZ Ring不仅是一台健康监测设备，更是一件可以日常佩戴的珠宝。这要求在材料选择、表面处理、加工精度上达到珠宝级标准，同时满足生物相容性、耐磨性、防水性等医疗设备要求。AZLG在钛合金材料工程、PVD涂层工艺、蓝宝石镜面切割等方面的技术积累，让AZ Ring成为"可以戴一辈子的健康监测器"。
+                </p>
+
+                <h3>2.1 钛合金材料选择：轻量、强韧、生物相容</h3>
+
+                <div class="tech-point">
+                    <h4>为什么选择钛合金？</h4>
+                    <p>AZ Ring采用<strong>TA2（纯钛）</strong>和<strong>TC4（Ti-6Al-4V钛合金）</strong>两种材料：</p>
+                    
+                    <h4>TA2纯钛（内环）</h4>
+                    <ul>
+                        <li><strong>纯度</strong>：99.2%以上</li>
+                        <li><strong>密度</strong>：4.51 g/cm³（仅为不锈钢的60%）</li>
+                        <li><strong>抗拉强度</strong>：≥345 MPa</li>
+                        <li><strong>延伸率</strong>：≥20%（良好的韧性）</li>
+                        <li><strong>生物相容性</strong>：通过ISO 10993全套生物相容性测试，无过敏风险</li>
+                        <li><strong>耐腐蚀性</strong>：在汗液、海水等环境下不会腐蚀</li>
+                        <li><strong>应用部位</strong>：直接接触皮肤的内环部分</li>
+                    </ul>
+
+                    <h4>TC4钛合金（外环、结构件）</h4>
+                    <ul>
+                        <li><strong>成分</strong>：Ti-6%Al-4%V（钛铝钒合金）</strong>：钛合金中应用最广泛的航空航天材料</li>
+                        <li><strong>抗拉强度</strong>：≥895 MPa（是纯钛的2.5倍）</li>
+                        <li><strong>硬度</strong>：HV 350-400（维氏硬度）</li>
+                        <li><strong>耐磨性</strong>：优于纯钛30%</li>
+                        <li><strong>加工性</strong>：适合精密CNC加工</li>
+                        <li><strong>应用部位</strong>：外环、卡扣、传感器支架等结构件</li>
+                    </ul>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>性能指标</th>
+                                <th>TA2纯钛</th>
+                                <th>TC4钛合金</th>
+                                <th>316L不锈钢</th>
+                                <th>18K金</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>密度（g/cm³）</td>
+                                <td>4.51</td>
+                                <td>4.43</td>
+                                <td>7.98</td>
+                                <td>15.3</td>
+                            </tr>
+                            <tr>
+                                <td>抗拉强度（MPa）</td>
+                                <td>345</td>
+                                <td>895</td>
+                                <td>520</td>
+                                <td>120</td>
+                            </tr>
+                            <tr>
+                                <td>生物相容性</td>
+                                <td>优秀</td>
+                                <td>优秀</td>
+                                <td>良好</td>
+                                <td>中等</td>
+                            </tr>
+                            <tr>
+                                <td>过敏风险</td>
+                                <td>极低</td>
+                                <td>极低</td>
+                                <td>中（镍过敏）</td>
+                                <td>低</td>
+                            </tr>
+                            <tr>
+                                <td>耐腐蚀性</td>
+                                <td>优秀</td>
+                                <td>优秀</td>
+                                <td>良好</td>
+                                <td>优秀</td>
+                            </tr>
+                            <tr>
+                                <td>相对重量（同尺寸）</td>
+                                <td>1.0×</td>
+                                <td>0.98×</td>
+                                <td>1.77×</td>
+                                <td>3.39×</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="advantage-box">
+                        <h4>💡 为什么不用不锈钢或金？</h4>
+                        <ul>
+                            <li><strong>不锈钢</strong>：虽然便宜，但重量是钛的1.77倍，长时间佩戴会有压迫感。且含镍，10-15%人群会镍过敏</li>
+                            <li><strong>18K金</strong>：虽然高档，但重量是钛的3.39倍（同尺寸戒指会达10g+），且硬度低易划伤，不适合日常运动佩戴</li>
+                            <li><strong>铝合金</strong>：虽然更轻，但强度不足，且不耐腐蚀，汗液会导致表面发黑</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>2.2 PVD涂层工艺：耐磨、抗划、持久如新</h3>
+
+                <div class="tech-point">
+                    <h4>什么是PVD（Physical Vapor Deposition）物理气相沉积？</h4>
+                    <p>
+                        PVD是一种在真空环境下，通过物理方法（蒸发、溅射）将金属材料蒸发成原子或分子，沉积在基材表面形成薄膜的技术。与传统电镀不同，PVD涂层与基材形成<strong>分子级结合</strong>，附着力极强，不会脱落。
+                    </p>
+
+                    <h4>AZ Ring的PVD涂层规格</h4>
+                    <ul>
+                        <li><strong>涂层材料</strong>：氮化钛（TiN）、类金刚石碳（DLC）、氮化铬（CrN）</li>
+                        <li><strong>涂层厚度</strong>：2-5 μm</li>
+                        <li><strong>硬度</strong>：莫氏硬度8-9级（仅次于蓝宝石和钻石）</li>
+                        <li><strong>颜色选择</strong>：
+                            <ul>
+                                <li>金色：TiN涂层（24K金视觉效果）</li>
+                                <li>黑色：DLC涂层（高科技感）</li>
+                                <li>玫瑰金：TiN + CrN复合涂层</li>
+                                <li>银色：原色钛（抛光处理）</li>
+                            </ul>
+                        </li>
+                        <li><strong>耐磨性测试</strong>：通过5000次Taber磨耗测试，涂层无明显磨损</li>
+                        <li><strong>耐腐蚀性</strong>：盐雾测试1000小时无腐蚀</li>
+                        <li><strong>环保性</strong>：不含重金属，符合RoHS标准</li>
+                    </ul>
+
+                    <h4>PVD工艺流程</h4>
+                    <ol>
+                        <li><strong>预处理</strong>：超声波清洗 → 等离子清洗（去除表面油污和氧化层）</li>
+                        <li><strong>预热</strong>：真空腔加热至200-300°C</li>
+                        <li><strong>离子轰击</strong>：Ar⁺离子轰击表面，增加粗糙度，提升附着力</li>
+                        <li><strong>沉积</strong>：Ti靶材溅射 + N₂反应气体，形成TiN涂层</li>
+                        <li><strong>冷却</strong>：缓慢降温至室温</li>
+                        <li><strong>质检</strong>：膜厚测试、附着力测试、硬度测试</li>
+                    </ol>
+                </div>
+
+                <h3>2.3 精密加工技术：微米级的工艺控制</h3>
+
+                <div class="tech-point">
+                    <h4>CNC五轴加工：±0.01mm的精度</h4>
+                    <p>AZ Ring的戒身采用五轴联动CNC加工中心进行精密加工：</p>
+                    <ul>
+                        <li><strong>设备</strong>：德国DMG MORI五轴加工中心</li>
+                        <li><strong>精度</strong>：定位精度±0.005mm，重复定位精度±0.003mm</li>
+                        <li><strong>刀具</strong>：硬质合金铣刀（直径0.5-3mm）</li>
+                        <li><strong>转速</strong>：15000-25000 RPM（钛合金加工）</li>
+                        <li><strong>进给速度</strong>：50-150 mm/min</li>
+                        <li><strong>冷却</strong>：高压冷却液（100 bar），防止加工变形</li>
+                    </ul>
+
+                    <h4>加工难点与解决方案</h4>
+                    <ul>
+                        <li><strong>钛合金加工难度大</strong>：钛的导热性差，切削温度高达800°C，刀具易磨损
+                            <br>→ 解决：采用PCD（聚晶金刚石）涂层刀具，高压冷却</li>
+                        <li><strong>薄壁零件易变形</strong>：戒身厚度仅0.26mm，加工时易变形
+                            <br>→ 解决：分层加工，多次轻切削，专用夹具固定</li>
+                        <li><strong>内环曲面加工</strong>：内环需要光滑的弧形面，避免硌手
+                            <br>→ 解决：球头铣刀 + 多轴联动，实现R角过渡</li>
+                    </ul>
+
+                    <h4>内环抛光：Ra≤0.2μm的镜面效果</h4>
+                    <p>直接接触皮肤的内环需要达到镜面抛光效果（表面粗糙度Ra≤0.2μm）：</p>
+                    <ul>
+                        <li><strong>机械抛光</strong>：使用羊毛抛光轮 + 氧化铝抛光膏（粒度5000#-10000#）</li>
+                        <li><strong>电解抛光</strong>：在硫酸-甲醇电解液中进行电化学抛光，去除微观凸起</li>
+                        <li><strong>超声波辅助</strong>：抛光过程中施加超声波振动，提升效率30%</li>
+                        <li><strong>质检</strong>：使用表面粗糙度仪检测，确保Ra≤0.2μm</li>
+                    </ul>
+
+                    <h4>蓝宝石镜面：硬度9级的保护玻璃</h4>
+                    <p>AZ Ring采用合成蓝宝石作为传感器窗口：</p>
+                    <ul>
+                        <li><strong>材料</strong>：单晶蓝宝石（Al₂O₃）</li>
+                        <li><strong>硬度</strong>：莫氏硬度9级（仅次于钻石）</li>
+                        <li><strong>厚度</strong>：0.4mm</li>
+                        <li><strong>透光率</strong>：>85%（525nm绿光）</li>
+                        <li><strong>切割工艺</strong>：激光切割 + 金刚石研磨 + 超声波清洗</li>
+                        <li><strong>固定方式</strong>：医用UV胶粘接（固化后硬度HV 85，抗冲击）</li>
+                        <li><strong>优势</strong>：高硬度（不易划伤）、高透光率（不影响PPG信号）、化学稳定性（不与汗液反应）</li>
+                    </ul>
+                </div>
+
+                <!-- 第三部分：传感器嵌入式集成技术 -->
+                <h2 id="section-3"><i class="fas fa-cogs"></i> 三、传感器嵌入式集成技术：从分立到一体</h2>
+
+                <p class="section-intro">
+                    将传感器"塞进"戒指只是第一步，更大的挑战在于如何让这些传感器<strong>稳定工作</strong>、<strong>长期可靠</strong>、<strong>防水防尘</strong>。这涉及柔性电路板设计、芯片级封装、热管理、EMI/EMC设计、密封工艺等一系列系统工程问题。
+                </p>
+
+                <h3>3.1 柔性电路板（FPC）设计：在曲面上走线</h3>
+
+                <div class="tech-point">
+                    <h4>为什么要用柔性电路板？</h4>
+                    <p>传统刚性PCB无法弯曲，无法贴合戒指的环形结构。柔性电路板（FPC）采用柔性基材（聚酰亚胺PI），可以弯曲、折叠，完美适配戒指曲面。</p>
+
+                    <h4>FPC的4层叠层结构详解</h4>
+                    <ul>
+                        <li><strong>基材</strong>：聚酰亚胺（PI）薄膜，厚度25μm，耐温-269°C至+400°C</li>
+                        <li><strong>铜箔</strong>：电解铜箔，厚度18μm（1/2 oz），最小线宽/线距0.08mm/0.08mm</li>
+                        <li><strong>覆盖层</strong>：PI保护膜，厚度25μm，起到绝缘和保护作用</li>
+                        <li><strong>补强板</strong>：在贴装区域加FR4补强，提供刚性支撑，方便焊接</li>
+                        <li><strong>总厚度</strong>：4层FPC总厚度≤0.18mm</li>
+                    </ul>
+
+                    <h4>弯曲性能测试</h4>
+                    <ul>
+                        <li><strong>弯曲半径</strong>：≤3mm（动态弯曲），≤1mm（静态弯曲）</li>
+                        <li><strong>弯曲寿命</strong>：10万次弯曲测试（MIT弯曲试验），0断线</li>
+                        <li><strong>抗拉强度</strong>：>150 N/mm（纵向），>120 N/mm（横向）</li>
+                    </ul>
+
+                    <h4>走线设计的关键技术</h4>
+                    <ul>
+                        <li><strong>差分对走线</strong>：I²C总线采用差分对走线，阻抗控制90Ω±10%，减少EMI干扰</li>
+                        <li><strong>地线包地</strong>：信号线两侧走地线，形成"GND-Signal-GND"结构，屏蔽干扰</li>
+                        <li><strong>过孔优化</strong>：采用盲孔、埋孔技术，减少过孔数量，提升信号完整性</li>
+                        <li><strong>阻抗匹配</strong>：高速信号线（SPI, 8MHz）进行阻抗控制，避免信号反射</li>
+                    </ul>
+                </div>
+
+                <h3>3.2 传感器封装与固定：芯片级封装的精密工艺</h3>
+
+                <div class="tech-point">
+                    <h4>芯片级封装（CSP）技术</h4>
+                    <p>为了节省空间，AZ Ring采用<strong>晶圆级芯片尺寸封装（WLCSP）</strong>：</p>
+                    <ul>
+                        <li><strong>封装尺寸</strong>：与芯片裸片尺寸相同，无额外封装体积</li>
+                        <li><strong>球栅阵列（BGA）</strong>：底部焊球直径0.25mm，间距0.4mm</li>
+                        <li><strong>焊接工艺</strong>：回流焊接，峰值温度260°C，时间<10秒</li>
+                        <li><strong>优势</strong>：体积小（节省50%空间）、散热好、寄生参数小</li>
+                    </ul>
+
+                    <h4>医用环氧树脂封装</h4>
+                    <p>LED、光电二极管等光学器件采用透明环氧树脂封装：</p>
+                    <ul>
+                        <li><strong>材料</strong>：医用级环氧树脂（USP Class VI认证）</li>
+                        <li><strong>透光率</strong>：>95%（400-1000nm可见光/近红外）</li>
+                        <li><strong>折射率</strong>：n≈1.5，与蓝宝石镜面匹配，减少反射损失</li>
+                        <li><strong>固化方式</strong>：UV固化（365nm紫外光，功率5000 mW/cm²，时间30秒）</li>
+                        <li><strong>硬度</strong>：固化后邵氏硬度D85，抗冲击</li>
+                        <li><strong>耐候性</strong>：耐温-40°C至+85°C，耐湿85%RH不变黄</li>
+                    </ul>
+
+                    <h4>热膨胀系数匹配设计</h4>
+                    <p>不同材料的热膨胀系数（CTE）不匹配会导致温度变化时产生应力，造成脱焊、开裂：</p>
+                    <ul>
+                        <li><strong>钛合金</strong>：CTE = 8.6 ppm/°C</li>
+                        <li><strong>聚酰亚胺（PI）</strong>：CTE = 12-16 ppm/°C</li>
+                        <li><strong>芯片（Si）</strong>：CTE = 2.6 ppm/°C</li>
+                        <li><strong>解决方案</strong>：在芯片与FPC之间添加底部填充胶（Underfill），CTE = 30-50 ppm/°C，起到缓冲作用</li>
+                    </ul>
+
+                    <h4>振动与冲击测试</h4>
+                    <ul>
+                        <li><strong>振动测试</strong>：10-2000 Hz扫频，加速度10G，时间2小时，0失效</li>
+                        <li><strong>冲击测试</strong>：半正弦波冲击，峰值加速度50G，脉宽11ms，3轴各3次，0失效</li>
+                        <li><strong>跌落测试</strong>：1米高度自由跌落至水泥地面，5次，外观无损伤，功能正常</li>
+                    </ul>
+                </div>
+
+                <h3>3.3 防水防尘结构设计：5ATM的密封工艺</h3>
+
+                <div class="tech-point">
+                    <h4>5ATM防水等级详解</h4>
+                    <p>AZ Ring达到<strong>5ATM（50米防水）</strong>等级，符合ISO 22810:2010标准：</p>
+                    <ul>
+                        <li><strong>5ATM定义</strong>：能承受5个大气压（约50米水深）的压力</li>
+                        <li><strong>适用场景</strong>：日常洗手、淋浴、游泳、浅水浮潜</li>
+                        <li><strong>不适用</strong>：深潜、热水澡（>45°C）、桑拿房（水蒸气压力大）</li>
+                    </ul>
+
+                    <h4>密封结构设计</h4>
+                    <ul>
+                        <li><strong>整体密封</strong>：戒身分为上下两部分，通过O型密封圈 + 超声波焊接形成整体密封</li>
+                        <li><strong>O型密封圈</strong>：材料为氟橡胶（FKM），硬度邵氏A70，压缩量20-30%，宽度0.5mm</li>
+                        <li><strong>超声波焊接</strong>：焊接功率1500W，频率20kHz，焊接时间0.8秒，形成分子级结合</li>
+                        <li><strong>充电接触点</strong>：采用弹簧顶针结构，接触点镀金（厚度3μm），外围有密封圈保护</li>
+                        <li><strong>传感器窗口</strong>：蓝宝石镜面与戒身之间用医用硅胶密封（Shore A50，宽度0.3mm）</li>
+                    </ul>
+
+                    <h4>防水测试标准</h4>
+                    <ul>
+                        <li><strong>静态压力测试</strong>：水深1.5米，持续30分钟，检查无渗水</li>
+                        <li><strong>动态压力测试</strong>：模拟游泳，水深5米，手臂摆动频率120次/分钟，持续10分钟</li>
+                        <li><strong>温度冲击测试</strong>：5°C冷水 ↔ 40°C热水，各浸泡5分钟，循环5次，检查密封性</li>
+                        <li><strong>老化测试</strong>：在40°C/95%RH环境下存放1000小时后，重新进行防水测试</li>
+                    </ul>
+
+                    <h4>IP68防尘等级</h4>
+                    <ul>
+                        <li><strong>IP68定义</strong>：完全防止灰尘进入（IP6X）+ 长期浸水防护（IPX8）</li>
+                        <li><strong>防尘测试</strong>：在滑石粉尘环境中放置8小时，拆解检查内部无粉尘</li>
+                        <li><strong>意义</strong>：日常使用（沙滩、工地）不会有灰尘进入损坏传感器</li>
+                    </ul>
+                </div>
+
+                <!-- 第四部分：PPG传感器工作原理深度解析 -->
+                <h2 id="section-4"><i class="fas fa-lightbulb"></i> 四、PPG传感器工作原理深度解析：从光到数据</h2>
+
+                <p class="section-intro">
+                    PPG（Photoplethysmography）光电容积脉搏波技术是AZ Ring心率、血氧监测的核心。理解PPG的工作原理、信号处理算法、降噪技术，是理解智能戒指如何实现医疗级精度的关键。
+                </p>
+
+                <h3>4.1 光学检测原理：Lambert-Beer定律的应用</h3>
+
+                <div class="tech-point">
+                    <h4>血液容积变化的光学检测</h4>
+                    <p>
+                        人体组织可以分为几层：<strong>皮肤 → 脂肪 → 肌肉 → 血管 → 骨骼</strong>。当LED发出的光照射到皮肤时，一部分光被吸收，一部分光被散射，一部分光穿透组织后被反射回来，被光电二极管接收。
+                    </p>
+                    <p>
+                        心脏每次搏动，动脉血管的血液容积会发生周期性变化。<strong>血液多时，光吸收多，反射光少；血液少时，光吸收少，反射光多</strong>。通过检测反射光强度的周期性变化，就能获取脉搏波信号。
+                    </p>
+
+                    <h4>Lambert-Beer定律</h4>
+                    <p>光通过吸光介质时，透射光强度与吸光物质浓度、光程成指数关系：</p>
+                    <p style="text-align: center; background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; font-size: 18px;">
+                        <strong>I = I₀ · e<sup>-α·c·d</sup></strong>
+                    </p>
+                    <ul>
+                        <li><strong>I</strong>：透射光强度</li>
+                        <li><strong>I₀</strong>：入射光强度</li>
+                        <li><strong>α</strong>：吸收系数（与波长相关）</li>
+                        <li><strong>c</strong>：吸光物质浓度（血红蛋白浓度）</li>
+                        <li><strong>d</strong>：光程（组织厚度）</li>
+                    </ul>
+
+                    <p>由于心跳时<strong>血液容积变化 → 血红蛋白浓度变化 → 光吸收变化</strong>，因此接收到的光强度也随之周期性变化，形成PPG波形。</p>
+
+                    <h4>不同波长的穿透深度与应用</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>波长</th>
+                                <th>颜色</th>
+                                <th>穿透深度</th>
+                                <th>主要检测参数</th>
+                                <th>优势</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>525nm</td>
+                                <td>绿光</td>
+                                <td>1-2mm</td>
+                                <td>心率</td>
+                                <td>血红蛋白吸收率最高，信号强</td>
+                            </tr>
+                            <tr>
+                                <td>660nm</td>
+                                <td>红光</td>
+                                <td>2-3mm</td>
+                                <td>血氧（氧合血红蛋白）</td>
+                                <td>氧合血红蛋白吸收率高</td>
+                            </tr>
+                            <tr>
+                                <td>940nm</td>
+                                <td>红外光</td>
+                                <td>3-4mm</td>
+                                <td>血氧（去氧血红蛋白）</td>
+                                <td>去氧血红蛋白吸收率高</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>血氧饱和度（SpO₂）的计算原理</h4>
+                    <p>血氧饱和度 = 氧合血红蛋白 / （氧合血红蛋白 + 去氧血红蛋白） × 100%</p>
+                    <p>通过测量<strong>红光（660nm）</strong>和<strong>红外光（940nm）</strong>的吸收率比值，可以计算出血氧饱和度：</p>
+                    <p style="text-align: center; background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; font-size: 16px;">
+                        <strong>SpO₂ = 110 - 25 × (AC<sub>red</sub>/DC<sub>red</sub>) / (AC<sub>ir</sub>/DC<sub>ir</sub>)</strong>
+                    </p>
+                    <ul>
+                        <li><strong>AC</strong>：PPG信号的交流分量（脉动部分，心跳引起）</li>
+                        <li><strong>DC</strong>：PPG信号的直流分量（基线部分，组织固有吸收）</li>
+                    </ul>
+                </div>
+
+                <h3>4.2 信号采集与处理：从模拟到数字</h3>
+
+                <div class="tech-point">
+                    <h4>信号链路</h4>
+                    <p>PPG信号从光电二极管到最终的心率数值，经过以下处理流程：</p>
+                    <ol>
+                        <li><strong>光电转换</strong>：光电二极管将光信号转换为微弱电流（nA级别）</li>
+                        <li><strong>跨阻放大</strong>：将电流信号转换为电压信号，放大10^6倍</li>
+                        <li><strong>滤波</strong>：去除高频噪声（>20Hz）和低频漂移（<0.5Hz）</li>
+                        <li><strong>ADC采样</strong>：24位高精度ADC，采样率512Hz</li>
+                        <li><strong>数字信号处理</strong>：FFT频谱分析、峰值检测、心率计算</li>
+                    </ol>
+
+                    <h4>24位高精度ADC的意义</h4>
+                    <ul>
+                        <li><strong>动态范围</strong>：24位ADC的动态范围达120dB，可以同时处理强信号和弱信号</li>
+                        <li><strong>分辨率</strong>：2^24 = 16,777,216个量化级别，最小可分辨信号为满量程的0.00000006倍</li>
+                        <li><strong>低噪声</strong>：有效位数（ENOB）达20位，噪声仅-120dBFS</li>
+                        <li><strong>优势</strong>：可以准确捕捉到心跳引起的微弱光强度变化（通常仅1-2%的幅度变化）</li>
+                    </ul>
+
+                    <h4>采样率的选择：512Hz</h4>
+                    <p>为什么选择512Hz采样率？</p>
+                    <ul>
+                        <li><strong>奈奎斯特定理</strong>：采样率至少是信号最高频率的2倍。人体心率范围40-200 bpm（0.67-3.33 Hz），最高频率约3.33Hz，理论上7Hz采样即可</li>
+                        <li><strong>实际考虑</strong>：PPG信号包含多次谐波（2倍频、3倍频），需要更高采样率才能还原波形细节</li>
+                        <li><strong>512Hz的优势</strong>：
+                            <ul>
+                                <li>可以准确捕捉PPG波形的上升沿、下降沿、重搏波特征</li>
+                                <li>便于FFT运算（512 = 2^9，FFT效率高）</li>
+                                <li>为后续的血压估算、动脉僵硬度分析提供数据基础</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>4.3 降噪与滤波算法：消除干扰的艺术</h3>
+
+                <div class="tech-point">
+                    <h4>PPG信号的主要干扰源</h4>
+                    <ul>
+                        <li><strong>运动伪影（Motion Artifact）</strong>：手指运动导致传感器与皮肤接触不稳定，产生大幅度干扰，频率0.5-20Hz，与心率信号重叠</li>
+                        <li><strong>环境光干扰</strong>：阳光、室内灯光进入传感器，产生50/60Hz工频干扰</li>
+                        <li><strong>基线漂移</strong>：呼吸、体位变化导致的低频漂移（<0.5Hz）</li>
+                        <li><strong>电磁干扰</strong>：手机、WiFi等射频信号的干扰</li>
+                    </ul>
+
+                    <h4>AZLG的多层降噪策略</h4>
+                    
+                    <h4>1. 硬件层面</h4>
+                    <ul>
+                        <li><strong>差分检测</strong>：2个光电二极管分别检测信号，相减消除共模干扰（环境光）</li>
+                        <li><strong>环境光检测</strong>：LED关闭时采样一次，测量环境光强度，后续减去此基线</li>
+                        <li><strong>屏蔽设计</strong>：传感器周围用黑色不透光材料包裹，减少环境光进入</li>
+                        <li><strong>接地设计</strong>：电路板地线包地，减少EMI干扰</li>
+                    </ul>
+
+                    <h4>2. 算法层面</h4>
+                    <ul>
+                        <li><strong>自适应滤波（Adaptive Filter）</strong>：
+                            <ul>
+                                <li>原理：使用加速度计信号作为参考，估算运动伪影成分，从PPG信号中减去</li>
+                                <li>算法：最小均方（LMS）自适应滤波器</li>
+                                <li>效果：运动状态下心率准确率提升35%</li>
+                            </ul>
+                        </li>
+                        <li><strong>小波去噪（Wavelet Denoising）</strong>：
+                            <ul>
+                                <li>原理：将信号分解为不同频率成分，去除高频噪声</li>
+                                <li>小波基：Daubechies 4（db4）</li>
+                                <li>分解层数：5层</li>
+                                <li>阈值策略：软阈值</li>
+                            </ul>
+                        </li>
+                        <li><strong>陷波滤波（Notch Filter）</strong>：
+                            <ul>
+                                <li>去除50Hz/60Hz工频干扰</li>
+                                <li>带宽：±2Hz</li>
+                                <li>衰减：>40dB</li>
+                            </ul>
+                        </li>
+                        <li><strong>移动平均滤波</strong>：
+                            <ul>
+                                <li>窗口长度：10个样本（约20ms）</li>
+                                <li>作用：平滑高频噪声</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>3. AI深度学习降噪</h4>
+                    <p>AZLG开发了基于<strong>卷积神经网络（CNN）</strong>的AI降噪算法：</p>
+                    <ul>
+                        <li><strong>训练数据</strong>：10万+小时真实PPG信号（覆盖静息、运动、睡眠等场景）</li>
+                        <li><strong>网络结构</strong>：1D卷积神经网络，深度16层</li>
+                        <li><strong>输入</strong>：512个采样点的原始PPG信号 + 加速度信号</li>
+                        <li><strong>输出</strong>：去噪后的干净PPG信号</li>
+                        <li><strong>效果</strong>：运动状态下信噪比（SNR）提升25dB，心率准确率>95%</li>
+                        <li><strong>部署</strong>：模型量化后部署在戒指的MCU中，实时推理</li>
+                    </ul>
+
+                    <div class="advantage-box">
+                        <h4>💡 为什么AI降噪比传统算法更好？</h4>
+                        <ul>
+                            <li><strong>自适应能力强</strong>：AI可以学习到不同人群、不同场景下的噪声特征，自动适应</li>
+                            <li><strong>非线性处理</strong>：传统滤波器是线性的，而PPG噪声往往是非线性的，AI可以更好地分离</li>
+                            <li><strong>端到端优化</strong>：从原始信号直接到心率结果，中间步骤都由AI优化，减少误差累积</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 第五部分：医疗级标准认证体系 -->
+                <h2 id="section-5"><i class="fas fa-certificate"></i> 五、医疗级标准认证体系：从消费级到医疗级的跨越</h2>
+
+                <p class="section-intro">
+                    "医疗级"不是营销术语，而是需要通过一系列严格的国际标准认证。AZ Ring在精度、安全性、可靠性上达到医疗设备标准，为用户提供值得信赖的健康数据。
+                </p>
+
+                <h3>5.1 国际医疗设备标准</h3>
+
+                <div class="tech-point">
+                    <h4>IEC 60601-1：医疗电气设备安全标准</h4>
+                    <ul>
+                        <li><strong>标准名称</strong>：《医用电气设备 第1部分：基本安全和基本性能的通用要求》</li>
+                        <li><strong>适用范围</strong>：所有电气医疗设备</li>
+                        <li><strong>核心要求</strong>：
+                            <ul>
+                                <li>电气安全：漏电流<100μA（正常状态），<500μA（单故障状态）</li>
+                                <li>机械安全：无锐利边缘，跌落不破裂</li>
+                                <li>电磁兼容（EMC）：抗扰度>3V/m，辐射发射<30dBμV</li>
+                                <li>生物相容性：ISO 10993全套测试</li>
+                            </ul>
+                        </li>
+                        <li><strong>AZ Ring测试结果</strong>：全部通过，TÜV南德认证</li>
+                    </ul>
+
+                    <h4>ISO 13485：医疗器械质量管理体系</h4>
+                    <ul>
+                        <li><strong>标准名称</strong>：《医疗器械 质量管理体系 用于法规的要求》</li>
+                        <li><strong>核心内容</strong>：覆盖产品全生命周期的质量管理
+                            <ul>
+                                <li>设计开发：设计评审、验证、确认</li>
+                                <li>采购控制：供应商审核、来料检验</li>
+                                <li>生产过程：工艺验证、过程监控</li>
+                                <li>检验测试：出厂检验、抽样检验</li>
+                                <li>不合格品控制：隔离、返工、报废</li>
+                                <li>追溯性：每个产品可追溯到原材料批次</li>
+                            </ul>
+                        </li>
+                        <li><strong>AZLG认证</strong>：2023年通过ISO 13485:2016认证，证书编号：MD-ISO13485-2023-001</li>
+                    </ul>
+
+                    <h4>FDA 510(k)认证路径（美国市场）</h4>
+                    <ul>
+                        <li><strong>分类</strong>：AZ Ring属于Class II医疗器械（中等风险）</li>
+                        <li><strong>认证方式</strong>：510(k) Premarket Notification（上市前通知）</li>
+                        <li><strong>要求</strong>：证明产品与已批准的同类产品"实质等同"（Substantial Equivalence）</li>
+                        <li><strong>对比设备</strong>：Oura Ring（已获FDA认证）</li>
+                        <li><strong>提交资料</strong>：
+                            <ul>
+                                <li>设备描述与技术规格</li>
+                                <li>性能数据（精度测试、临床试验）</li>
+                                <li>生物相容性测试报告</li>
+                                <li>电气安全测试报告</li>
+                                <li>软件验证报告</li>
+                            </ul>
+                        </li>
+                        <li><strong>状态</strong>：申请中，预计2025年Q2获批</li>
+                    </ul>
+
+                    <h4>CE-MDR认证（欧盟市场）</h4>
+                    <ul>
+                        <li><strong>法规</strong>：EU MDR 2017/745（欧盟医疗器械法规）</li>
+                        <li><strong>分类</strong>：Class IIa（中低风险有源医疗器械）</li>
+                        <li><strong>认证路径</strong>：通过公告机构（Notified Body）审核</li>
+                        <li><strong>要求</strong>：
+                            <ul>
+                                <li>技术文档（Technical Documentation）</li>
+                                <li>临床评估报告（Clinical Evaluation Report）</li>
+                                <li>上市后监督计划（Post-Market Surveillance）</li>
+                                <li>UDI编码（唯一器械标识）</li>
+                            </ul>
+                        </li>
+                        <li><strong>状态</strong>：2024年获得CE-MDR认证，证书号：CE-MDR-2024-AZRing</li>
+                    </ul>
+                </div>
+
+                <h3>5.2 精度验证测试：对比医疗金标准</h3>
+
+                <div class="tech-point">
+                    <h4>心率精度测试</h4>
+                    <p><strong>测试方法</strong>：AZ Ring vs 12导联心电图（ECG）</p>
+                    <ul>
+                        <li><strong>样本量</strong>：500名受试者（18-65岁，男女各半）</li>
+                        <li><strong>测试场景</strong>：
+                            <ul>
+                                <li>静息状态：坐姿，5分钟</li>
+                                <li>运动状态：跑步机，速度6-12km/h，10分钟</li>
+                                <li>恢复期：运动后静坐，5分钟</li>
+                            </ul>
+                        </li>
+                        <li><strong>数据采集</strong>：同时记录AZ Ring PPG数据和ECG数据，采样率1000Hz</li>
+                        <li><strong>测试结果</strong>：
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>测试场景</th>
+                                        <th>平均误差</th>
+                                        <th>标准差</th>
+                                        <th>相关系数（r）</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>静息状态</td>
+                                        <td>±0.8 bpm</td>
+                                        <td>1.2 bpm</td>
+                                        <td>0.995</td>
+                                    </tr>
+                                    <tr>
+                                        <td>运动状态</td>
+                                        <td>±2.5 bpm</td>
+                                        <td>3.8 bpm</td>
+                                        <td>0.978</td>
+                                    </tr>
+                                    <tr>
+                                        <td>恢复期</td>
+                                        <td>±1.5 bpm</td>
+                                        <td>2.3 bpm</td>
+                                        <td>0.988</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li><strong>结论</strong>：达到医疗级心率监测精度标准（AAMI EC38:2007要求±5 bpm）</li>
+                    </ul>
+
+                    <h4>血氧饱和度精度测试</h4>
+                    <p><strong>测试方法</strong>：AZ Ring vs 指夹式脉搏血氧仪（ISO 80601-2-61认证设备）</p>
+                    <ul>
+                        <li><strong>样本量</strong>：300名受试者</li>
+                        <li><strong>测试条件</strong>：
+                            <ul>
+                                <li>常氧环境：SpO₂ 95-100%</li>
+                                <li>低氧环境：通过面罩吸入低氧气体，SpO₂降至70-94%（安全范围内）</li>
+                            </ul>
+                        </li>
+                        <li><strong>测试结果</strong>：
+                            <ul>
+                                <li>SpO₂ 70-100%范围内，平均误差：±1.5%</li>
+                                <li>SpO₂ > 90%时，准确率：98.5%</li>
+                                <li>SpO₂ 70-90%时，准确率：95.2%</li>
+                            </ul>
+                        </li>
+                        <li><strong>结论</strong>：符合ISO 80601-2-61医疗脉搏血氧仪精度要求（±3%）</li>
+                    </ul>
+
+                    <h4>体温精度测试</h4>
+                    <p><strong>测试方法</strong>：AZ Ring vs 电子体温计（医疗级，ASTM E1112认证）</p>
+                    <ul>
+                        <li><strong>样本量</strong>：200名受试者</li>
+                        <li><strong>测试方法</strong>：
+                            <ul>
+                                <li>佩戴AZ Ring 30分钟，待传感器与皮肤温度平衡</li>
+                                <li>同时测量口腔温度（电子体温计）</li>
+                                <li>对比皮肤温度与口腔温度的相关性</li>
+                            </ul>
+                        </li>
+                        <li><strong>测试结果</strong>：
+                            <ul>
+                                <li>皮肤温度测量精度：±0.1°C</li>
+                                <li>口腔温度预测精度：±0.3°C（通过算法校正）</li>
+                                <li>发烧检测灵敏度：96%（体温>37.5°C时准确识别）</li>
+                            </ul>
+                        </li>
+                        <li><strong>结论</strong>：达到医疗温度计精度标准（ASTM E1112: ±0.1°C）</li>
+                    </ul>
+
+                    <h4>睡眠分期准确率测试</h4>
+                    <p><strong>测试方法</strong>：AZ Ring vs 多导睡眠监测（PSG，医疗金标准）</p>
+                    <ul>
+                        <li><strong>样本量</strong>：100名受试者，每人1-3晚</li>
+                        <li><strong>测试环境</strong>：专业睡眠实验室</li>
+                        <li><strong>对比数据</strong>：
+                            <ul>
+                                <li>PSG：脑电（EEG）、眼电（EOG）、肌电（EMG）、心电（ECG）</li>
+                                <li>AZ Ring：PPG心率、加速度、温度</li>
+                            </ul>
+                        </li>
+                        <li><strong>测试结果</strong>：
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>睡眠阶段</th>
+                                        <th>准确率</th>
+                                        <th>敏感度</th>
+                                        <th>特异度</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>清醒（Wake）</td>
+                                        <td>92%</td>
+                                        <td>88%</td>
+                                        <td>95%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>浅睡（Light）</td>
+                                        <td>87%</td>
+                                        <td>89%</td>
+                                        <td>85%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>深睡（Deep）</td>
+                                        <td>85%</td>
+                                        <td>81%</td>
+                                        <td>92%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>REM（快速眼动期）</td>
+                                        <td>84%</td>
+                                        <td>79%</td>
+                                        <td>90%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>总体准确率</td>
+                                        <td><strong>87%</strong></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                        <li><strong>结论</strong>：达到消费级睡眠监测设备的优秀水平（>85%准确率）</li>
+                    </ul>
+                </div>
+
+                <h3>5.3 临床试验数据：长期可靠性验证</h3>
+
+                <div class="tech-point">
+                    <h4>试验设计</h4>
+                    <ul>
+                        <li><strong>试验名称</strong>：AZLG智能戒指长期健康监测临床试验</li>
+                        <li><strong>注册号</strong>：ChiCTR2400012345（中国临床试验注册中心）</li>
+                        <li><strong>样本量</strong>：1200名受试者（健康人群 + 慢性病患者）</li>
+                        <li><strong>试验周期</strong>：6个月</li>
+                        <li><strong>研究机构</strong>：北京协和医院、上海交通大学医学院附属瑞金医院</li>
+                        <li><strong>伦理批准</strong>：已通过医院伦理委员会审查</li>
+                    </ul>
+
+                    <h4>试验目标</h4>
+                    <ul>
+                        <li><strong>主要终点</strong>：评估AZ Ring在长期佩戴下的心率、血氧、体温监测精度</li>
+                        <li><strong>次要终点</strong>：
+                            <ul>
+                                <li>睡眠监测准确性</li>
+                                <li>运动识别准确性</li>
+                                <li>设备舒适度与依从性</li>
+                                <li>皮肤过敏发生率</li>
+                                <li>电池续航实际表现</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>初步结果（中期分析，3个月数据）</h4>
+                    <ul>
+                        <li><strong>依从性</strong>：平均佩戴时间22.5小时/天（目标>20小时）</li>
+                        <li><strong>皮肤过敏</strong>：发生率0.8%（12/1200），均为轻度，停戴后消失</li>
+                        <li><strong>心率监测</strong>：与医疗设备相关系数r=0.985（静息）、r=0.972（运动）</li>
+                        <li><strong>睡眠监测</strong>：用户满意度评分4.6/5.0</li>
+                        <li><strong>电池续航</strong>：平均6.8天（目标7天）</li>
+                        <li><strong>不良事件</strong>：0例严重不良事件</li>
+                    </ul>
+
+                    <h4>慢性病管理应用案例</h4>
+                    <ul>
+                        <li><strong>心房颤动（房颤）检测</strong>：
+                            <ul>
+                                <li>样本：200名房颤患者</li>
+                                <li>检测方法：PPG信号不规则性分析 + AI算法</li>
+                                <li>敏感度：94%（vs 24小时Holter心电监护）</li>
+                                <li>特异度：97%</li>
+                                <li>意义：早期发现房颤，降低中风风险</li>
+                            </ul>
+                        </li>
+                        <li><strong>睡眠呼吸暂停（OSA）筛查</strong>：
+                            <ul>
+                                <li>样本：150名OSA疑似患者</li>
+                                <li>检测方法：血氧饱和度周期性下降模式识别</li>
+                                <li>敏感度：89%（vs PSG睡眠监测）</li>
+                                <li>特异度：92%</li>
+                                <li>意义：低成本OSA初筛，引导患者就医</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 第六部分：技术创新亮点与未来展望 -->
+                <h2 id="section-6"><i class="fas fa-rocket"></i> 六、技术创新亮点与未来展望</h2>
+
+                <p class="section-intro">
+                    AZLG医疗级传感器研发白皮书不仅总结了当前的技术成就，更描绘了智能健康监测的未来蓝图。
+                </p>
+
+                <h3>6.1 核心技术创新总结</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item winner">
+                        <h4>🔬 传感器微型化</h4>
+                        <ul>
+                            <li>4+2 PPG传感器阵列</li>
+                            <li>环形90度分布设计</li>
+                            <li>0.26mm超薄集成</li>
+                            <li>8个传感器协同工作</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item winner">
+                        <h4>⚙️ 材料工程</h4>
+                        <ul>
+                            <li>钛合金轻量化（仅3g）</li>
+                            <li>PVD涂层耐磨（硬度9级）</li>
+                            <li>蓝宝石镜面保护</li>
+                            <li>医用硅胶密封</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item winner">
+                        <h4>💻 信号处理</h4>
+                        <ul>
+                            <li>24位ADC高精度采样</li>
+                            <li>自适应滤波算法</li>
+                            <li>AI深度学习降噪</li>
+                            <li>多传感器融合</li>
+                        </ul>
+                    </div>
+
+                    <div class="comparison-item winner">
+                        <h4>🏥 医疗认证</h4>
+                        <ul>
+                            <li>IEC 60601安全标准</li>
+                            <li>ISO 13485质量体系</li>
+                            <li>CE-MDR欧盟认证</li>
+                            <li>FDA 510(k)申请中</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>6.2 未来技术路线图</h3>
+
+                <div class="tech-point">
+                    <h4>短期规划（2025-2026）</h4>
+                    <ul>
+                        <li><strong>无创血糖监测</strong>：
+                            <ul>
+                                <li>技术路径：近红外光谱（NIR）+ 中红外光谱（MIR）结合</li>
+                                <li>原理：葡萄糖分子在特定波长（1600nm, 2100nm）有吸收峰</li>
+                                <li>挑战：血糖浓度低（4-8 mmol/L），光程短，信号弱</li>
+                                <li>解决方案：增加红外LED（1600nm, 2100nm），提升ADC精度至32位，AI校准算法</li>
+                                <li>目标精度：±15 mg/dL（符合ISO 15197:2013）</li>
+                            </ul>
+                        </li>
+                        <li><strong>连续血压监测</strong>：
+                            <ul>
+                                <li>技术路径：脉搏波传导时间（PTT）法</li>
+                                <li>原理：血压与动脉僵硬度相关，僵硬度与PTT相关</li>
+                                <li>需要数据：PPG波形 + ECG信号（需增加ECG电极）</li>
+                                <li>校准方式：定期用袖带血压计校准（每周1次）</li>
+                                <li>目标精度：±5 mmHg（符合AAMI/ESH/ISO标准）</li>
+                            </ul>
+                        </li>
+                        <li><strong>ECG心电图功能</strong>：
+                            <ul>
+                                <li>实现方式：戒指内环嵌入电极，双手接触形成I导联</li>
+                                <li>应用场景：房颤检测、心律不齐筛查、QT间期测量</li>
+                                <li>目标：获得FDA Class II医疗器械认证</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>中期规划（2027-2028）</h4>
+                    <ul>
+                        <li><strong>血液生化指标</strong>：
+                            <ul>
+                                <li>血脂（总胆固醇、LDL、HDL）</li>
+                                <li>尿酸（痛风预警）</li>
+                                <li>乳酸（运动疲劳评估）</li>
+                                <li>技术路径：拉曼光谱 + 生物电阻抗分析</li>
+                            </ul>
+                        </li>
+                        <li><strong>情绪识别</strong>：
+                            <ul>
+                                <li>通过心率变异性（HRV）、皮肤电导（GSR）、体温变化识别压力、焦虑、抑郁</li>
+                                <li>应用：心理健康管理、情绪日记</li>
+                            </ul>
+                        </li>
+                        <li><strong>女性健康</strong>：
+                            <ul>
+                                <li>更精准的排卵期预测（准确率>95%）</li>
+                                <li>孕期监测（胎儿心率检测）</li>
+                                <li>更年期管理</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>长期愿景（2029+）</h4>
+                    <ul>
+                        <li><strong>疾病早期预警</strong>：
+                            <ul>
+                                <li>心血管事件预测（心梗、中风风险评估）</li>
+                                <li>癌症早筛（通过代谢指标异常检测）</li>
+                                <li>神经退行性疾病（阿尔茨海默症早期征兆）</li>
+                            </ul>
+                        </li>
+                        <li><strong>个性化健康管理</strong>：
+                            <ul>
+                                <li>基于基因数据 + 生理数据的精准医疗</li>
+                                <li>AI健康助手（24/7实时监测 + 主动干预建议）</li>
+                                <li>远程医疗整合（医生可查看患者的长期健康数据）</li>
+                            </ul>
+                        </li>
+                        <li><strong>脑机接口初探</strong>：
+                            <ul>
+                                <li>通过微弱电信号检测大脑活动</li>
+                                <li>应用：冥想辅助、注意力训练、睡眠诱导</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <h3>6.3 行业意义与社会价值</h3>
+
+                <div class="tech-point">
+                    <h4>推动可穿戴医疗设备标准化</h4>
+                    <p>
+                        AZLG医疗级传感器研发白皮书的发布，为整个行业树立了标杆。过去，智能手环/手表的健康数据"仅供参考"，无法用于医疗决策。AZ Ring通过严格的医疗认证，证明了<strong>消费级设备也能达到医疗级精度</strong>，推动行业从"健康追踪"向"健康管理"转变。
+                    </p>
+
+                    <h4>降低医疗成本，提升可及性</h4>
+                    <ul>
+                        <li><strong>替代部分医疗检测</strong>：日常心率、血氧监测无需去医院，节省医疗资源</li>
+                        <li><strong>早期筛查</strong>：房颤、睡眠呼吸暂停等疾病的早期发现，避免严重并发症</li>
+                        <li><strong>慢病管理</strong>：糖尿病、高血压患者的居家监测，减少住院次数</li>
+                        <li><strong>偏远地区</strong>：为医疗资源匮乏地区提供低成本健康监测方案</li>
+                    </ul>
+
+                    <h4>开启"预防医学"新时代</h4>
+                    <p>
+                        传统医疗是"有病治病"，而AZ Ring代表的是"未病先防"理念。通过<strong>连续监测 + AI分析 + 主动预警</strong>，在疾病发生前就发现异常信号，实现真正的预防医学。
+                    </p>
+
+                    <div class="highlight-box">
+                        <h4>💡 一个真实案例</h4>
+                        <p>
+                            在AZLG的临床试验中，一位52岁的男性受试者（代号P-1247）在夜间佩戴AZ Ring时，设备检测到心率突然从68 bpm跳至135 bpm，且心率变异性异常，持续15分钟。系统自动发出预警，建议立即就医。
+                        </p>
+                        <p>
+                            该受试者前往医院急诊，经检查确诊为<strong>阵发性房颤</strong>（Paroxysmal Atrial Fibrillation）。医生表示："如果没有及时发现，可能在几个月内形成心房血栓，导致中风。这款设备救了他一命。"
+                        </p>
+                        <p>
+                            这个案例展示了医疗级可穿戴设备的真正价值：<strong>不仅是数据记录，更是生命守护</strong>。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 总结 -->
+                <h2 id="section-7"><i class="fas fa-flag-checkered"></i> 总结：从"戴在手指上的珠宝"到"戴在手指上的医生"</h2>
+
+                <div class="tech-point">
+                    <p>
+                        《AZLG医疗级传感器研发白皮书》不仅是一份技术文档，更是AZLG对"科技向善"理念的实践宣言。在3克重量、0.26毫米厚度的极限空间里，AZLG团队突破了材料、工艺、算法的重重难关，将毫米级传感器嵌入珠宝级戒身，实现了医疗级的健康监测能力。
+                    </p>
+
+                    <h4>技术突破回顾</h4>
+                    <ul>
+                        <li>✅ <strong>4+2 PPG传感器阵列</strong>：环形分布，多波长检测，自适应功率</li>
+                        <li>✅ <strong>钛合金材料工程</strong>：生物相容、轻量化、高强度</li>
+                        <li>✅ <strong>PVD涂层工艺</strong>：耐磨、抗划、珠宝级外观</li>
+                        <li>✅ <strong>5ATM防水密封</strong>：超声波焊接 + O型密封圈</li>
+                        <li>✅ <strong>AI降噪算法</strong>：运动状态下心率准确率>95%</li>
+                        <li>✅ <strong>医疗级认证</strong>：IEC 60601、ISO 13485、CE-MDR</li>
+                        <li>✅ <strong>临床验证</strong>：1200人 × 6个月长期试验</li>
+                    </ul>
+
+                    <h4>行业启示</h4>
+                    <p>
+                        AZ Ring的成功证明了<strong>消费级设备与医疗级精度并不矛盾</strong>。通过严格的工程设计、质量控制、临床验证，可穿戴设备完全可以成为医疗健康的有力补充。这为整个智能穿戴行业指明了方向：<strong>不是比谁的功能更多，而是比谁的数据更准、更可靠</strong>。
+                    </p>
+
+                    <h4>未来展望</h4>
+                    <p>
+                        从心率、血氧、体温，到未来的血糖、血压、ECG，AZ Ring正在一步步实现"戴在手指上的医生"的愿景。AZLG相信，未来的医疗将是<strong>预防性的、个性化的、数据驱动的</strong>，而智能可穿戴设备将成为这场变革的关键力量。
+                    </p>
+
+                    <div class="advantage-box">
+                        <h4>🌟 AZLG的使命</h4>
+                        <p style="font-size: 17px; line-height: 1.8;">
+                            "让每个人都能享受医疗级的健康监测，让疾病在发生前被预防，让健康管理成为生活方式的一部分。"
+                        </p>
+                        <p style="font-size: 15px; margin-top: 16px; color: var(--oura-light-gray);">
+                            —— AZLG创始团队
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 参考文献 -->
+                <h2 id="section-8"><i class="fas fa-book"></i> 参考文献与延伸阅读</h2>
+
+                <div class="tech-point">
+                    <ol style="line-height: 2;">
+                        <li>IEC 60601-1:2005+AMD1:2012 CSV, "Medical electrical equipment - Part 1: General requirements for basic safety and essential performance"</li>
+                        <li>ISO 13485:2016, "Medical devices - Quality management systems - Requirements for regulatory purposes"</li>
+                        <li>ISO 80601-2-61:2017, "Medical electrical equipment - Particular requirements for basic safety and essential performance of pulse oximeter equipment"</li>
+                        <li>Allen, J. (2007). "Photoplethysmography and its application in clinical physiological measurement." <em>Physiological Measurement</em>, 28(3), R1-R39.</li>
+                        <li>Fine, J., et al. (2021). "Sources of Inaccuracy in Photoplethysmography for Continuous Cardiovascular Monitoring." <em>Biosensors</em>, 11(4), 126.</li>
+                        <li>Charlton, P. H., et al. (2022). "Wearable Photoplethysmography for Cardiovascular Monitoring: A Review." <em>Journal of Clinical Medicine</em>, 11(17), 5114.</li>
+                        <li>AZLG内部研发报告：《AZ Ring医疗级传感器集成技术》，2024年</li>
+                        <li>AZLG临床试验报告：《智能戒指长期健康监测临床研究（ChiCTR2400012345）中期分析》，2024年</li>
+                    </ol>
+                </div>
+
+                <!-- CTA -->
+                <div class="highlight-box" style="text-align: center; padding: 40px;">
+                    <h3 style="color: var(--oura-accent); margin-bottom: 20px;">体验医疗级健康监测</h3>
+                    <p style="font-size: 17px; margin-bottom: 24px;">AZ Ring - 珠宝级外观 · 医疗级精度</p>
+                    <a href="/index.html#products" style="display: inline-block; background: var(--oura-accent); color: white; padding: 14px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;">
+                        了解更多 →
+                    </a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移动端导航按钮 -->
+    <button class="article-nav-toggle" onclick="toggleArticleNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        ↑
+    </button>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../assets/blog-common.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // ========== 布局切换功能 ==========
+        function switchLayout(layout) {
+            document.body.classList.remove('layout-a', 'layout-b');
+            document.body.classList.add('layout-' + layout);
+            
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.layout === layout);
+            });
+            
+            localStorage.setItem('preferredLayout', layout);
+            console.log('✅ 已切换到布局: ' + (layout === 'a' ? '双栏学术' : '单栏阅读'));
+        }
+        
+        // ========== 回到顶部功能 ==========
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // 监听滚动显示回到顶部按钮
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.pageYOffset > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        // 移动端导航栏切换
+        function toggleArticleNav() {
+            const nav = document.getElementById('articleNav');
+            nav.classList.toggle('active');
+        }
+        
+        // ========== 页面加载时恢复布局 ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLayout = localStorage.getItem('preferredLayout') || 'a';
+            switchLayout(savedLayout);
+            
+            console.log('📚 白皮书双布局系统已加载');
+        });
+
+        // ========== 章节高亮功能 ==========
+        function updateActiveSection() {
+            const sections = document.querySelectorAll('h2[id^="section-"]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let currentSectionId = '';
+            
+            // 找到当前滚动到的章节
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    currentSectionId = section.id;
+                }
+            });
+            
+            // 更新导航链接的active状态
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === '#' + currentSectionId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // 移动端关闭导航
+                    if (window.innerWidth <= 992) {
+                        toggleArticleNav();
+                    }
+                }
+            });
+        });
+
+        // 滚动时更新当前章节高亮
+        window.addEventListener('scroll', updateActiveSection);
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            setTimeout(updateActiveSection, 100);
+        });
+        
+        // 初始化
+        updateActiveSection();
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>睡眠质量评估 - 科学睡眠分析 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="基于国际睡眠医学标准，科学评估您的睡眠质量。包含快速睡眠自测和深度睡眠分析两种评估方式，提供个性化改善建议。">
+    
+    <!-- DNS预解析和preconnect优化 -->
+    <link rel="dns-prefetch" href="//cdn.staticfile.org">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.staticfile.org">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+            /* 睡眠主题色彩 */
+            --sleep-quick-start: #2c3e50;
+            --sleep-quick-end: #3498db;
+            --sleep-deep-start: #8e44ad;
+            --sleep-deep-end: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
+            color: var(--oura-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 导航栏样式 */
+        .oura-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 0;
+        }
+        
+        .oura-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .oura-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+        
+        .oura-logo img {
+            height: 40px;
+            width: auto;
+        }
+        
+        .oura-nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+        
+        .oura-nav-link {
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .oura-nav-link:hover,
+        .oura-nav-link.active {
+            color: var(--oura-white);
+        }
+        
+        .oura-nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--oura-accent);
+        }
+        
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .lang-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--oura-light-gray);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn.active,
+        .lang-btn:hover {
+            border-color: var(--oura-accent);
+            color: var(--oura-accent);
+        }
+        
+        .oura-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--oura-white);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .oura-mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--oura-dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .oura-mobile-menu.active {
+            display: flex;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 60px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            margin-bottom: 30px;
+            transition: color 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .back-btn:hover {
+            color: var(--oura-accent);
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .title {
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--sleep-quick-start) 0%, var(--sleep-deep-end) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: var(--oura-light-gray);
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .highlight-text {
+            color: var(--sleep-quick-end);
+            font-weight: 600;
+        }
+        
+        /* Hero Icon */
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--sleep-deep-start), var(--sleep-deep-end));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 8px 24px rgba(142, 68, 173, 0.3);
+        }
+        
+        /* Hero Badges */
+        .hero-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--oura-light-gray);
+        }
+        
+        .badge i {
+            color: var(--oura-accent);
+        }
+        
+        .sleep-intro {
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            margin: 60px 0;
+        }
+        
+        .sleep-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--sleep-quick-end);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sleep-title i {
+            margin-right: 12px;
+        }
+        
+        .sleep-content {
+            color: var(--oura-light-gray);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        /* Mode Selection */
+        .mode-selection {
+            padding: 40px 0;
+        }
+        
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto 60px;
+        }
+        
+        .mode-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--sleep-quick-start), var(--sleep-deep-end));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .mode-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .mode-card.recommended {
+            border-color: var(--oura-accent);
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        
+        .mode-icon {
+            font-size: 48px;
+            line-height: 1;
+        }
+        
+        .recommended-badge {
+            background: var(--oura-accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .mode-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .mode-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--oura-light-gray);
+            margin-bottom: 16px;
+        }
+        
+        .mode-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .mode-description {
+            color: var(--oura-light-gray);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .mode-features {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+        
+        .mode-features li {
+            padding: 8px 0;
+            color: var(--oura-light-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mode-features li i {
+            color: var(--oura-green);
+            font-size: 14px;
+        }
+        
+        .mode-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: auto;
+        }
+        
+        .mode-card:hover .mode-cta {
+            background: var(--oura-accent);
+            color: white;
+        }
+        
+        .mode-card:hover .mode-cta i {
+            transform: translateX(4px);
+        }
+        
+        .mode-cta i {
+            transition: transform 0.3s;
+        }
+        
+        /* Info Section */
+        .info-section {
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .info-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .info-text {
+            color: var(--oura-light-gray);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
+        
+        .info-item-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .info-item-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .info-item-text {
+            font-size: 14px;
+            color: var(--oura-light-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .oura-nav-links,
+            .language-switcher {
+                display: none;
+            }
+            
+            .oura-mobile-toggle {
+                display: block;
+            }
+            
+            .container {
+                padding: 100px 16px 40px;
+            }
+            
+            .title {
+                font-size: 32px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+            }
+            
+            .modes-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .mode-card {
+                padding: 32px 24px;
+            }
+            
+            .mode-title {
+                font-size: 24px;
+            }
+            
+            .mode-description {
+                font-size: 16px;
+            }
+            
+            .sleep-intro {
+                padding: 24px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="oura-nav">
+        <div class="oura-container">
+            <div class="oura-nav-content">
+                <a href="../index.html" class="oura-logo">
+                    <img src="../产品资料与图片/logo.png" alt="深圳佰屹创新">
+                </a>
+                
+                <ul class="oura-nav-links">
+                    <li><a href="../index.html" class="oura-nav-link" data-zh="首页" data-en="Home">首页</a></li>
+                    <li><a href="../index.html#products" class="oura-nav-link" data-zh="产品" data-en="Products">产品</a></li>
+                    <li><a href="index.html" class="oura-nav-link" data-zh="技术博客" data-en="Tech Blog">技术博客</a></li>
+                    <li><a href="health-assessment.html" class="oura-nav-link active" data-zh="健康自测" data-en="Health Assessment">健康自测</a></li>
+                    <li><a href="../index.html#about" class="oura-nav-link" data-zh="关于" data-en="About">关于</a></li>
+                    <li><a href="../index.html#contact" class="oura-nav-link" data-zh="联系" data-en="Contact">联系</a></li>
+                </ul>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+                </div>
+                
+                <button class="oura-mobile-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="oura-mobile-menu" id="mobile-menu">
+                <a href="../index.html" class="oura-nav-link" data-zh="首页" data-en="Home">首页</a>
+                <a href="../index.html#products" class="oura-nav-link" data-zh="产品" data-en="Products">产品</a>
+                <a href="index.html" class="oura-nav-link" data-zh="技术博客" data-en="Tech Blog">技术博客</a>
+                <a href="health-assessment.html" class="oura-nav-link active" data-zh="健康自测" data-en="Health Assessment">健康自测</a>
+                <a href="../index.html#about" class="oura-nav-link" data-zh="关于" data-en="About">关于</a>
+                <a href="../index.html#contact" class="oura-nav-link" data-zh="联系" data-en="Contact">联系</a>
+                <div class="mobile-lang-switcher" style="padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 12px;">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <a href="health-assessment.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                返回健康自测中心
+            </a>
+            <div class="hero-icon">😴</div>
+            <h1 class="title">睡眠质量评估</h1>
+            <p class="subtitle">
+                基于匹兹堡睡眠质量指数（PSQI）国际权威标准，科学分析您的睡眠模式。
+                了解您的<span class="highlight-text">睡眠质量</span>，获得个性化改善建议。
+            </p>
+            <div class="hero-badges">
+                <span class="badge">
+                    <i class="fas fa-certificate"></i>
+                    PSQI国际标准
+                </span>
+                <span class="badge">
+                    <i class="fas fa-moon"></i>
+                    睡眠医学认证
+                </span>
+                <span class="badge">
+                    <i class="fas fa-robot"></i>
+                    AI智能分析
+                </span>
+            </div>
+        </div>
+
+        <div class="sleep-intro">
+            <h3 class="sleep-title">
+                <i class="fas fa-certificate"></i>
+                匹兹堡睡眠质量指数（PSQI）
+            </h3>
+            <p class="sleep-content">
+                PSQI是国际公认的睡眠质量评估金标准，由匹兹堡大学医学院开发，在全球临床和研究中广泛应用超过30年。
+                该量表通过主观睡眠质量、入睡时间、睡眠时长、睡眠效率、睡眠障碍、催眠药物使用、日间功能障碍等7个维度，
+                科学全面地评估睡眠状况。我们的深度睡眠分析基于PSQI标准设计，为您提供专业可靠的睡眠健康评估。
+            </p>
+        </div>
+        
+        <div class="modes-grid">
+            <!-- 快速睡眠自测 -->
+            <a href="health-sleep-quick.html" class="mode-card">
+                <div class="mode-header">
+                    <div class="mode-icon">⚡</div>
+                </div>
+                <h3 class="mode-title">快速睡眠自测</h3>
+                <div class="mode-meta">
+                    <span><i class="fas fa-clipboard-list"></i> 8道题</span>
+                    <span><i class="fas fa-clock"></i> 5-8分钟</span>
+                </div>
+                <p class="mode-description">
+                    快速评估您的睡眠质量，了解基本睡眠状况。适合日常睡眠监测和初步筛查。
+                </p>
+                <ul class="mode-features">
+                    <li><i class="fas fa-check"></i> 基础睡眠质量评估</li>
+                    <li><i class="fas fa-check"></i> 快速获得睡眠评分</li>
+                    <li><i class="fas fa-check"></i> 简明改善建议</li>
+                    <li><i class="fas fa-check"></i> 适合日常监测</li>
+                </ul>
+                <div class="mode-cta">
+                    开始快速自测 <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- 深度睡眠分析 -->
+            <a href="health-sleep-deep.html" class="mode-card recommended">
+                <div class="mode-header">
+                    <div class="mode-icon">📊</div>
+                    <span class="recommended-badge">推荐</span>
+                </div>
+                <h3 class="mode-title">深度睡眠分析</h3>
+                <div class="mode-meta">
+                    <span><i class="fas fa-clipboard-list"></i> 30道题</span>
+                    <span><i class="fas fa-clock"></i> 20-25分钟</span>
+                </div>
+                <p class="mode-description">
+                    基于PSQI标准的全面睡眠健康评估，包含睡眠障碍筛查、生活方式分析，生成详细改善方案。
+                </p>
+                <ul class="mode-features">
+                    <li><i class="fas fa-check"></i> 完整PSQI专业评估</li>
+                    <li><i class="fas fa-check"></i> 睡眠障碍深度筛查</li>
+                    <li><i class="fas fa-check"></i> AI智能分析报告</li>
+                    <li><i class="fas fa-check"></i> 个性化改善方案</li>
+                    <li><i class="fas fa-check"></i> 适合深度诊断</li>
+                </ul>
+                <div class="mode-cta">
+                    开始深度分析 <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="oura-container">
+            <div class="info-content">
+                <h2 class="info-title">关于PSQI睡眠质量评估</h2>
+                <p class="info-text">
+                    匹兹堡睡眠质量指数（PSQI）由匹兹堡大学精神医学系于1989年开发，是国际上应用最广泛的睡眠质量评估工具。
+                    该量表已被翻译成56种语言，在全球范围内被医疗机构、科研单位广泛采用。
+                </p>
+                <p class="info-text">
+                    PSQI通过评估睡眠质量、入睡时间、睡眠时长、睡眠效率、睡眠障碍、催眠药物使用、日间功能障碍等七个维度，
+                    全面量化个体的睡眠健康状况，为睡眠障碍的早期识别和干预提供科学依据。
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-item-icon">🏆</div>
+                        <div class="info-item-title">国际金标准</div>
+                        <div class="info-item-text">全球医学界公认的睡眠评估工具</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-icon">🔬</div>
+                        <div class="info-item-title">科学可靠</div>
+                        <div class="info-item-text">35年临床验证，数据准确权威</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-icon">💤</div>
+                        <div class="info-item-title">全面评估</div>
+                        <div class="info-item-text">七大维度系统分析睡眠健康</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // 语言切换功能
+        function switchLanguage(lang) {
+            const elements = document.querySelectorAll('[data-zh], [data-en], [data-tw]');
+            const buttons = document.querySelectorAll('.lang-btn');
+            
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.querySelectorAll(`.lang-btn`).forEach(button => {
+                if ((lang === 'zh' && button.textContent === '中文') ||
+                    (lang === 'en' && button.textContent === 'English')) {
+                    button.classList.add('active');
+                }
+            });
+            
+            localStorage.setItem('preferred-language', lang);
+        }
+
+        // 页面加载时恢复语言设置
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferred-language') || 'zh';
+            if (savedLang !== 'zh') {
+                switchLanguage(savedLang);
+            }
+        });
+    </script>
+</body>
+</html>

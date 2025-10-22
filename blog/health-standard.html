@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标准评估 - 中医九种体质自测 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="完整的中医九种体质分析，8-10分钟获得详细的体质报告和个性化调理建议。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 健康数据管理系统 -->
+    <script src="js/health-data-manager.js"></script>
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-accent-light: #ff8a65;
+            --oura-blue: #4a90e2;
+            --oura-green: #7ed321;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 结果模式：切换为深色高对比背景，并允许滚动 */
+        .result-mode {
+            background: linear-gradient(135deg, #0f172a 0%, #111827 100%) !important;
+            overflow: auto !important;
+        }
+
+        .result-mode .result-container {
+            background: rgba(0, 0, 0, 0.55);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,.35);
+        }
+
+        .result-mode .result-title,
+        .result-mode .result-subtitle,
+        .result-mode .radar-title {
+            color: #ffffff;
+        }
+
+        .result-mode canvas#radarChart {
+            background: transparent;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 圆形进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* 问题容器 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .question-slide.active {
+            display: block;
+        }
+
+        /* 问题标题 */
+        .question-header {
+            margin-bottom: 40px;
+        }
+
+        .question-category {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .typeform-question {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .typeform-subtitle {
+            font-size: 20px;
+            opacity: 0.8;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+        
+        .progress-section {
+            margin-bottom: 40px;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: var(--oura-light-gray);
+            font-size: 14px;
+        }
+        
+        .question-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .question-number {
+            color: var(--oura-accent);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .question-category {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--oura-accent);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .question-text {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        /* 大尺寸卡片选项 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .option-card {
+            background: white;
+            color: #333;
+            padding: 24px 32px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-card span {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .option-card.selected {
+            border-color: #ff6b35;
+            background: #fff5f0;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.3);
+        }
+        
+        .option-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid #ddd;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .option-card.selected .option-indicator {
+            border-color: #ff6b35;
+            background: #ff6b35;
+        }
+
+        .option-card.selected .option-indicator::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .option.selected .option-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--oura-white);
+            border-radius: 50%;
+        }
+        
+        .option-text {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        /* 导航按钮 */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-button.primary {
+            background: white;
+            color: #ff6b35;
+            border-color: white;
+        }
+
+        .nav-button.primary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-prev {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--oura-white);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-next {
+            background: var(--oura-accent);
+            color: var(--oura-white);
+            border: 2px solid var(--oura-accent);
+        }
+        
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .question-info {
+            text-align: center;
+            color: var(--oura-light-gray);
+            font-size: 14px;
+        }
+        
+        /* 结果页面样式 */
+        .result-container {
+            display: block;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .result-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--oura-accent);
+        }
+        
+        .result-subtitle {
+            color: var(--oura-light-gray);
+            font-size: 18px;
+        }
+        
+        .constitution-result {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .radar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .radar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        #radarChart {
+            width: 360px;
+            height: 360px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 50%;
+        }
+        
+        .constitution-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .constitution-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+        }
+        
+        .constitution-item.primary {
+            border-left-color: var(--oura-accent);
+            background: rgba(255, 107, 53, 0.1);
+        }
+        
+        .constitution-item.secondary {
+            border-left-color: var(--oura-blue);
+            background: rgba(74, 144, 226, 0.1);
+        }
+        
+        .constitution-name {
+            font-weight: 500;
+        }
+        
+        .constitution-score {
+            font-weight: 600;
+            color: var(--oura-accent);
+        }
+        
+        .recommendations {
+            margin-top: 40px;
+        }
+        
+        .recommendations-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendation-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .recommendation-content {
+            color: var(--oura-light-gray);
+            line-height: 1.6;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--oura-accent);
+            color: var(--oura-white);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--oura-white);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* AI加载状态样式 */
+        .ai-loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .ai-loading-icon {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ff6b35;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .ai-brain-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+        
+        .ai-loading-text h4 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .ai-loading-text p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .progress-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .progress-dots span {
+            color: #ff6b35;
+            font-size: 24px;
+            animation: dot-bounce 1.4s ease-in-out infinite both;
+        }
+        
+        .progress-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .progress-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .progress-dots span:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* 结构化卡片样式 */
+        .constitution-analysis-cards {
+            display: grid;
+            gap: 24px;
+            margin-top: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ffa500 100%);
+            color: white;
+            padding: 20px 24px;
+            border-bottom: none;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-content {
+            padding: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .card-content p {
+            margin: 0 0 16px 0;
+            white-space: pre-wrap;
+        }
+
+        .card-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 体质评估结果卡片 */
+        .constitution-summary .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+        }
+
+        .constitution-summary .card-content {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 调理建议卡片 */
+        .recommendations-card .card-content {
+            padding: 0;
+        }
+
+        .recommendation-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .recommendation-section:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-section h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffa500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-section p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* 注意事项卡片 */
+        .precautions-card .card-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #e55039 100%);
+        }
+
+        .precautions-card .card-content {
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .constitution-analysis-cards {
+                gap: 16px;
+                margin-top: 20px;
+            }
+
+            .card-header {
+                padding: 16px 20px;
+            }
+
+            .card-header h3 {
+                font-size: 16px;
+            }
+
+            .card-content {
+                padding: 20px;
+            }
+
+            .recommendation-section {
+                padding: 16px 20px;
+            }
+
+            .recommendation-section h4 {
+                font-size: 15px;
+            }
+        }
+
+        .error-message {
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #fed7d7;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .constitution-result {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            #radarChart {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typeform响应式设计 */
+        @media (max-width: 768px) {
+            .typeform-progress {
+                top: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 12px;
+            }
+
+            .back-btn {
+                top: 20px;
+                left: 20px;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .typeform-question {
+                font-size: 32px;
+            }
+
+            .typeform-subtitle {
+                font-size: 18px;
+                margin-bottom: 40px;
+            }
+
+            .option-card {
+                padding: 20px 24px;
+                font-size: 16px;
+            }
+
+            .navigation {
+                gap: 20px;
+                margin-top: 40px;
+            }
+
+            .nav-button {
+                padding: 14px 24px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="typeform-container">
+        <!-- 进度指示器 -->
+        <div class="typeform-progress">
+            <div class="progress-circle" id="progressCircle"></div>
+            <div class="progress-text" id="progressText">1/10</div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <a href="health-tcm-constitution.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回
+        </a>
+
+        <!-- 问题幻灯片 -->
+        <div class="question-slide active" id="slide-0">
+            <div class="question-header">
+                <div class="question-category">体形特征</div>
+                <h1 class="typeform-question">您的体形特点是？</h1>
+                <p class="typeform-subtitle">请根据您最近三个月的实际情况选择最符合的答案</p>
+            </div>
+            
+            <div class="options-grid" id="options-0">
+                <div class="option-card" onclick="selectOption(0)">
+                    <div class="option-indicator"></div>
+                    <span>偏瘦</span>
+                </div>
+                <div class="option-card" onclick="selectOption(1)">
+                    <div class="option-indicator"></div>
+                    <span>匀称</span>
+                </div>
+                <div class="option-card" onclick="selectOption(2)">
+                    <div class="option-indicator"></div>
+                    <span>偏胖</span>
+                </div>
+                <div class="option-card" onclick="selectOption(3)">
+                    <div class="option-indicator"></div>
+                    <span>肥胖</span>
+                </div>
+                <div class="option-card" onclick="selectOption(4)">
+                    <div class="option-indicator"></div>
+                    <span>很瘦</span>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" style="visibility: hidden;">
+                    <i class="fas fa-arrow-left"></i>
+                    上一题
+                </button>
+                <button class="nav-button primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                    下一题
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他问题幻灯片将通过JavaScript动态生成 -->
+        
+        <div id="result" class="result-container hidden">
+            <div class="result-header">
+                <h2 class="result-title">您的体质分析报告</h2>
+                <p class="result-subtitle">基于中医体质学理论的专业分析</p>
+            </div>
+            
+            <div class="constitution-result">
+                <div class="radar-container">
+                    <h3 class="radar-title">九种体质雷达图</h3>
+                    <canvas id="radarChart" width="360" height="360"></canvas>
+                </div>
+                
+                <div class="constitution-details">
+                    <h3 style="margin-bottom: 16px;">体质得分详情</h3>
+                    <div id="constitutionScores">
+                        <!-- 体质得分将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recommendations">
+                <h3 class="recommendations-title">个性化调理建议</h3>
+                <div class="recommendation-grid" id="recommendationGrid">
+                    <!-- 建议将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- AI分析与建议区域 -->
+            <div class="ai-analysis-section" id="aiAnalysisSection">
+                <!-- AI分析内容将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="result-actions">
+                <a href="health-deep.html" class="action-btn btn-primary">
+                    <i class="fas fa-microscope"></i>
+                    进行深度剖析
+                </a>
+                <button onclick="shareResult()" class="action-btn btn-secondary">
+                    <i class="fas fa-share-alt"></i>
+                    分享结果
+                </button>
+                <a href="health-tcm-constitution.html" class="action-btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    返回体质测试
+                </a>
+                <a href="health-assessment.html?showDashboard=true" class="action-btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    返回测试中心
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局错误处理
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('标准评估页面错误:', msg, 'at', url, ':', lineNo);
+            alert('页面出现错误，请刷新重试。错误信息：' + msg);
+            return false;
+        };
+
+        // 安全的DOM元素获取
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn('DOM元素未找到:', id);
+            }
+            return element;
+        }
+
+        // 隐藏问卷相关元素但保持容器可见
+        function hideQuestionnaireElements() {
+            try {
+                // 隐藏进度指示器
+                const progress = document.querySelector('.typeform-progress');
+                if (progress) progress.style.display = 'none';
+                
+                // 隐藏返回按钮
+                const backBtn = document.querySelector('.back-btn');
+                if (backBtn) backBtn.style.display = 'none';
+                
+                // 隐藏所有问题幻灯片
+                const slides = document.querySelectorAll('.question-slide');
+                slides.forEach(slide => {
+                    slide.style.display = 'none';
+                });
+                
+            } catch (error) {
+                console.error('隐藏问卷元素时出错:', error);
+            }
+        }
+
+        // 中医九种体质标准问卷数据
+        const questions = [
+            // 平和质相关问题
+            { category: "体形特征", text: "您的体形特点是？", options: ["偏瘦", "匀称", "偏胖", "肥胖", "很瘦"], constitution: "pinghe" },
+            { category: "精神状态", text: "您平时精力充沛吗？", options: ["总是很累", "偶尔疲倦", "精力一般", "精力充沛", "精力旺盛"], constitution: "pinghe" },
+            { category: "睡眠质量", text: "您的睡眠质量如何？", options: ["经常失眠", "偶尔失眠", "睡眠一般", "睡眠良好", "睡眠很好"], constitution: "pinghe" },
+            
+            // 气虚质相关问题
+            { category: "体力状况", text: "您容易感到疲倦吗？", options: ["从不疲倦", "很少疲倦", "偶尔疲倦", "经常疲倦", "总是疲倦"], constitution: "qixu" },
+            { category: "呼吸状况", text: "您说话的声音大小？", options: ["声音洪亮", "声音较大", "声音一般", "声音较小", "声音很小"], constitution: "qixu" },
+            { category: "免疫力", text: "您容易感冒吗？", options: ["从不感冒", "很少感冒", "偶尔感冒", "经常感冒", "总是感冒"], constitution: "qixu" },
+            
+            // 阳虚质相关问题
+            { category: "怕冷程度", text: "您怕冷吗？", options: ["从不怕冷", "很少怕冷", "偶尔怕冷", "经常怕冷", "总是怕冷"], constitution: "yangxu" },
+            { category: "手脚温度", text: "您的手脚温度如何？", options: ["总是温暖", "大多温暖", "温度一般", "偏凉", "总是冰凉"], constitution: "yangxu" },
+            { category: "食欲状况", text: "您喜欢吃热的还是凉的食物？", options: ["喜欢冷饮", "偏爱凉食", "没有偏好", "偏爱热食", "只吃热食"], constitution: "yangxu" },
+            
+            // 阴虚质相关问题
+            { category: "怕热程度", text: "您怕热吗？", options: ["从不怕热", "很少怕热", "偶尔怕热", "经常怕热", "总是怕热"], constitution: "yinxu" },
+            { category: "皮肤状态", text: "您的皮肤干燥吗？", options: ["从不干燥", "很少干燥", "偶尔干燥", "经常干燥", "总是干燥"], constitution: "yinxu" },
+            { category: "口渴状况", text: "您经常感到口渴吗？", options: ["从不口渴", "很少口渴", "偶尔口渴", "经常口渴", "总是口渴"], constitution: "yinxu" },
+            
+            // 痰湿质相关问题
+            { category: "体重状况", text: "您的体重变化情况？", options: ["体重偏轻", "体重正常", "体重略重", "明显超重", "严重超重"], constitution: "tanshi" },
+            { category: "胸闷感", text: "您有胸闷的感觉吗？", options: ["从无胸闷", "很少胸闷", "偶尔胸闷", "经常胸闷", "总是胸闷"], constitution: "tanshi" },
+            { category: "痰多程度", text: "您有痰多的情况吗？", options: ["从无痰", "很少有痰", "偶尔有痰", "经常有痰", "总是有痰"], constitution: "tanshi" },
+            
+            // 湿热质相关问题
+            { category: "面部油腻", text: "您的面部容易出油吗？", options: ["从不出油", "很少出油", "偶尔出油", "经常出油", "总是出油"], constitution: "shire" },
+            { category: "口苦状况", text: "您有口苦的感觉吗？", options: ["从无口苦", "很少口苦", "偶尔口苦", "经常口苦", "总是口苦"], constitution: "shire" },
+            { category: "大便性状", text: "您的大便情况？", options: ["很干燥", "较干燥", "正常", "偏湿软", "很湿软"], constitution: "shire" },
+            
+            // 血瘀质相关问题
+            { category: "皮肤色泽", text: "您的皮肤颜色？", options: ["很白皙", "较白皙", "正常", "偏暗沉", "很暗沉"], constitution: "xueyu" },
+            { category: "疼痛感受", text: "您有身体疼痛的情况吗？", options: ["从无疼痛", "很少疼痛", "偶尔疼痛", "经常疼痛", "总是疼痛"], constitution: "xueyu" },
+            { category: "记忆力", text: "您的记忆力如何？", options: ["记忆很好", "记忆较好", "记忆一般", "记忆较差", "记忆很差"], constitution: "xueyu" },
+            
+            // 气郁质相关问题
+            { category: "情绪状态", text: "您容易感到抑郁吗？", options: ["从不抑郁", "很少抑郁", "偶尔抑郁", "经常抑郁", "总是抑郁"], constitution: "qiyu" },
+            { category: "焦虑程度", text: "您容易焦虑吗？", options: ["从不焦虑", "很少焦虑", "偶尔焦虑", "经常焦虑", "总是焦虑"], constitution: "qiyu" },
+            { category: "胸胁胀满", text: "您有胸胁胀满的感觉吗？", options: ["从无胀满", "很少胀满", "偶尔胀满", "经常胀满", "总是胀满"], constitution: "qiyu" },
+            
+            // 特禀质相关问题
+            { category: "过敏反应", text: "您容易过敏吗？", options: ["从不过敏", "很少过敏", "偶尔过敏", "经常过敏", "总是过敏"], constitution: "tebing" },
+            { category: "鼻塞流涕", text: "您有鼻塞流涕的情况吗？", options: ["从无症状", "很少出现", "偶尔出现", "经常出现", "总是出现"], constitution: "tebing" },
+            { category: "皮肤敏感", text: "您的皮肤敏感吗？", options: ["从不敏感", "很少敏感", "偶尔敏感", "经常敏感", "总是敏感"], constitution: "tebing" }
+        ];
+        
+        // 补充更多问题到60题
+        const additionalQuestions = [
+            { category: "饮食习惯", text: "您的食量如何？", options: ["食量很小", "食量较小", "食量正常", "食量较大", "食量很大"], constitution: "pinghe" },
+            { category: "排便情况", text: "您的排便是否规律？", options: ["很不规律", "不太规律", "基本规律", "比较规律", "非常规律"], constitution: "pinghe" },
+            { category: "适应能力", text: "您对环境变化的适应能力？", options: ["很难适应", "较难适应", "一般适应", "较易适应", "很易适应"], constitution: "pinghe" },
+            { category: "运动耐力", text: "您的运动耐力如何？", options: ["耐力很差", "耐力较差", "耐力一般", "耐力较好", "耐力很好"], constitution: "qixu" },
+            { category: "出汗情况", text: "您容易出汗吗？", options: ["从不出汗", "很少出汗", "正常出汗", "容易出汗", "总是出汗"], constitution: "qixu" },
+            { category: "脉搏情况", text: "您感觉自己的脉搏如何？", options: ["很有力", "较有力", "正常", "较无力", "很无力"], constitution: "qixu" },
+            { category: "腰膝酸软", text: "您有腰膝酸软的感觉吗？", options: ["从无此感", "很少有", "偶尔有", "经常有", "总是有"], constitution: "yangxu" },
+            { category: "夜尿频率", text: "您夜间小便的次数？", options: ["从不起夜", "很少起夜", "偶尔起夜", "经常起夜", "总是起夜"], constitution: "yangxu" },
+            { category: "性功能", text: "您的性功能状况？", options: ["很好", "较好", "一般", "较差", "很差"], constitution: "yangxu" },
+            { category: "潮热盗汗", text: "您有潮热盗汗的情况吗？", options: ["从无此症", "很少出现", "偶尔出现", "经常出现", "总是出现"], constitution: "yinxu" },
+            { category: "眼干口燥", text: "您有眼干口燥的感觉吗？", options: ["从无此感", "很少有", "偶尔有", "经常有", "总是有"], constitution: "yinxu" },
+            { category: "失眠多梦", text: "您有失眠多梦的情况吗？", options: ["从不失眠", "很少失眠", "偶尔失眠", "经常失眠", "总是失眠"], constitution: "yinxu" },
+            { category: "身体沉重", text: "您感觉身体沉重吗？", options: ["从无此感", "很少有", "偶尔有", "经常有", "总是有"], constitution: "tanshi" },
+            { category: "腹部胀满", text: "您有腹部胀满的感觉吗？", options: ["从无胀满", "很少胀满", "偶尔胀满", "经常胀满", "总是胀满"], constitution: "tanshi" },
+            { category: "关节酸痛", text: "您有关节酸痛的情况吗？", options: ["从无酸痛", "很少酸痛", "偶尔酸痛", "经常酸痛", "总是酸痛"], constitution: "tanshi" },
+            { category: "小便黄", text: "您的小便颜色如何？", options: ["很清", "较清", "正常", "较黄", "很黄"], constitution: "shire" },
+            { category: "皮肤状况", text: "您近期是否容易长痘/粉刺？", options: ["从不", "很少", "偶尔", "经常", "总是"], constitution: "shire" },
+            { category: "脾气急躁", text: "您的脾气如何？", options: ["很温和", "较温和", "一般", "较急躁", "很急躁"], constitution: "shire" },
+            { category: "唇色紫暗", text: "您的唇色如何？", options: ["很红润", "较红润", "正常", "偏暗", "很暗"], constitution: "xueyu" },
+            { category: "舌下静脉", text: "您的舌下静脉颜色？", options: ["很淡", "较淡", "正常", "较紫", "很紫"], constitution: "xueyu" },
+            { category: "淤青消退", text: "皮肤出现淤青后，通常消退得快吗？", options: ["很快", "较快", "一般", "较慢", "很慢"], constitution: "xueyu" },
+            { category: "叹气频率", text: "您经常叹气吗？", options: ["从不叹气", "很少叹气", "偶尔叹气", "经常叹气", "总是叹气"], constitution: "qiyu" },
+            { category: "咽部异物", text: "您有咽部异物感吗？", options: ["从无此感", "很少有", "偶尔有", "经常有", "总是有"], constitution: "qiyu" },
+            { category: "情绪波动", text: "您的情绪波动大吗？", options: ["很稳定", "较稳定", "一般", "较波动", "很波动"], constitution: "qiyu" },
+            { category: "药物过敏", text: "您有药物过敏史吗？", options: ["从无过敏", "很少过敏", "偶尔过敏", "经常过敏", "总是过敏"], constitution: "tebing" },
+            { category: "接触过敏", text: "您接触某些物质会过敏吗？", options: ["从不过敏", "很少过敏", "偶尔过敏", "经常过敏", "总是过敏"], constitution: "tebing" },
+            { category: "季节过敏", text: "您在特定季节容易过敏吗？", options: ["从不过敏", "很少过敏", "偶尔过敏", "经常过敏", "总是过敏"], constitution: "tebing" },
+            { category: "遗传体质", text: "您家族有特殊体质史吗？", options: ["完全没有", "很少有", "偶尔有", "经常有", "总是有"], constitution: "tebing" },
+            { category: "免疫功能", text: "您的免疫功能如何？", options: ["很强", "较强", "一般", "较弱", "很弱"], constitution: "tebing" },
+            { category: "体质稳定", text: "您的体质状况稳定吗？", options: ["很稳定", "较稳定", "一般", "不太稳定", "很不稳定"], constitution: "tebing" },
+            { category: "恢复能力", text: "您生病后的恢复能力？", options: ["很快", "较快", "一般", "较慢", "很慢"], constitution: "pinghe" },
+            { category: "心理状态", text: "您的心理状态如何？", options: ["很好", "较好", "一般", "较差", "很差"], constitution: "pinghe" },
+            { category: "生活规律", text: "您的生活是否规律？", options: ["很规律", "较规律", "一般", "不太规律", "很不规律"], constitution: "pinghe" },
+            { category: "工作效率", text: "您的工作效率如何？", options: ["很高", "较高", "一般", "较低", "很低"], constitution: "qixu" },
+            { category: "注意力", text: "您的注意力集中程度？", options: ["很集中", "较集中", "一般", "不太集中", "很难集中"], constitution: "qixu" },
+            { category: "反应速度", text: "您的反应速度如何？", options: ["很快", "较快", "一般", "较慢", "很慢"], constitution: "qixu" }
+        ];
+        
+        // 合并所有问题
+        const allQuestions = [...questions, ...additionalQuestions].slice(0, 60);
+
+        let currentQuestion = 0;
+        let answers = [];
+        
+        // 九种体质名称映射
+        const constitutionNames = {
+            pinghe: '平和质',
+            qixu: '气虚质',
+            yangxu: '阳虚质',
+            yinxu: '阴虚质',
+            tanshi: '痰湿质',
+            shire: '湿热质',
+            xueyu: '血瘀质',
+            qiyu: '气郁质',
+            tebing: '特禀质'
+        };
+        
+        // 初始化
+        function init() {
+            // 生成所有问题幻灯片
+            generateSlides();
+            // 更新进度
+            updateProgress();
+        }
+
+        // 生成问题幻灯片
+        function generateSlides() {
+            const container = document.querySelector('.typeform-container');
+            
+            for (let i = 1; i < allQuestions.length; i++) {
+                const question = allQuestions[i];
+                const slide = document.createElement('div');
+                slide.className = 'question-slide';
+                slide.id = `slide-${i}`;
+                
+                slide.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-category">${question.category}</div>
+                        <h1 class="typeform-question">${question.text}</h1>
+                        <p class="typeform-subtitle">请根据您最近三个月的实际情况选择最符合的答案</p>
+                    </div>
+                    
+                    <div class="options-grid" id="options-${i}">
+                        ${question.options.map((option, index) => `
+                            <div class="option-card" onclick="selectOption(${index})">
+                                <div class="option-indicator"></div>
+                                <span>${option}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()" ${i === 0 ? 'style="visibility: hidden;"' : ''}>
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" id="nextBtn-${i}" onclick="nextQuestion()" disabled>
+                            ${i === allQuestions.length - 1 ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+                
+                container.insertBefore(slide, document.getElementById('result'));
+            }
+        }
+        
+        // 更新问题显示
+        function updateQuestion() {
+            const question = allQuestions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `第 ${currentQuestion + 1} 题`;
+            document.getElementById('questionCategory').textContent = question.category;
+            document.getElementById('questionText').textContent = question.text;
+            
+            // 生成选项
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.onclick = () => selectOption(index);
+                
+                optionElement.innerHTML = `
+                    <div class="option-radio"></div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // 恢复之前的选择
+            if (answers[currentQuestion] !== undefined) {
+                selectOption(answers[currentQuestion]);
+            }
+            
+            // 更新按钮状态
+            document.getElementById('prevBtn').style.visibility = currentQuestion > 0 ? 'visible' : 'hidden';
+            document.getElementById('nextBtn').textContent = currentQuestion === allQuestions.length - 1 ? '查看结果' : '下一题';
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === undefined;
+        }
+        
+        // 选择选项
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            
+            // 更新选项样式
+            const options = document.querySelectorAll(`#slide-${currentQuestion} .option-card`);
+            options.forEach((option, i) => {
+                option.classList.toggle('selected', i === index);
+            });
+            
+            // 启用下一题按钮 - 使用正确的选择器
+            const nextBtn = document.querySelector(`#slide-${currentQuestion} .nav-button.primary`);
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+        }
+        
+        // 更新进度
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / allQuestions.length) * 100;
+            const progressCircle = document.getElementById('progressCircle');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressCircle && progressText) {
+                progressCircle.style.background = `conic-gradient(#ffffff ${progress * 3.6}deg, transparent ${progress * 3.6}deg)`;
+                progressText.textContent = `${currentQuestion + 1}/${allQuestions.length}`;
+            }
+            
+            if (currentQuestion >= allQuestions.length) {
+                progressText.textContent = '完成';
+                progressCircle.style.background = 'conic-gradient(#ffffff 360deg, transparent 360deg)';
+            }
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < allQuestions.length - 1) {
+                // 隐藏当前问题
+                document.getElementById(`slide-${currentQuestion}`).classList.remove('active');
+                
+                currentQuestion++;
+                
+                // 显示下一题
+                document.getElementById(`slide-${currentQuestion}`).classList.add('active');
+                
+                updateProgress();
+            } else {
+                // 显示结果
+                document.getElementById(`slide-${currentQuestion}`).classList.remove('active');
+                showResult();
+            }
+        }
+        
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 隐藏当前问题
+                document.getElementById(`slide-${currentQuestion}`).classList.remove('active');
+                
+                currentQuestion--;
+                
+                // 显示上一题
+                document.getElementById(`slide-${currentQuestion}`).classList.add('active');
+                
+                updateProgress();
+            }
+        }
+        
+        // 显示结果
+        function showResult() {
+            // 计算体质得分
+            const scores = calculateConstitutionScores();
+            
+            // 隐藏问卷相关元素，但保持容器可见
+            hideQuestionnaireElements();
+            
+            const resultContainer = safeGetElement('result');
+            if (resultContainer) {
+                resultContainer.classList.remove('hidden');
+                resultContainer.style.display = 'block'; // 确保显示
+            }
+
+            // 切换为结果模式背景以获得更佳可读性
+            if (document && document.body) {
+                document.body.classList.add('result-mode');
+            }
+            
+            // 显示体质得分
+            displayConstitutionScores(scores);
+            
+            // 绘制雷达图
+            drawRadarChart(scores);
+            
+            // 显示调理建议
+            displayRecommendations(scores);
+            
+            // 显示AI分析加载状态
+            showAILoadingState();
+            
+            // 延迟一点时间让用户看到加载动画
+            setTimeout(async () => {
+                try {
+                    // 使用AI生成个性化建议
+                    const aiRecommendations = await generateAIRecommendations(scores, answers);
+                    
+                    // 显示AI生成的建议
+                    await displayAIRecommendations(aiRecommendations);
+                } catch (error) {
+                    console.error('AI分析生成失败:', error);
+                    // 显示备用建议
+                    await displayFallbackRecommendations(scores);
+                }
+            }, 1500); // 1.5秒延迟，让用户看到加载动画
+            
+            // 保存结果
+            saveResult(scores);
+        }
+        
+        // 计算体质得分
+        function calculateConstitutionScores() {
+            const scores = {
+                pinghe: 0, qixu: 0, yangxu: 0, yinxu: 0,
+                tanshi: 0, shire: 0, xueyu: 0, qiyu: 0, tebing: 0
+            };
+            
+            // 计算每种体质的得分
+            allQuestions.forEach((question, index) => {
+                if (answers[index] !== undefined) {
+                    const score = answers[index] + 1; // 1-5分
+                    scores[question.constitution] += score;
+                }
+            });
+            
+            // 标准化得分（转换为百分制）
+            Object.keys(scores).forEach(constitution => {
+                const questionCount = allQuestions.filter(q => q.constitution === constitution).length;
+                if (questionCount > 0) {
+                    scores[constitution] = Math.round((scores[constitution] / (questionCount * 5)) * 100);
+                }
+            });
+            
+            return scores;
+        }
+        
+        // 显示体质得分
+        function displayConstitutionScores(scores) {
+            const container = document.getElementById('constitutionScores');
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            
+            container.innerHTML = '';
+            
+            sortedScores.forEach(([constitution, score], index) => {
+                const item = document.createElement('div');
+                item.className = `constitution-item ${index === 0 ? 'primary' : index === 1 ? 'secondary' : ''}`;
+                item.innerHTML = `
+                    <span class="constitution-name">${constitutionNames[constitution]}</span>
+                    <span class="constitution-score">${score}分</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // 绘制雷达图
+        function drawRadarChart(scores) {
+            try {
+                const canvas = document.getElementById('radarChart');
+                if (!canvas) {
+                    console.error('雷达图Canvas元素未找到');
+                    return;
+                }
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    console.error('浏览器不支持Canvas');
+                    return;
+                }
+                
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(canvas.width, canvas.height) / 2 - 40; // 预留标签空间
+            
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const constitutions = Object.keys(scores);
+            const values = Object.values(scores);
+            const angleStep = (2 * Math.PI) / constitutions.length;
+            
+            // 绘制背景网格
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.lineWidth = 1;
+            
+            for (let i = 1; i <= 5; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, (radius * i) / 5, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+            
+            // 绘制轴线
+            constitutions.forEach((_, index) => {
+                const angle = index * angleStep - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                // 绘制标签
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '12px Arial, sans-serif'; // 使用Web安全字体
+                ctx.textAlign = 'center';
+                const labelX = centerX + Math.cos(angle) * (radius + 28);
+                const labelY = centerY + Math.sin(angle) * (radius + 28);
+                ctx.fillText(constitutionNames[constitutions[index]], labelX, labelY);
+            });
+            
+            // 绘制数据多边形
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            values.forEach((value, index) => {
+                const angle = index * angleStep - Math.PI / 2;
+                const distance = (value / 100) * radius;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // 绘制数据点
+            ctx.fillStyle = '#ff6b35';
+            values.forEach((value, index) => {
+                const angle = index * angleStep - Math.PI / 2;
+                const distance = (value / 100) * radius;
+                const x = centerX + Math.cos(angle) * distance;
+                const y = centerY + Math.sin(angle) * distance;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            
+            } catch (error) {
+                console.error('绘制雷达图时出错:', error);
+                // 显示错误提示
+                const canvas = document.getElementById('radarChart');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    if (ctx) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '16px Arial, sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('雷达图加载失败', canvas.width / 2, canvas.height / 2);
+                    }
+                }
+            }
+        }
+        
+        // 显示调理建议
+        function displayRecommendations(scores) {
+            const container = document.getElementById('recommendationGrid');
+            const primaryConstitution = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+            
+            const recommendations = getRecommendations(primaryConstitution);
+            
+            container.innerHTML = '';
+            
+            recommendations.forEach(rec => {
+                const card = document.createElement('div');
+                card.className = 'recommendation-card';
+                card.innerHTML = `
+                    <div class="recommendation-icon">${rec.icon}</div>
+                    <h4 class="recommendation-title">${rec.title}</h4>
+                    <p class="recommendation-content">${rec.content}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        // 获取调理建议
+        function getRecommendations(constitution) {
+            const recommendations = {
+                pinghe: [
+                    { icon: '🥗', title: '饮食调养', content: '保持饮食均衡，五谷杂粮搭配，避免偏食。适量进食，定时定量。' },
+                    { icon: '🏃', title: '运动养生', content: '选择适合的运动方式，如散步、太极拳等，避免过度运动。' },
+                    { icon: '😴', title: '作息规律', content: '保持规律的作息时间，早睡早起，充足睡眠。' },
+                    { icon: '😊', title: '情志调节', content: '保持心情舒畅，避免大喜大悲，培养乐观心态。' }
+                ],
+                qixu: [
+                    { icon: '🍖', title: '补气食疗', content: '多食用黄芪、党参、山药等补气食材，少食生冷。' },
+                    { icon: '🧘', title: '适度运动', content: '选择轻柔的运动，如八段锦、太极拳，避免剧烈运动。' },
+                    { icon: '💤', title: '充足休息', content: '保证充足睡眠，避免熬夜，中午可适当午休。' },
+                    { icon: '🌱', title: '中药调理', content: '可适当服用补中益气丸等中成药，建议咨询中医师。' }
+                ],
+                yangxu: [
+                    { icon: '🔥', title: '温阳食疗', content: '多食温热食物，如羊肉、韭菜、生姜等，忌食生冷。' },
+                    { icon: '☀️', title: '阳光运动', content: '多在阳光下运动，如慢跑、登山等，增强阳气。' },
+                    { icon: '🧣', title: '注意保暖', content: '四季都要注意保暖，特别是腰腹部和足部。' },
+                    { icon: '🛁', title: '温水调理', content: '可常用温水泡脚，促进血液循环，温通经络。' }
+                ],
+                yinxu: [
+                    { icon: '🥛', title: '滋阴润燥', content: '多食用银耳、百合、枸杞等滋阴食材，少食辛辣。' },
+                    { icon: '🏊', title: '柔和运动', content: '选择游泳、瑜伽等柔和运动，避免大汗淋漓。' },
+                    { icon: '🌙', title: '养阴作息', content: '避免熬夜，子时前入睡，保证充足睡眠。' },
+                    { icon: '💧', title: '补充水分', content: '多饮水，保持室内适宜湿度，避免过度干燥。' }
+                ],
+                tanshi: [
+                    { icon: '🥬', title: '祛湿食疗', content: '多食薏米、冬瓜、赤小豆等利水祛湿食物。' },
+                    { icon: '🚴', title: '有氧运动', content: '进行适量有氧运动，如快走、游泳，促进代谢。' },
+                    { icon: '🏠', title: '环境调节', content: '保持居住环境干燥通风，避免潮湿环境。' },
+                    { icon: '⚖️', title: '控制体重', content: '合理控制体重，避免过食肥甘厚味。' }
+                ],
+                shire: [
+                    { icon: '🥒', title: '清热利湿', content: '多食绿豆、苦瓜、黄瓜等清热利湿食物。' },
+                    { icon: '🏃', title: '大强度运动', content: '可进行较大强度运动，通过出汗排除湿热。' },
+                    { icon: '🚿', title: '清洁卫生', content: '保持良好的个人卫生，勤洗澡，穿透气衣物。' },
+                    { icon: '❄️', title: '避免湿热', content: '避免在湿热环境中长时间停留。' }
+                ],
+                xueyu: [
+                    { icon: '🍷', title: '活血化瘀', content: '适量食用山楂、红花、当归等活血食材。' },
+                    { icon: '💃', title: '活血运动', content: '进行舞蹈、太极拳等运动，促进血液循环。' },
+                    { icon: '🌹', title: '情志舒畅', content: '保持心情愉快，避免生气郁闷。' },
+                    { icon: '💆', title: '按摩调理', content: '经常进行身体按摩，疏通经络。' }
+                ],
+                qiyu: [
+                    { icon: '🌸', title: '疏肝理气', content: '多食玫瑰花、柑橘等疏肝理气食物。' },
+                    { icon: '🎵', title: '音乐疗法', content: '多听舒缓音乐，参加文娱活动，陶冶情操。' },
+                    { icon: '🗣️', title: '倾诉交流', content: '多与朋友交流，倾诉心声，释放压力。' },
+                    { icon: '🌳', title: '户外活动', content: '多进行户外活动，亲近自然，舒缓心情。' }
+                ],
+                tebing: [
+                    { icon: '🛡️', title: '避免过敏原', content: '找出并避免接触过敏原，减少过敏反应。' },
+                    { icon: '🥗', title: '清淡饮食', content: '饮食清淡，避免易致敏食物，如海鲜、坚果等。' },
+                    { icon: '🏠', title: '环境清洁', content: '保持居住环境清洁，定期清除尘螨等过敏原。' },
+                    { icon: '💊', title: '药物准备', content: '随身携带抗过敏药物，必要时及时就医。' }
+                ]
+            };
+            
+            return recommendations[constitution] || recommendations.pinghe;
+        }
+        
+        // 保存结果
+        function saveResult(scores) {
+            const result = {
+                scores: scores,
+                answers: answers,
+                timestamp: new Date().toISOString(),
+                type: 'standard'
+            };
+            
+            // 保留旧格式（向后兼容）
+            localStorage.setItem('standardAssessmentResult', JSON.stringify(result));
+            console.log('测试结果已保存（旧格式）');
+            
+            // 保存到统一健康数据系统
+            if (window.healthDataManager) {
+                // 获取主要体质（分数最高的）
+                const topConstitution = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+                const [constitutionType, constitutionScore] = topConstitution;
+                const constitutionName = constitutionNames[constitutionType] || constitutionType;
+                
+                window.healthDataManager.saveTestResult(
+                    'tcm',                        // testType
+                    '体质标准评估',              // testName
+                    constitutionScore,            // score (主要体质的分数)
+                    constitutionName,             // level (体质名称)
+                    result                        // details
+                );
+                console.log('✅ 测试结果已保存到统一系统');
+            }
+        }
+        
+        // 分享结果
+        function shareResult() {
+            const result = localStorage.getItem('standardAssessmentResult');
+            if (result) {
+                const data = JSON.parse(result);
+                const topConstitution = Object.entries(data.scores).sort((a, b) => b[1] - a[1])[0];
+                
+                const shareText = `我刚完成了中医九种体质评估！我的主要体质类型是：${constitutionNames[topConstitution[0]]}（${topConstitution[1]}分）。快来测测你的体质吧！`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: '中医体质评估结果',
+                        text: shareText,
+                        url: window.location.origin + '/blog/health-standard.html'
+                    });
+                } else {
+                    // 复制到剪贴板
+                    navigator.clipboard.writeText(shareText + '\n' + window.location.href).then(() => {
+                        alert('结果已复制到剪贴板！');
+                    });
+                }
+            }
+        }
+        
+
+        // AI分析状态管理
+        let isAIAnalysisInProgress = false;
+        let aiLoadingStartTime = 0;
+        const MIN_LOADING_TIME = 2000; // 最小显示2秒
+
+        // 显示AI分析加载状态
+        function showAILoadingState() {
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer) return;
+            
+            isAIAnalysisInProgress = true;
+            aiLoadingStartTime = Date.now();
+            
+            listContainer.innerHTML = `
+                <div class="ai-loading-container">
+                    <div class="ai-loading-icon">
+                        <div class="loading-spinner"></div>
+                        <div class="ai-brain-icon">🧠</div>
+                    </div>
+                    <div class="ai-loading-text">
+                        <h4>AI 正在深度分析您的中医体质...</h4>
+                        <p>基于您的60项详细问卷答案，AI中医专家正在为您生成个性化的体质解读和调理建议</p>
+                        <div class="loading-progress">
+                            <div class="progress-dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示AI生成的建议
+        async function displayAIRecommendations(aiResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            let contentHTML = '';
+            
+            if (aiResult.type === 'ai_generated') {
+                // 解析AI内容为结构化卡片
+                const parsedData = parseAIContentToCards(aiResult.content);
+                
+                if (parsedData) {
+                    // 生成结构化卡片HTML
+                    contentHTML = generateConstitutionCards(parsedData);
+                } else {
+                    // 如果解析失败，显示原始内容的格式化版本
+                    let formattedContent = aiResult.content;
+                    
+                    // 如果内容是JSON字符串，尝试格式化
+                    if (typeof formattedContent === 'string' && formattedContent.trim().startsWith('{')) {
+                        try {
+                            const jsonData = JSON.parse(formattedContent);
+                            formattedContent = JSON.stringify(jsonData, null, 2);
+                        } catch (e) {
+                            // 保持原始内容
+                        }
+                    }
+                    
+                    contentHTML = `
+                        <div class="ai-analysis-card" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 32px; margin: 32px 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <div class="ai-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🤖</div>
+                                <div>
+                                    <h3 style="margin: 0; color: white; font-size: 20px; font-weight: 700;">AI 专业中医体质分析</h3>
+                                    <p style="margin: 4px 0 0 0; color: rgba(255, 255, 255, 0.7); font-size: 14px;">基于传统中医理论的智能评估</p>
+                                </div>
+                            </div>
+                            <div style="color: white; line-height: 1.6; font-size: 14px; white-space: pre-wrap;">
+                                ${formattedContent}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                // 显示备用建议
+                contentHTML = `
+                    <div class="ai-error-card" style="background: rgba(255, 107, 53, 0.1); border: 1px solid #ff6b35; border-radius: 16px; padding: 24px; text-align: center; margin: 32px 0;">
+                        <div style="font-size: 24px; margin-bottom: 12px;">⚠️</div>
+                        <div style="color: #ff6b35; font-weight: 600; margin-bottom: 8px;">AI分析暂时不可用</div>
+                        <div style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">为您提供传统中医调理建议</div>
+                    </div>
+                `;
+            }
+            
+            listContainer.innerHTML = contentHTML;
+        }
+
+        // 生成AI建议
+        async function generateAIRecommendations(scores, answers) {
+            try {
+                // 构建中医体质分析数据
+                const constitutionData = buildConstitutionAnalysisData(scores, answers);
+                
+                // 调用AI分析API
+                const aiResponse = await callProxyAPI('sk-9c3ff6da6d7a4278adb0906afb7bf556', constitutionData);
+                
+                return {
+                    type: 'ai_generated',
+                    content: aiResponse
+                };
+            } catch (error) {
+                console.error('AI分析调用失败:', error);
+                return {
+                    type: 'fallback',
+                    error: error.message,
+                    content: scores
+                };
+            }
+        }
+
+        // 构建中医体质分析数据
+        function buildConstitutionAnalysisData(scores, answers) {
+            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            const primaryConstitution = sortedScores[0];
+            const secondaryConstitution = sortedScores[1];
+            
+            // 计算体质特征摘要
+            const constitutionSummary = generateConstitutionSummary(scores);
+            
+            return {
+                primaryConstitution: {
+                    type: constitutionNames[primaryConstitution[0]],
+                    score: primaryConstitution[1]
+                },
+                secondaryConstitution: {
+                    type: constitutionNames[secondaryConstitution[0]], 
+                    score: secondaryConstitution[1]
+                },
+                allScores: Object.fromEntries(
+                    Object.entries(scores).map(([key, value]) => [constitutionNames[key], value])
+                ),
+                constitutionSummary: constitutionSummary,
+                totalQuestions: answers.length,
+                answeredQuestions: answers.filter(a => a !== undefined && a !== null).length
+            };
+        }
+
+        // 生成体质特征摘要
+        function generateConstitutionSummary(scores) {
+            const features = [];
+            
+            Object.entries(scores).forEach(([constitution, score]) => {
+                if (score >= 60) {
+                    const name = constitutionNames[constitution];
+                    if (constitution === 'pinghe') {
+                        features.push(`${name}特征明显(${score}分)`);
+                    } else {
+                        features.push(`${name}偏颇(${score}分)`);
+                    }
+                }
+            });
+            
+            return features.length > 0 ? features.join('、') : '体质相对平和';
+        }
+
+        // 通过代理服务调用AI API
+        async function callProxyAPI(apiKey, constitutionData) {
+            const PROXY_URL = 'https://www.520rpy.xyz/api/bailian';
+            
+            const prompt = `作为资深中医体质学专家，请基于九种体质理论对用户进行全面分析。
+
+用户中医体质评估数据：
+- 主要体质：${constitutionData.primaryConstitution.type} (${constitutionData.primaryConstitution.score}分)
+- 次要体质：${constitutionData.secondaryConstitution.type} (${constitutionData.secondaryConstitution.score}分)
+- 体质特征：${constitutionData.constitutionSummary}
+- 完成题目：${constitutionData.answeredQuestions}/${constitutionData.totalQuestions}题
+
+各体质得分详情：
+${Object.entries(constitutionData.allScores).map(([name, score]) => `${name}: ${score}分`).join('\n')}
+
+请按以下要求提供专业分析：
+
+1. **体质综合评估** (80字内)
+   - 主要体质特点和健康状况
+   - 体质偏颇程度和风险评估
+
+2. **个性化调理方案**
+   - 饮食调养：具体食物推荐和禁忌
+   - 运动养生：适合的运动方式和强度
+   - 生活起居：作息调理和环境要求
+   - 情志调节：心理调适和情绪管理
+   - 四季养生：不同季节的调理重点
+
+3. **中医药调理建议**
+   - 推荐的中成药或方剂
+   - 常用穴位和按摩方法
+   - 预防保健要点
+
+4. **生活注意事项**
+   - 需要特别注意的生活习惯
+   - 可能的健康风险提示
+   - 调理效果预期时间
+
+请用专业但通俗易懂的语言回答，重点突出实用性和可操作性。`;
+
+            const response = await fetch(PROXY_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API调用失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            // 处理不同的响应格式，优先提取实际AI文本内容
+            let aiText = null;
+            
+            // 尝试提取data.output.text
+            if (data.output && data.output.text) {
+                aiText = data.output.text;
+            }
+            // 备用路径：data.content.output.text
+            else if (data.content && data.content.output && data.content.output.text) {
+                aiText = data.content.output.text;
+            }
+            // 其他可能的路径
+            else if (data.success && data.content) {
+                aiText = typeof data.content === 'string' ? data.content : JSON.stringify(data.content);
+            } else if (data.content) {
+                aiText = typeof data.content === 'string' ? data.content : JSON.stringify(data.content);
+            } else if (data.message) {
+                aiText = data.message;
+            } else if (data.result) {
+                aiText = data.result;
+            } else if (typeof data === 'string') {
+                aiText = data;
+            }
+            
+            // 确保返回的是字符串内容
+            if (aiText && typeof aiText === 'string') {
+                console.log('提取的AI文本内容:', aiText.substring(0, 200) + '...');
+                return aiText;
+            } else {
+                console.log('AI API响应格式:', data);
+                return JSON.stringify(data, null, 2);
+            }
+        }
+
+        // 解析AI内容为结构化卡片数据
+        function parseAIContentToCards(aiText) {
+            if (!aiText || typeof aiText !== 'string') {
+                return null;
+            }
+
+            const parsed = {
+                summary: '',
+                constitution: '',
+                recommendations: {
+                    diet: '',
+                    exercise: '',
+                    lifestyle: '',
+                    emotion: '',
+                    seasonal: '',
+                    medicine: ''
+                },
+                precautions: ''
+            };
+
+            // 按段落分割内容
+            const paragraphs = aiText.split('\n').filter(line => line.trim());
+            let currentSection = '';
+            let currentContent = [];
+
+            for (const line of paragraphs) {
+                const trimmedLine = line.trim();
+                
+                // 识别主要章节标题
+                if (trimmedLine.includes('体质综合评估') || trimmedLine.includes('综合评估')) {
+                    currentSection = 'summary';
+                    currentContent = [];
+                } else if (trimmedLine.includes('个性化调理方案') || trimmedLine.includes('调理方案')) {
+                    currentSection = 'recommendations';
+                    currentContent = [];
+                } else if (trimmedLine.includes('中医药调理') || trimmedLine.includes('中药调理')) {
+                    currentSection = 'medicine';
+                    currentContent = [];
+                } else if (trimmedLine.includes('生活注意事项') || trimmedLine.includes('注意事项')) {
+                    currentSection = 'precautions';
+                    currentContent = [];
+                }
+                // 识别子分类
+                else if (trimmedLine.includes('饮食调养') || trimmedLine.includes('饮食')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'diet';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('运动养生') || trimmedLine.includes('运动')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'exercise';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('生活起居') || trimmedLine.includes('起居')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'lifestyle';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('情志调节') || trimmedLine.includes('情绪')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'emotion';
+                        currentContent = [];
+                    }
+                } else if (trimmedLine.includes('四季养生') || trimmedLine.includes('季节')) {
+                    if (currentSection === 'recommendations') {
+                        currentSection = 'seasonal';
+                        currentContent = [];
+                    }
+                }
+                // 收集内容
+                else if (trimmedLine && !trimmedLine.startsWith('**') && !trimmedLine.startsWith('#')) {
+                    currentContent.push(trimmedLine);
+                }
+
+                // 保存收集的内容
+                if (currentContent.length > 0) {
+                    const content = currentContent.join('\n');
+                    switch (currentSection) {
+                        case 'summary':
+                            parsed.summary = content;
+                            break;
+                        case 'diet':
+                            parsed.recommendations.diet = content;
+                            break;
+                        case 'exercise':
+                            parsed.recommendations.exercise = content;
+                            break;
+                        case 'lifestyle':
+                            parsed.recommendations.lifestyle = content;
+                            break;
+                        case 'emotion':
+                            parsed.recommendations.emotion = content;
+                            break;
+                        case 'seasonal':
+                            parsed.recommendations.seasonal = content;
+                            break;
+                        case 'medicine':
+                            parsed.recommendations.medicine = content;
+                            break;
+                        case 'precautions':
+                            parsed.precautions = content;
+                            break;
+                    }
+                }
+            }
+
+            // 如果没有找到明确的分段，尝试简单提取
+            if (!parsed.summary && !parsed.precautions) {
+                const lines = aiText.split('\n').filter(line => line.trim());
+                if (lines.length > 0) {
+                    // 前面几行作为总结
+                    parsed.summary = lines.slice(0, 3).join('\n');
+                    // 后面的内容作为建议
+                    if (lines.length > 3) {
+                        parsed.recommendations.diet = lines.slice(3).join('\n');
+                    }
+                }
+            }
+
+            return parsed;
+        }
+
+        // 生成体质分析卡片HTML
+        function generateConstitutionCards(parsedData) {
+            if (!parsedData) {
+                return '<div class="error-message">数据解析失败，请重试</div>';
+            }
+
+            let cardsHTML = '<div class="constitution-analysis-cards">';
+
+            // 体质评估结果卡片
+            if (parsedData.summary) {
+                cardsHTML += `
+                    <div class="card constitution-summary">
+                        <div class="card-header">
+                            <h3>🎯 体质评估结果</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>${parsedData.summary}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 调理建议卡片
+            const hasRecommendations = Object.values(parsedData.recommendations).some(content => content);
+            if (hasRecommendations) {
+                cardsHTML += `
+                    <div class="card recommendations-card">
+                        <div class="card-header">
+                            <h3>💊 个性化调理方案</h3>
+                        </div>
+                        <div class="card-content">
+                `;
+
+                // 饮食调养
+                if (parsedData.recommendations.diet) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🍎 饮食调养</h4>
+                            <p>${parsedData.recommendations.diet}</p>
+                        </div>
+                    `;
+                }
+
+                // 运动养生
+                if (parsedData.recommendations.exercise) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🏃‍♂️ 运动养生</h4>
+                            <p>${parsedData.recommendations.exercise}</p>
+                        </div>
+                    `;
+                }
+
+                // 生活起居
+                if (parsedData.recommendations.lifestyle) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🏠 生活起居</h4>
+                            <p>${parsedData.recommendations.lifestyle}</p>
+                        </div>
+                    `;
+                }
+
+                // 情志调节
+                if (parsedData.recommendations.emotion) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>😌 情志调节</h4>
+                            <p>${parsedData.recommendations.emotion}</p>
+                        </div>
+                    `;
+                }
+
+                // 四季养生
+                if (parsedData.recommendations.seasonal) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🌸 四季养生</h4>
+                            <p>${parsedData.recommendations.seasonal}</p>
+                        </div>
+                    `;
+                }
+
+                // 中医药调理
+                if (parsedData.recommendations.medicine) {
+                    cardsHTML += `
+                        <div class="recommendation-section">
+                            <h4>🌿 中医药调理</h4>
+                            <p>${parsedData.recommendations.medicine}</p>
+                        </div>
+                    `;
+                }
+
+                cardsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 注意事项卡片
+            if (parsedData.precautions) {
+                cardsHTML += `
+                    <div class="card precautions-card">
+                        <div class="card-header">
+                            <h3>⚠️ 生活注意事项</h3>
+                        </div>
+                        <div class="card-content">
+                            <p>${parsedData.precautions}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cardsHTML += '</div>';
+            return cardsHTML;
+        }
+
+        // 显示备用建议（当AI分析失败时）
+        async function displayFallbackRecommendations(constitutionResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            const primaryConstitution = Object.entries(constitutionResult).sort((a, b) => b[1] - a[1])[0][0];
+            
+            listContainer.innerHTML = `
+                <div class="ai-fallback-container" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 32px; margin: 32px 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div class="fallback-header" style="text-align: center; margin-bottom: 24px;">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🏥</div>
+                        <h3 style="color: white; margin: 0 0 8px 0;">传统中医调理建议</h3>
+                        <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 14px;">基于您的主要体质类型：${constitutionNames[primaryConstitution]}</p>
+                    </div>
+                    <div style="color: white; line-height: 1.6;">
+                        <p style="margin-bottom: 16px;">根据中医体质学理论，您的主要体质特点需要重点关注以下调理方向：</p>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;">饮食调养：选择适合您体质的食物</li>
+                            <li style="margin-bottom: 8px;">生活起居：保持规律的作息时间</li>
+                            <li style="margin-bottom: 8px;">运动养生：选择合适的运动方式</li>
+                            <li style="margin-bottom: 8px;">情志调节：保持心情舒畅</li>
+                        </ul>
+                        <p style="color: rgba(255, 255, 255, 0.6); font-size: 12px; margin-top: 16px;">* AI分析暂时不可用，为您提供基础建议</p>
+                    </div>
+                </div>
+            `;
+        }
+
+
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

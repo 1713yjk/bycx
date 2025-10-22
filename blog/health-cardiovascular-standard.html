@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标准心血管健康风险评估 - 基于Framingham标准 | AZ Ring</title>
+    <meta name="description" content="8-10分钟标准评估，完整Framingham风险评分，AI智能深度分析您的心血管健康状况。">
+    
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --cardiovascular-standard: #e74c3c;
+            --cardiovascular-standard-light: #c0392b;
+            --oura-white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--cardiovascular-standard) 0%, var(--cardiovascular-standard-light) 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 圆形进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        /* 问题幻灯片 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .question-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-indicator {
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0.9;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .question-number {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 24px;
+        }
+        
+        .question-text {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 48px;
+            line-height: 1.4;
+        }
+        
+        .question-hint {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 32px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        /* 选项样式 */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .option {
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .option:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(4px);
+        }
+        
+        .option.selected {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--cardiovascular-standard);
+            border-color: white;
+        }
+        
+        .option-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .option.selected .option-letter {
+            background: var(--cardiovascular-standard);
+            color: white;
+        }
+        
+        /* 输入框样式 */
+        .input-group {
+            max-width: 500px;
+            margin: 0 auto 24px;
+        }
+        
+        .input-label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-wrapper:focus-within {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .input-field {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .input-field:focus {
+            outline: none;
+        }
+        
+        .input-unit {
+            padding-right: 12px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* 导航按钮 */
+        .nav-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 48px;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--cardiovascular-standard);
+            border-color: white;
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 结果页面样式 */
+        .results-container {
+            display: none;
+            overflow-y: auto;
+            height: 100vh;
+            background: #f8f9fa;
+            color: #1f2937;
+            padding: 80px 24px 40px;
+        }
+        
+        .results-container.active {
+            display: block;
+        }
+        
+        .results-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .results-title {
+            font-size: 36px;
+            font-weight: 300;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .results-subtitle {
+            color: #6b7280;
+            font-size: 16px;
+        }
+        
+        /* 风险评分卡 */
+        .risk-score-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .risk-label-text {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .risk-percentage {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--cardiovascular-standard), var(--cardiovascular-standard-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .risk-level-label {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .risk-description {
+            color: #6b7280;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 分析区块 */
+        .analysis-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .analysis-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--cardiovascular-standard), var(--cardiovascular-standard-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .analysis-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .analysis-content {
+            color: #4b5563;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
+        .risk-factors-list,
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .risk-factors-list li {
+            padding: 12px 16px;
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .risk-factors-list li i {
+            color: #ef4444;
+        }
+        
+        .suggestions-list li {
+            padding: 12px 16px;
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .suggestions-list li i {
+            color: #10b981;
+            margin-top: 4px;
+        }
+        
+        /* 行动按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-btn-primary {
+            background: linear-gradient(135deg, var(--cardiovascular-standard), var(--cardiovascular-standard-light));
+            color: white;
+        }
+        
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+        }
+        
+        .action-btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        .action-btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        /* 加载动画 */
+        .loading-animation {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading-animation.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* 免责声明 */
+        .disclaimer {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 32px;
+            color: #92400e;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* 调试面板样式 */
+        .debug-toggle {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 200;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .debug-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .debug-panel {
+            position: fixed;
+            bottom: 100px;
+            left: 40px;
+            width: 320px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .debug-panel.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .debug-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .debug-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .debug-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #6b7280;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .debug-close:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        .debug-content {
+            padding: 20px;
+        }
+        
+        .debug-action-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--cardiovascular-standard), var(--cardiovascular-standard-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .debug-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+        }
+        
+        .debug-action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .debug-action-btn i {
+            font-size: 16px;
+        }
+        
+        .debug-hint {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #0369a1;
+            line-height: 1.5;
+        }
+        
+        .debug-hint i {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .typeform-container {
+                padding: 20px;
+            }
+            
+            .back-btn,
+            .typeform-progress {
+                top: 20px;
+            }
+            
+            .back-btn {
+                left: 20px;
+            }
+            
+            .typeform-progress {
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .question-text {
+                font-size: 24px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .results-container {
+                padding: 60px 16px 24px;
+            }
+            
+            .results-title {
+                font-size: 28px;
+            }
+            
+            .risk-score-card {
+                padding: 32px 24px;
+            }
+            
+            .risk-percentage {
+                font-size: 56px;
+            }
+            
+            .analysis-card {
+                padding: 24px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .debug-toggle {
+                bottom: 20px;
+                left: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .debug-panel {
+                bottom: 75px;
+                left: 20px;
+                right: 20px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="health-cardiovascular-center.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        返回
+    </a>
+
+    <div class="typeform-progress">
+        <div class="progress-circle"></div>
+        <div class="progress-text">0%</div>
+    </div>
+
+    <!-- 调试面板 -->
+    <div class="debug-toggle" onclick="toggleDebugPanel()">
+        <i class="fas fa-bug"></i>
+    </div>
+    <div class="debug-panel" id="debugPanel">
+        <div class="debug-header">
+            <h3>调试模式</h3>
+            <button class="debug-close" onclick="toggleDebugPanel()">×</button>
+        </div>
+        <div class="debug-content">
+            <button class="debug-action-btn" onclick="quickFillAndSubmit()">
+                <i class="fas fa-rocket"></i>
+                <span>一键直达结果页</span>
+            </button>
+            <div class="debug-hint">
+                <i class="fas fa-info-circle"></i>
+                <span>自动填充默认答案并跳转到结果页，用于快速测试展示效果</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 问卷容器 -->
+    <div class="typeform-container" id="quizContainer">
+        <!-- Question 1: 年龄 -->
+        <div class="question-slide active">
+            <div class="section-indicator">📋 基础信息</div>
+            <div class="question-number">问题 1/25</div>
+            <div class="question-text">您的年龄是？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="age" placeholder="请输入年龄" min="30" max="79">
+                    <span class="input-unit">岁</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 2: 性别 -->
+        <div class="question-slide">
+            <div class="section-indicator">📋 基础信息</div>
+            <div class="question-number">问题 2/25</div>
+            <div class="question-text">您的性别是？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'male')">
+                    <div class="option-letter">A</div>
+                    <span>男性</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'female')">
+                    <div class="option-letter">B</div>
+                    <span>女性</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 3: 身高 -->
+        <div class="question-slide">
+            <div class="section-indicator">📋 基础信息</div>
+            <div class="question-number">问题 3/25</div>
+            <div class="question-text">您的身高是？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="height" placeholder="请输入身高" min="100" max="250">
+                    <span class="input-unit">cm</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 4: 体重 -->
+        <div class="question-slide">
+            <div class="section-indicator">📋 基础信息</div>
+            <div class="question-number">问题 4/25</div>
+            <div class="question-text">您的体重是？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="weight" placeholder="请输入体重" min="30" max="300" step="0.1">
+                    <span class="input-unit">kg</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 5: 收缩压 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 5/25</div>
+            <div class="question-text">您的收缩压（高压）是多少？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 如不清楚，请最近一次体检报告，或到药店/医院测量
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="sbp" placeholder="请输入收缩压" min="90" max="200">
+                    <span class="input-unit">mmHg</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 6: 舒张压 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 6/25</div>
+            <div class="question-text">您的舒张压（低压）是多少？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="dbp" placeholder="请输入舒张压" min="60" max="120">
+                    <span class="input-unit">mmHg</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 7: 高血压治疗 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 7/25</div>
+            <div class="question-text">您是否正在服用降压药？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'no')">
+                    <div class="option-letter">A</div>
+                    <span>否</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'yes')">
+                    <div class="option-letter">B</div>
+                    <span>是</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 8: 总胆固醇 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 8/25</div>
+            <div class="question-text">您的总胆固醇（TC）是多少？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 查看近期体检报告的血脂检查项目
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="tc" placeholder="请输入总胆固醇" min="100" max="400" step="0.01">
+                    <span class="input-unit">mg/dL</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 9: HDL胆固醇 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 9/25</div>
+            <div class="question-text">您的HDL胆固醇（高密度脂蛋白，"好胆固醇"）是多少？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="hdl" placeholder="请输入HDL胆固醇" min="20" max="100" step="0.01">
+                    <span class="input-unit">mg/dL</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 10: LDL胆固醇 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 10/25</div>
+            <div class="question-text">您的LDL胆固醇（低密度脂蛋白，"坏胆固醇"）是多少？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="ldl" placeholder="请输入LDL胆固醇" min="50" max="300" step="0.01">
+                    <span class="input-unit">mg/dL</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 11: 甘油三酯 -->
+        <div class="question-slide">
+            <div class="section-indicator">💉 血压与血脂</div>
+            <div class="question-number">问题 11/25</div>
+            <div class="question-text">您的甘油三酯（TG）是多少？</div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="tg" placeholder="请输入甘油三酯" min="50" max="500" step="0.01">
+                    <span class="input-unit">mg/dL</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚（系统将使用平均值估算）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 12: 糖尿病 -->
+        <div class="question-slide">
+            <div class="section-indicator">🩺 疾病史</div>
+            <div class="question-number">问题 12/25</div>
+            <div class="question-text">您是否患有糖尿病？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 包括1型或2型糖尿病，由医生诊断
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'no')">
+                    <div class="option-letter">A</div>
+                    <span>否</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'yes')">
+                    <div class="option-letter">B</div>
+                    <span>是</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 13: 空腹血糖 -->
+        <div class="question-slide">
+            <div class="section-indicator">🩺 疾病史</div>
+            <div class="question-number">问题 13/25</div>
+            <div class="question-text">您的空腹血糖是多少？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 查看体检报告或最近一次血糖检测结果
+            </div>
+            <div class="input-group">
+                <div class="input-wrapper">
+                    <input type="number" class="input-field" id="fasting_glucose" placeholder="请输入空腹血糖" min="50" max="300" step="0.1">
+                    <span class="input-unit">mg/dL</span>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'unknown')">
+                    <div class="option-letter">?</div>
+                    <span>不清楚</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 14: 吸烟 -->
+        <div class="question-slide">
+            <div class="section-indicator">🚬 生活方式</div>
+            <div class="question-number">问题 14/25</div>
+            <div class="question-text">您是否吸烟？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 包括香烟、雪茄或其他形式的烟草制品
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'never')">
+                    <div class="option-letter">A</div>
+                    <span>从不吸烟</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'former')">
+                    <div class="option-letter">B</div>
+                    <span>已戒烟</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'current')">
+                    <div class="option-letter">C</div>
+                    <span>目前吸烟</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 15: 每天吸烟量 -->
+        <div class="question-slide">
+            <div class="section-indicator">🚬 生活方式</div>
+            <div class="question-number">问题 15/25</div>
+            <div class="question-text">如果您吸烟，每天大约吸多少支？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, '0')">
+                    <div class="option-letter">A</div>
+                    <span>不吸烟</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '1-10')">
+                    <div class="option-letter">B</div>
+                    <span>1-10支/天</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '11-20')">
+                    <div class="option-letter">C</div>
+                    <span>11-20支/天</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '20+')">
+                    <div class="option-letter">D</div>
+                    <span>超过20支/天</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 16: 运动频率 -->
+        <div class="question-slide">
+            <div class="section-indicator">🏃 生活方式</div>
+            <div class="question-number">问题 16/25</div>
+            <div class="question-text">您每周运动几次？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 运动指持续30分钟以上的中等强度活动（如快走、慢跑、游泳等）
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'none')">
+                    <div class="option-letter">A</div>
+                    <span>几乎不运动</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '1-2')">
+                    <div class="option-letter">B</div>
+                    <span>1-2次/周</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '3-4')">
+                    <div class="option-letter">C</div>
+                    <span>3-4次/周</span>
+                </div>
+                <div class="option" onclick="selectOption(this, '5+')">
+                    <div class="option-letter">D</div>
+                    <span>5次及以上/周</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 17: 运动强度 -->
+        <div class="question-slide">
+            <div class="section-indicator">🏃 生活方式</div>
+            <div class="question-number">问题 17/25</div>
+            <div class="question-text">您通常的运动强度如何？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'light')">
+                    <div class="option-letter">A</div>
+                    <span>轻度（散步、瑜伽）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'moderate')">
+                    <div class="option-letter">B</div>
+                    <span>中等（快走、骑车、游泳）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'vigorous')">
+                    <div class="option-letter">C</div>
+                    <span>高强度（跑步、球类运动）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 18: 饮食习惯 -->
+        <div class="question-slide">
+            <div class="section-indicator">🥗 生活方式</div>
+            <div class="question-number">问题 18/25</div>
+            <div class="question-text">您的饮食习惯如何？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'poor')">
+                    <div class="option-letter">A</div>
+                    <span>经常高盐高油高糖、油炸食品</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'fair')">
+                    <div class="option-letter">B</div>
+                    <span>偶尔注意饮食健康</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'good')">
+                    <div class="option-letter">C</div>
+                    <span>经常注意均衡饮食</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'excellent')">
+                    <div class="option-letter">D</div>
+                    <span>严格控制健康饮食（地中海饮食、DASH饮食等）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 19: 每日蔬果 -->
+        <div class="question-slide">
+            <div class="section-indicator">🥗 生活方式</div>
+            <div class="question-number">问题 19/25</div>
+            <div class="question-text">您每天食用蔬菜和水果的份数？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 1份约等于1个拳头大小
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'low')">
+                    <div class="option-letter">A</div>
+                    <span>少于3份</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'moderate')">
+                    <div class="option-letter">B</div>
+                    <span>3-5份</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'high')">
+                    <div class="option-letter">C</div>
+                    <span>5份以上</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 20: 饮酒 -->
+        <div class="question-slide">
+            <div class="section-indicator">🍷 生活方式</div>
+            <div class="question-number">问题 20/25</div>
+            <div class="question-text">您是否饮酒？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'never')">
+                    <div class="option-letter">A</div>
+                    <span>从不饮酒</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'occasional')">
+                    <div class="option-letter">B</div>
+                    <span>偶尔饮酒（每周1-2次）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'moderate')">
+                    <div class="option-letter">C</div>
+                    <span>适量饮酒（每周3-5次）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'heavy')">
+                    <div class="option-letter">D</div>
+                    <span>经常饮酒（每天或几乎每天）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 21: 家族史 -->
+        <div class="question-slide">
+            <div class="section-indicator">👨‍👩‍👧‍👦 家族史</div>
+            <div class="question-number">问题 21/25</div>
+            <div class="question-text">您的直系亲属（父母、兄弟姐妹）是否有心血管疾病史？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 包括心脏病、中风、心肌梗死等
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'no')">
+                    <div class="option-letter">A</div>
+                    <span>无家族史</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'yes')">
+                    <div class="option-letter">B</div>
+                    <span>有家族史</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 22: 家族史年龄 -->
+        <div class="question-slide">
+            <div class="section-indicator">👨‍👩‍👧‍👦 家族史</div>
+            <div class="question-number">问题 22/25</div>
+            <div class="question-text">如有家族史，亲属发病时的年龄？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'none')">
+                    <div class="option-letter">A</div>
+                    <span>无家族史</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'young')">
+                    <div class="option-letter">B</div>
+                    <span>55岁之前（男性）或65岁之前（女性）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'old')">
+                    <div class="option-letter">C</div>
+                    <span>55岁之后（男性）或65岁之后（女性）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 23: 压力水平 -->
+        <div class="question-slide">
+            <div class="section-indicator">😌 心理状态</div>
+            <div class="question-number">问题 23/25</div>
+            <div class="question-text">您的日常压力水平如何？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'low')">
+                    <div class="option-letter">A</div>
+                    <span>低（很少感到压力）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'moderate')">
+                    <div class="option-letter">B</div>
+                    <span>中等（有时感到压力）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'high')">
+                    <div class="option-letter">C</div>
+                    <span>高（经常感到压力）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'very_high')">
+                    <div class="option-letter">D</div>
+                    <span>非常高（持续感到巨大压力）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 24: 睡眠质量 -->
+        <div class="question-slide">
+            <div class="section-indicator">😴 睡眠</div>
+            <div class="question-number">问题 24/25</div>
+            <div class="question-text">您的睡眠质量如何？</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(this, 'excellent')">
+                    <div class="option-letter">A</div>
+                    <span>优秀（7-9小时，深度睡眠充足）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'good')">
+                    <div class="option-letter">B</div>
+                    <span>良好（7-9小时，偶尔失眠）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'fair')">
+                    <div class="option-letter">C</div>
+                    <span>一般（6-7小时，经常失眠）</span>
+                </div>
+                <div class="option" onclick="selectOption(this, 'poor')">
+                    <div class="option-letter">D</div>
+                    <span>较差（少于6小时，睡眠障碍）</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" disabled>下一题 <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Question 25: 既往病史 -->
+        <div class="question-slide">
+            <div class="section-indicator">🩺 疾病史</div>
+            <div class="question-number">问题 25/25</div>
+            <div class="question-text">您是否有以下既往病史？</div>
+            <div class="question-hint">
+                <i class="fas fa-info-circle"></i> 可多选
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectMultiple(this, 'none')" data-value="none">
+                    <div class="option-letter">A</div>
+                    <span>无</span>
+                </div>
+                <div class="option" onclick="selectMultiple(this, 'coronary')" data-value="coronary">
+                    <div class="option-letter">B</div>
+                    <span>冠心病</span>
+                </div>
+                <div class="option" onclick="selectMultiple(this, 'stroke')" data-value="stroke">
+                    <div class="option-letter">C</div>
+                    <span>中风</span>
+                </div>
+                <div class="option" onclick="selectMultiple(this, 'heart_failure')" data-value="heart_failure">
+                    <div class="option-letter">D</div>
+                    <span>心力衰竭</span>
+                </div>
+                <div class="option" onclick="selectMultiple(this, 'arrhythmia')" data-value="arrhythmia">
+                    <div class="option-letter">E</div>
+                    <span>心律失常</span>
+                </div>
+                <div class="option" onclick="selectMultiple(this, 'kidney')" data-value="kidney">
+                    <div class="option-letter">F</div>
+                    <span>肾脏疾病</span>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="prevQuestion()"><i class="fas fa-arrow-left"></i> 上一题</button>
+                <button class="btn btn-primary" onclick="submitQuiz()">查看结果 <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loading-animation">
+            <div class="spinner"></div>
+            <div class="loading-text">AI正在深度分析您的心血管健康状况...</div>
+        </div>
+    </div>
+
+    <!-- 结果容器 -->
+    <div class="results-container" id="resultsContainer">
+        <div class="results-content">
+            <div class="results-header">
+                <h1 class="results-title">心血管健康风险评估报告</h1>
+                <p class="results-subtitle">基于Framingham国际权威标准</p>
+            </div>
+
+            <!-- 风险评分卡 -->
+            <div class="risk-score-card" id="riskScoreCard">
+                <div class="risk-label-text">您的10年心血管疾病风险</div>
+                <div class="risk-percentage" id="riskPercentage">--</div>
+                <div class="risk-level-label" id="riskLevelLabel">--</div>
+                <div class="risk-description" id="riskDescription">--</div>
+            </div>
+
+            <!-- AI分析 -->
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div class="analysis-icon"><i class="fas fa-robot"></i></div>
+                    <div class="analysis-title">AI智能分析</div>
+                </div>
+                <div class="analysis-content" id="aiAnalysis">正在分析中...</div>
+            </div>
+
+            <!-- 主要风险因素 -->
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div class="analysis-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="analysis-title">主要风险因素</div>
+                </div>
+                <ul class="risk-factors-list" id="riskFactors"></ul>
+            </div>
+
+            <!-- 改善建议 -->
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div class="analysis-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="analysis-title">个性化改善建议</div>
+                </div>
+                <ul class="suggestions-list" id="suggestions"></ul>
+            </div>
+
+            <!-- 行动按钮 -->
+            <div class="action-buttons">
+                <button class="action-btn action-btn-secondary" onclick="location.reload()">
+                    <i class="fas fa-redo"></i> 重新评估
+                </button>
+                <button class="action-btn action-btn-primary" onclick="location.href='health-assessment.html'">
+                    <i class="fas fa-arrow-left"></i> 返回健康自测中心
+                </button>
+            </div>
+
+            <!-- 免责声明 -->
+            <div class="disclaimer">
+                <strong>重要提示：</strong>本评估基于Framingham国际权威标准，仅供健康参考和风险筛查使用。
+                评估结果不能替代专业的医疗诊断。如果您有任何健康问题或疑虑，请及时咨询医生并进行全面的健康检查。
+                本评估不应作为医疗决策的唯一依据。
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/cardiovascular-ai.js"></script>
+    <script>
+        // 调试模式：默认使用真实AI
+        let useRealAI = true;
+        
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.question-slide');
+        const totalSlides = slides.length - 1; // 减去加载动画
+        const answers = {};
+
+        // 切换调试面板显示/隐藏
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debugPanel');
+            panel.classList.toggle('active');
+        }
+
+        // 一键直达结果页（自动填充默认答案并提交）
+        function quickFillAndSubmit() {
+            console.log('🚀 调试模式：自动填充答案并跳转结果页');
+            
+            // 自动填充所有答案（中等风险的默认值）
+            answers.q1 = '45';  // 年龄：45岁
+            answers.q2 = 'male';  // 性别：男性
+            answers.q3 = '175';  // 身高：175cm
+            answers.q4 = '75';  // 体重：75kg
+            answers.q5 = '130';  // 收缩压：130
+            answers.q6 = '85';  // 舒张压：85
+            answers.q7 = 'no';  // 降压药：否
+            answers.q8 = '200';  // 总胆固醇：200
+            answers.q9 = '45';  // HDL：45
+            answers.q10 = '130';  // LDL：130
+            answers.q11 = '150';  // 甘油三酯：150
+            answers.q12 = 'no';  // 糖尿病：否
+            answers.q13 = '100';  // 空腹血糖：100
+            answers.q14 = 'former';  // 吸烟：已戒烟
+            answers.q15 = '0';  // 吸烟量：0
+            answers.q16 = '1-2';  // 运动频率：1-2次/周
+            answers.q17 = 'moderate';  // 运动强度：中等
+            answers.q18 = 'fair';  // 饮食习惯：偶尔注意
+            answers.q19 = 'moderate';  // 蔬果：3-5份
+            answers.q20 = 'occasional';  // 饮酒：偶尔
+            answers.q21 = 'yes';  // 家族史：有
+            answers.q22 = 'old';  // 家族史年龄：55岁之后
+            answers.q23 = 'moderate';  // 压力：中等
+            answers.q24 = 'good';  // 睡眠：良好
+            answers.q25 = ['none'];  // 既往病史：无
+            
+            console.log('✅ 答案填充完成', answers);
+            
+            // 关闭调试面板
+            toggleDebugPanel();
+            
+            // 直接跳转到提交逻辑
+            submitQuiz();
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentSlide / totalSlides) * 100);
+            document.querySelector('.progress-text').textContent = progress + '%';
+            
+            const deg = (progress / 100) * 360;
+            document.querySelector('.progress-circle').style.background = 
+                `conic-gradient(#ffffff ${deg}deg, transparent ${deg}deg)`;
+        }
+
+        function selectOption(element, value) {
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            const slideIndex = currentSlide;
+            answers[`q${slideIndex + 1}`] = value;
+            
+            const nextBtn = element.closest('.question-slide').querySelector('.btn-primary');
+            if (nextBtn) nextBtn.disabled = false;
+        }
+
+        function selectMultiple(element, value) {
+            element.classList.toggle('selected');
+            
+            const slideIndex = currentSlide;
+            if (!answers[`q${slideIndex + 1}`]) {
+                answers[`q${slideIndex + 1}`] = [];
+            }
+            
+            if (value === 'none') {
+                const options = element.parentElement.querySelectorAll('.option');
+                options.forEach(opt => {
+                    if (opt !== element) opt.classList.remove('selected');
+                });
+                answers[`q${slideIndex + 1}`] = ['none'];
+            } else {
+                const noneOption = element.parentElement.querySelector('[data-value="none"]');
+                if (noneOption) noneOption.classList.remove('selected');
+                
+                if (element.classList.contains('selected')) {
+                    if (!answers[`q${slideIndex + 1}`].includes(value)) {
+                        answers[`q${slideIndex + 1}`].push(value);
+                    }
+                } else {
+                    const index = answers[`q${slideIndex + 1}`].indexOf(value);
+                    if (index > -1) {
+                        answers[`q${slideIndex + 1}`].splice(index, 1);
+                    }
+                }
+            }
+        }
+
+        function nextQuestion() {
+            // 验证当前题目
+            const currentQuestion = currentSlide + 1;
+            
+            // 输入框题目验证
+            if (currentQuestion === 1) {
+                const age = document.getElementById('age').value;
+                if (!age || age < 30 || age > 79) {
+                    alert('请输入有效的年龄（30-79岁）');
+                    return;
+                }
+                answers.q1 = age;
+            } else if (currentQuestion === 3) {
+                const height = document.getElementById('height').value;
+                if (!height || height < 100 || height > 250) {
+                    alert('请输入有效的身高（100-250cm）');
+                    return;
+                }
+                answers.q3 = height;
+            } else if (currentQuestion === 4) {
+                const weight = document.getElementById('weight').value;
+                if (!weight || weight < 30 || weight > 300) {
+                    alert('请输入有效的体重（30-300kg）');
+                    return;
+                }
+                answers.q4 = weight;
+            } else if (currentQuestion === 5 || currentQuestion === 6 || 
+                       currentQuestion === 8 || currentQuestion === 9 || 
+                       currentQuestion === 10 || currentQuestion === 11 || 
+                       currentQuestion === 13) {
+                // 这些题目可以跳过（选择"不清楚"）
+                const questionMap = {
+                    5: 'sbp', 6: 'dbp', 8: 'tc', 9: 'hdl', 
+                    10: 'ldl', 11: 'tg', 13: 'fasting_glucose'
+                };
+                const inputId = questionMap[currentQuestion];
+                const value = document.getElementById(inputId).value;
+                if (value) {
+                    answers[`q${currentQuestion}`] = value;
+                } else if (!answers[`q${currentQuestion}`]) {
+                    answers[`q${currentQuestion}`] = 'unknown';
+                }
+            }
+            
+            slides[currentSlide].classList.remove('active');
+            currentSlide++;
+            if (currentSlide < slides.length) {
+                slides[currentSlide].classList.add('active');
+                updateProgress();
+            }
+        }
+
+        function prevQuestion() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide--;
+            slides[currentSlide].classList.add('active');
+            updateProgress();
+        }
+
+        async function submitQuiz() {
+            // 收集最后一题的答案
+            if (!answers.q25 || answers.q25.length === 0) {
+                answers.q25 = ['none'];
+            }
+            
+            // 显示加载动画
+            slides[currentSlide].classList.remove('active');
+            const loadingSlide = document.querySelector('.loading-animation');
+            loadingSlide.classList.add('active');
+            
+            // 计算风险评分
+            const result = calculateFraminghamRisk(answers);
+            
+            // 等待AI分析
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // 显示结果
+            document.getElementById('quizContainer').style.display = 'none';
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.classList.add('active');
+            
+            displayResults(result);
+        }
+
+        function calculateFraminghamRisk(answers) {
+            // 简化的Framingham风险评分计算
+            // 实际应用中应使用完整的Framingham公式
+            
+            let riskScore = 0;
+            let riskFactors = [];
+            
+            // 年龄风险
+            const age = parseInt(answers.q1);
+            if (age >= 65) {
+                riskScore += 8;
+                riskFactors.push('年龄偏大（≥65岁）');
+            } else if (age >= 55) {
+                riskScore += 5;
+                riskFactors.push('年龄（55-64岁）');
+            } else if (age >= 45) {
+                riskScore += 3;
+            }
+            
+            // BMI
+            const height = parseFloat(answers.q3) / 100;
+            const weight = parseFloat(answers.q4);
+            const bmi = weight / (height * height);
+            if (bmi >= 30) {
+                riskScore += 5;
+                riskFactors.push('肥胖（BMI≥30）');
+            } else if (bmi >= 25) {
+                riskScore += 3;
+                riskFactors.push('超重（BMI≥25）');
+            }
+            
+            // 血压
+            if (answers.q5 !== 'unknown') {
+                const sbp = parseInt(answers.q5);
+                if (sbp >= 160) {
+                    riskScore += 8;
+                    riskFactors.push('高血压（收缩压≥160）');
+                } else if (sbp >= 140) {
+                    riskScore += 5;
+                    riskFactors.push('高血压（收缩压≥140）');
+                } else if (sbp >= 130) {
+                    riskScore += 3;
+                }
+            }
+            
+            // 降压药
+            if (answers.q7 === 'yes') {
+                riskScore += 2;
+                riskFactors.push('正在服用降压药');
+            }
+            
+            // 胆固醇
+            if (answers.q8 !== 'unknown') {
+                const tc = parseFloat(answers.q8);
+                if (tc >= 240) {
+                    riskScore += 5;
+                    riskFactors.push('高胆固醇（≥240 mg/dL）');
+                } else if (tc >= 200) {
+                    riskScore += 3;
+                }
+            }
+            
+            // HDL
+            if (answers.q9 !== 'unknown') {
+                const hdl = parseFloat(answers.q9);
+                if (hdl < 40) {
+                    riskScore += 5;
+                    riskFactors.push('HDL胆固醇过低（<40 mg/dL）');
+                }
+            }
+            
+            // 糖尿病
+            if (answers.q12 === 'yes') {
+                riskScore += 8;
+                riskFactors.push('患有糖尿病');
+            }
+            
+            // 吸烟
+            if (answers.q14 === 'current') {
+                riskScore += 6;
+                riskFactors.push('目前吸烟');
+                
+                if (answers.q15 === '20+') {
+                    riskScore += 2;
+                    riskFactors[riskFactors.length - 1] = '重度吸烟（>20支/天）';
+                }
+            }
+            
+            // 运动
+            if (answers.q16 === 'none') {
+                riskScore += 4;
+                riskFactors.push('缺乏运动');
+            }
+            
+            // 饮食
+            if (answers.q18 === 'poor') {
+                riskScore += 3;
+                riskFactors.push('不健康饮食习惯');
+            }
+            
+            // 家族史
+            if (answers.q21 === 'yes') {
+                riskScore += 4;
+                if (answers.q22 === 'young') {
+                    riskScore += 2;
+                    riskFactors.push('早发心血管疾病家族史');
+                } else {
+                    riskFactors.push('心血管疾病家族史');
+                }
+            }
+            
+            // 压力
+            if (answers.q23 === 'very_high') {
+                riskScore += 3;
+                riskFactors.push('压力水平过高');
+            } else if (answers.q23 === 'high') {
+                riskScore += 2;
+            }
+            
+            // 睡眠
+            if (answers.q24 === 'poor') {
+                riskScore += 3;
+                riskFactors.push('睡眠质量较差');
+            } else if (answers.q24 === 'fair') {
+                riskScore += 2;
+            }
+            
+            // 既往病史
+            if (answers.q25 && !answers.q25.includes('none')) {
+                const conditions = answers.q25.filter(c => c !== 'none');
+                riskScore += conditions.length * 5;
+                conditions.forEach(condition => {
+                    const conditionNames = {
+                        'coronary': '冠心病',
+                        'stroke': '中风',
+                        'heart_failure': '心力衰竭',
+                        'arrhythmia': '心律失常',
+                        'kidney': '肾脏疾病'
+                    };
+                    riskFactors.push(`既往${conditionNames[condition]}史`);
+                });
+            }
+            
+            // 转换为百分比（简化计算）
+            const riskPercentage = Math.min(Math.round(riskScore * 1.5), 45);
+            
+            // 确定风险等级
+            let riskLevel, riskLevelText, riskDescription;
+            if (riskPercentage < 10) {
+                riskLevel = 'low';
+                riskLevelText = '低风险';
+                riskDescription = '您的心血管健康状况良好，10年内发生心血管疾病的风险较低。继续保持良好的生活习惯，定期体检。';
+            } else if (riskPercentage < 20) {
+                riskLevel = 'moderate';
+                riskLevelText = '中等风险';
+                riskDescription = '您的心血管健康存在一定风险因素，建议积极改善生活方式，定期监测相关指标，必要时咨询医生。';
+            } else {
+                riskLevel = 'high';
+                riskLevelText = '高风险';
+                riskDescription = '您的心血管健康风险较高，建议尽快咨询专业医生，进行全面的心血管健康检查，并在医生指导下制定个性化的干预方案。';
+            }
+            
+            // 生成建议
+            const suggestions = generateSuggestions(answers, riskFactors, riskLevel);
+            
+            // 调用AI分析
+            const aiAnalysisPromise = getAIAnalysis(answers, riskPercentage, riskLevel, riskFactors);
+            
+            return {
+                riskScore: riskPercentage,
+                riskLevel: riskLevelText,
+                riskDescription,
+                riskFactors,
+                suggestions,
+                aiAnalysisPromise
+            };
+        }
+
+        function generateSuggestions(answers, riskFactors, riskLevel) {
+            const suggestions = [];
+            
+            // 基于风险因素生成建议
+            if (answers.q14 === 'current') {
+                suggestions.push('戒烟是降低心血管风险最有效的措施之一，建议寻求专业戒烟帮助');
+            }
+            
+            if (answers.q16 === 'none' || answers.q16 === '1-2') {
+                suggestions.push('建议每周至少150分钟中等强度运动（如快走、游泳、骑车）');
+            }
+            
+            if (answers.q18 === 'poor' || answers.q18 === 'fair') {
+                suggestions.push('采用地中海饮食或DASH饮食模式，多吃蔬果、全谷物、鱼类，减少饱和脂肪摄入');
+            }
+            
+            const height = parseFloat(answers.q3) / 100;
+            const weight = parseFloat(answers.q4);
+            const bmi = weight / (height * height);
+            if (bmi >= 25) {
+                suggestions.push('通过合理饮食和规律运动，将BMI控制在18.5-24.9的健康范围');
+            }
+            
+            if (answers.q23 === 'high' || answers.q23 === 'very_high') {
+                suggestions.push('学习压力管理技巧，如冥想、瑜伽、深呼吸练习，必要时寻求心理咨询');
+            }
+            
+            if (answers.q24 === 'fair' || answers.q24 === 'poor') {
+                suggestions.push('改善睡眠质量：保持规律作息，睡前避免电子屏幕，营造良好睡眠环境');
+            }
+            
+            if (answers.q5 !== 'unknown' && parseInt(answers.q5) >= 130) {
+                suggestions.push('定期监测血压，必要时在医生指导下进行药物治疗，减少盐分摄入');
+            }
+            
+            if (answers.q12 === 'yes') {
+                suggestions.push('严格控制血糖，定期监测HbA1c，遵医嘱用药，预防糖尿病并发症');
+            }
+            
+            // 通用建议
+            suggestions.push('定期进行心血管健康检查，包括血压、血脂、血糖等指标');
+            suggestions.push('使用AZ Ring智能戒指，持续监测心率、心率变异性、血氧等健康数据');
+            
+            return suggestions.slice(0, 6); // 最多6条建议
+        }
+
+        async function getAIAnalysis(answers, riskScore, riskLevel, riskFactors) {
+            try {
+                const prompt = `作为专业的心血管健康顾问，请基于Framingham风险评估数据提供结构化的分析和建议。
+
+用户信息：
+- 年龄：${answers.q1}岁
+- 性别：${answers.q2 === 'male' ? '男性' : '女性'}
+- BMI：${(parseFloat(answers.q4) / Math.pow(parseFloat(answers.q3) / 100, 2)).toFixed(1)}
+- 10年心血管风险：${riskScore}%（${riskLevel}）
+- 主要风险因素：${riskFactors.join('、')}
+- 吸烟状况：${answers.q14 === 'current' ? '目前吸烟' : answers.q14 === 'former' ? '已戒烟' : '不吸烟'}
+- 运动频率：${answers.q16}
+- 饮食习惯：${answers.q18}
+- 压力水平：${answers.q23}
+- 睡眠质量：${answers.q24}
+- 糖尿病：${answers.q12 === 'yes' ? '是' : '否'}
+- 家族史：${answers.q21 === 'yes' ? '有' : '无'}
+
+请以JSON格式返回：
+{
+  "overall_assessment": {
+    "summary": "总体评估摘要（60-90字）",
+    "risk_personality": "风险类型（如：低危型/警惕型/干预型/高危型）",
+    "professional_advice": "专业建议（90-130字，积极鼓励）",
+    "improvement_timeline": "预期改善时间"
+  },
+  "health_impact": {
+    "cardiovascular_risk": "心血管风险具体分析（50-70字）",
+    "metabolic_impact": "代谢影响（40-60字）",
+    "lifestyle_factors": "生活方式影响（40-60字）"
+  },
+  "detailed_analysis": {
+    "modifiable_factors": ["可改变风险因素1", "可改变风险因素2"],
+    "non_modifiable_factors": ["不可改变因素1", "不可改变因素2"],
+    "protective_factors": ["保护因素1", "保护因素2"],
+    "priority_actions": "优先行动建议（60-80字）"
+  },
+  "recommendations": {
+    "immediate_actions": ["立即行动1", "立即行动2"],
+    "dietary_changes": ["饮食改善1", "饮食改善2"],
+    "exercise_plan": ["运动建议1", "运动建议2"],
+    "lifestyle_modifications": ["生活方式调整1", "生活方式调整2"],
+    "monitoring_advice": ["监测建议1", "监测建议2"],
+    "azring_features": ["AZ Ring功能1", "AZ Ring功能2"]
+  },
+  "scientific_foundation": {
+    "framingham_basis": "Framingham研究基础（40-60字）",
+    "clinical_evidence": ["临床证据1", "临床证据2"]
+  }
+}
+
+注意：必须返回有效JSON，使用积极语气，强调风险可控性。`;
+
+                let analysis;
+                if (useRealAI) {
+                    // 调用真实AI API
+                    console.log('🤖 调用真实百炼AI...');
+                    const PROXY_URL = 'https://www.520rpy.xyz/api/bailian';
+                    try {
+                        const response = await fetch(PROXY_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ prompt })
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        console.log('🤖 百炼AI响应成功');
+                        
+                        // 解析百炼AI返回的标准格式
+                        const aiText = data.output?.text || data.output?.choices?.[0]?.message?.content || '';
+                        if (!aiText) {
+                            throw new Error('AI响应格式错误');
+                        }
+                        
+                        console.log('📝 AI返回文本长度:', aiText.length);
+                        
+                        // 尝试解析为JSON格式
+                        try {
+                            let jsonText = aiText.trim();
+                            
+                            // 移除markdown包裹
+                            const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)```/);
+                            if (jsonMatch) {
+                                jsonText = jsonMatch[1].trim();
+                            }
+                            
+                            // 提取JSON对象
+                            const jsonStartIndex = jsonText.indexOf('{');
+                            const jsonEndIndex = jsonText.lastIndexOf('}');
+                            if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+                                jsonText = jsonText.substring(jsonStartIndex, jsonEndIndex + 1);
+                            }
+                            
+                            const parsedData = JSON.parse(jsonText);
+                            console.log('✅ 成功解析为JSON格式');
+                            analysis = parsedData;
+                        } catch (jsonError) {
+                            console.log('⚠️ 不是JSON格式，使用纯文本');
+                            analysis = aiText;
+                        }
+                        
+                    } catch (fetchError) {
+                        console.error('AI调用网络错误:', fetchError);
+                        throw fetchError;
+                    }
+                } else {
+                    console.log('🔄 使用模拟AI响应（快速测试）');
+                    analysis = await getMockAIAnalysis(answers, riskScore, riskLevel, riskFactors);
+                }
+                
+                console.log('✅ AI分析完成，长度:', analysis.length);
+                return analysis;
+                
+            } catch (error) {
+                console.error('AI分析失败:', error);
+                return getFallbackAnalysis(riskLevel, riskFactors);
+            }
+        }
+
+        // 模拟AI响应（调试模式）
+        function getMockAIAnalysis(answers, riskScore, riskLevel, riskFactors) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    let analysis = '';
+                    
+                    if (riskLevel === '低风险') {
+                        analysis = `根据您的评估结果，您的心血管健康状况总体良好，10年内发生心血管疾病的风险较低（${riskScore}%）。这是一个令人欣慰的结果，说明您目前的生活方式和健康状态相对理想。不过，心血管健康需要持续关注和维护，建议您继续保持健康的生活习惯，定期进行体检，使用AZ Ring智能戒指持续监测心率、心率变异性等关键指标，及早发现潜在问题。`;
+                    } else if (riskLevel === '中等风险') {
+                        analysis = `您的心血管健康评估显示存在一定的风险因素，10年内发生心血管疾病的风险为${riskScore}%，处于中等水平。主要风险因素包括：${riskFactors.slice(0, 3).join('、')}。但好消息是，通过积极的生活方式调整和必要的医疗干预，这些风险因素大多是可以改善的。建议您从戒烟、规律运动、健康饮食、压力管理等方面入手，同时定期监测血压、血脂、血糖等指标。AZ Ring智能戒指可以帮助您实时监测心率、睡眠、活动量等数据，为您的健康管理提供科学依据。`;
+                    } else {
+                        analysis = `您的心血管健康风险评估结果显示，您目前处于较高风险水平（${riskScore}%），存在多个重要的风险因素：${riskFactors.slice(0, 3).join('、')}。虽然这个结果可能让您感到担忧，但请记住，心血管疾病的风险是可以通过科学的干预措施显著降低的。建议您尽快咨询专业医生，进行全面的心血管健康检查，并在医生指导下制定个性化的治疗和管理方案。同时，戒烟、合理饮食、规律运动、控制体重、管理压力等生活方式改变都将对您的心血管健康产生积极影响。使用AZ Ring智能戒指持续监测您的生理数据，可以帮助您和医生更好地评估治疗效果。`;
+                    }
+                    
+                    resolve(analysis);
+                }, 1500);
+            });
+        }
+
+        function getFallbackAnalysis(riskLevel, riskFactors) {
+            if (riskLevel === '低风险') {
+                return '您的心血管健康状况良好，请继续保持健康的生活方式，定期体检，使用AZ Ring持续监测健康数据。';
+            } else if (riskLevel === '中等风险') {
+                return `您存在一些心血管风险因素（${riskFactors.slice(0, 2).join('、')}），建议积极改善生活方式，定期监测相关指标，必要时咨询医生。`;
+            } else {
+                return `您的心血管风险较高（${riskFactors.slice(0, 2).join('、')}），建议尽快咨询专业医生，进行全面检查，制定个性化干预方案。`;
+            }
+        }
+
+        // 生成增强版心血管分析HTML
+        function generateEnhancedCardioAnalysisHTML(data, riskLevel) {
+            // 如果是纯文本格式，转换为简化HTML
+            if (typeof data === 'string') {
+                return `
+                    <div class="ai-analysis-card" style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div style="color: #1f2937; font-size: 15px; line-height: 1.8;">${data}</div>
+                    </div>
+                `;
+            }
+            
+            // 结构化JSON数据
+            const overallAssessment = data.overall_assessment || {};
+            const healthImpact = data.health_impact || {};
+            const detailedAnalysis = data.detailed_analysis || {};
+            const recommendations = data.recommendations || {};
+            const scientificFoundation = data.scientific_foundation || {};
+            
+            // 风险类型配置
+            const riskPersonalityConfig = {
+                '低危型': { icon: '✅', color: '#10b981' },
+                '警惕型': { icon: '⚠️', color: '#f59e0b' },
+                '干预型': { icon: '🔔', color: '#f97316' },
+                '高危型': { icon: '🚨', color: '#ef4444' }
+            };
+            
+            const personalityInfo = riskPersonalityConfig[overallAssessment.risk_personality] || { icon: '❤️', color: '#ef4444' };
+            
+            return `
+                <div class="ai-analysis-card" style="background: white; border-radius: 20px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
+                    <!-- AI分析头部 -->
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #dc2626, #ef4444); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🤖</div>
+                        <div>
+                            <h3 style="margin: 0; color: #111827; font-size: 20px; font-weight: 700;">AI 专业心血管分析</h3>
+                            <p style="margin: 4px 0 0 0; color: #6b7280; font-size: 14px;">基于Framingham国际标准的智能评估</p>
+                        </div>
+                    </div>
+
+                    <!-- 总体评估与风险类型 -->
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px;">
+                        <div style="background: #f9fafb; border-radius: 12px; padding: 20px;">
+                            <div style="color: #111827; font-weight: 600; margin-bottom: 8px; font-size: 16px;">${overallAssessment.summary || '综合评估'}</div>
+                            <div style="color: #4b5563; font-size: 14px; line-height: 1.6; margin-bottom: 12px;">${overallAssessment.professional_advice || ''}</div>
+                            ${overallAssessment.improvement_timeline ? `
+                                <div style="display: inline-block; background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;">
+                                    预期改善：${overallAssessment.improvement_timeline}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${overallAssessment.risk_personality ? `
+                            <div style="background: #f9fafb; border-radius: 12px; padding: 20px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 8px;">${personalityInfo.icon}</div>
+                                <div style="color: ${personalityInfo.color}; font-weight: 600; margin-bottom: 4px;">${overallAssessment.risk_personality}</div>
+                                <div style="color: #9ca3af; font-size: 12px;">风险类型</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- 健康影响评估 -->
+                    ${healthImpact.cardiovascular_risk || healthImpact.metabolic_impact || healthImpact.lifestyle_factors ? `
+                        <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h4 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                                <span>💓</span> 健康影响分析
+                            </h4>
+                            
+                            <div style="display: grid; gap: 12px;">
+                                ${healthImpact.cardiovascular_risk ? `
+                                    <div style="background: #fef2f2; border-radius: 8px; padding: 12px;">
+                                        <div style="color: #991b1b; font-weight: 500; font-size: 13px; margin-bottom: 6px;">💔 心血管风险</div>
+                                        <div style="color: #7f1d1d; font-size: 13px; line-height: 1.5;">${healthImpact.cardiovascular_risk}</div>
+                                    </div>
+                                ` : ''}
+                                ${healthImpact.metabolic_impact ? `
+                                    <div style="background: #fef3c7; border-radius: 8px; padding: 12px;">
+                                        <div style="color: #92400e; font-weight: 500; font-size: 13px; margin-bottom: 6px;">⚡ 代谢影响</div>
+                                        <div style="color: #78350f; font-size: 13px; line-height: 1.5;">${healthImpact.metabolic_impact}</div>
+                                    </div>
+                                ` : ''}
+                                ${healthImpact.lifestyle_factors ? `
+                                    <div style="background: #dbeafe; border-radius: 8px; padding: 12px;">
+                                        <div style="color: #1e40af; font-weight: 500; font-size: 13px; margin-bottom: 6px;">🏃 生活方式</div>
+                                        <div style="color: #1e3a8a; font-size: 13px; line-height: 1.5;">${healthImpact.lifestyle_factors}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- 详细分析 -->
+                    ${detailedAnalysis.priority_actions || detailedAnalysis.modifiable_factors || detailedAnalysis.protective_factors ? `
+                        <div style="background: #f9fafb; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h4 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                                <span>🔬</span> 深度分析
+                            </h4>
+                            
+                            ${detailedAnalysis.priority_actions ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: #7c3aed; font-weight: 500; font-size: 14px; margin-bottom: 8px;">优先行动</div>
+                                    <div style="color: #374151; font-size: 14px; line-height: 1.6; background: white; padding: 12px; border-radius: 8px;">
+                                        ${detailedAnalysis.priority_actions}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.modifiable_factors && detailedAnalysis.modifiable_factors.length ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: #ea580c; font-weight: 500; font-size: 14px; margin-bottom: 8px;">可改变的风险因素</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                        ${detailedAnalysis.modifiable_factors.map(factor => `
+                                            <span style="background: #fed7aa; color: #9a3412; padding: 6px 10px; border-radius: 6px; font-size: 13px;">🔄 ${factor}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.protective_factors && detailedAnalysis.protective_factors.length ? `
+                                <div>
+                                    <div style="color: #059669; font-weight: 500; font-size: 14px; margin-bottom: 8px;">保护因素</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                        ${detailedAnalysis.protective_factors.map(factor => `
+                                            <span style="background: #d1fae5; color: #065f46; padding: 6px 10px; border-radius: 6px; font-size: 13px;">✓ ${factor}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
+                    <!-- 科学依据 -->
+                    ${scientificFoundation.framingham_basis || scientificFoundation.clinical_evidence ? `
+                        <div style="background: #f0f9ff; border-radius: 12px; padding: 20px; margin-bottom: 24px; border-left: 4px solid #0ea5e9;">
+                            <h4 style="color: #0369a1; font-size: 15px; font-weight: 600; margin: 0 0 12px 0;">📚 科学依据</h4>
+                            ${scientificFoundation.framingham_basis ? `
+                                <div style="color: #0c4a6e; font-size: 13px; line-height: 1.6; margin-bottom: 12px;">
+                                    ${scientificFoundation.framingham_basis}
+                                </div>
+                            ` : ''}
+                            ${scientificFoundation.clinical_evidence && scientificFoundation.clinical_evidence.length ? `
+                                <div>
+                                    ${scientificFoundation.clinical_evidence.map(evidence => `
+                                        <div style="font-size: 12px; color: #075985; margin-bottom: 4px;">• ${evidence}</div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
+                    <!-- 改善建议 -->
+                    ${Object.keys(recommendations).length ? `
+                        <div>
+                            <h4 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 16px 0;">💡 个性化改善方案</h4>
+                            <div style="display: grid; gap: 16px;">
+                                ${recommendations.immediate_actions && recommendations.immediate_actions.length ? `
+                                    <div style="background: #fef3c7; border-radius: 12px; padding: 16px;">
+                                        <div style="color: #92400e; font-weight: 600; font-size: 14px; margin-bottom: 10px;">⚡ 立即行动</div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 13px; line-height: 1.8;">
+                                            ${recommendations.immediate_actions.map(action => `<li>${action}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                                
+                                ${recommendations.dietary_changes && recommendations.dietary_changes.length ? `
+                                    <div style="background: #d1fae5; border-radius: 12px; padding: 16px;">
+                                        <div style="color: #065f46; font-weight: 600; font-size: 14px; margin-bottom: 10px;">🥗 饮食改善</div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #064e3b; font-size: 13px; line-height: 1.8;">
+                                            ${recommendations.dietary_changes.map(change => `<li>${change}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                                
+                                ${recommendations.exercise_plan && recommendations.exercise_plan.length ? `
+                                    <div style="background: #dbeafe; border-radius: 12px; padding: 16px;">
+                                        <div style="color: #1e40af; font-weight: 600; font-size: 14px; margin-bottom: 10px;">🏃 运动计划</div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #1e3a8a; font-size: 13px; line-height: 1.8;">
+                                            ${recommendations.exercise_plan.map(plan => `<li>${plan}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                                
+                                ${recommendations.monitoring_advice && recommendations.monitoring_advice.length ? `
+                                    <div style="background: #fce7f3; border-radius: 12px; padding: 16px;">
+                                        <div style="color: #9f1239; font-weight: 600; font-size: 14px; margin-bottom: 10px;">📊 监测建议</div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #881337; font-size: 13px; line-height: 1.8;">
+                                            ${recommendations.monitoring_advice.map(advice => `<li>${advice}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                                
+                                ${recommendations.azring_features && recommendations.azring_features.length ? `
+                                    <div style="background: #e0e7ff; border-radius: 12px; padding: 16px;">
+                                        <div style="color: #4338ca; font-weight: 600; font-size: 14px; margin-bottom: 10px;">📱 AZ Ring 功能</div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #3730a3; font-size: 13px; line-height: 1.8;">
+                                            ${recommendations.azring_features.map(feature => `<li>${feature}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        async function displayResults(result) {
+            // 显示风险评分
+            document.getElementById('riskPercentage').textContent = result.riskScore + '%';
+            document.getElementById('riskLevelLabel').textContent = result.riskLevel;
+            document.getElementById('riskDescription').textContent = result.riskDescription;
+            
+            // 显示风险因素
+            const riskFactorsList = document.getElementById('riskFactors');
+            riskFactorsList.innerHTML = '';
+            if (result.riskFactors.length === 0) {
+                const li = document.createElement('li');
+                li.innerHTML = '<i class="fas fa-check-circle"></i> <span>未发现明显风险因素，请继续保持</span>';
+                riskFactorsList.appendChild(li);
+            } else {
+                result.riskFactors.forEach(factor => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>${factor}</span>`;
+                    riskFactorsList.appendChild(li);
+                });
+            }
+            
+            // 显示建议
+            const suggestionsList = document.getElementById('suggestions');
+            suggestionsList.innerHTML = '';
+            result.suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-check"></i> <span>${suggestion}</span>`;
+                suggestionsList.appendChild(li);
+            });
+            
+            // 等待AI分析（使用增强版HTML）
+            const aiAnalysisElement = document.getElementById('aiAnalysis');
+            aiAnalysisElement.innerHTML = '<p style="color: #6b7280; font-size: 14px; text-align: center;">⏳ 正在生成AI智能分析...</p>';
+            
+            try {
+                const aiAnalysis = await result.aiAnalysisPromise;
+                // 使用增强版HTML生成器
+                const enhancedHTML = generateEnhancedCardioAnalysisHTML(aiAnalysis, result.riskLevel);
+                aiAnalysisElement.innerHTML = enhancedHTML;
+            } catch (error) {
+                console.error('AI分析加载失败:', error);
+                const fallbackText = getFallbackAnalysis(result.riskLevel, result.riskFactors);
+                aiAnalysisElement.innerHTML = generateEnhancedCardioAnalysisHTML(fallbackText, result.riskLevel);
+            }
+        }
+
+        // 初始化
+        updateProgress();
+    </script>
+</body>
+</html>
+

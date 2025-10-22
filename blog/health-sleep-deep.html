@@ -1,0 +1,3830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深度睡眠分析 - 睡眠质量评估 | AZ Ring智能健康戒指</title>
+    <meta name="description" content="15-20分钟全面评估您的睡眠健康状况，包含睡眠障碍筛查、生活方式分析，生成详细的睡眠改善方案。">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 健康数据管理器 -->
+    <script src="js/health-data-manager.js"></script>
+    
+    <!-- 本地Inter字体 -->
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            /* 现代医疗健康应用配色系统 */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            
+            /* 品牌主色调 - 专业医疗蓝 */
+            --brand-primary: #2563eb;
+            --brand-secondary: #3b82f6;
+            --brand-light: #dbeafe;
+            
+            /* 状态色彩 */
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            
+            /* 深度睡眠评估渐变 (仅问卷部分) */
+            --sleep-gradient-start: #8e44ad;
+            --sleep-gradient-end: #9b59b6;
+            
+            /* 阴影系统 */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* 圆角系统 */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--sleep-gradient-start) 0%, var(--sleep-gradient-end) 100%);
+            color: white;
+            line-height: 1.6;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 结果页面专用样式 - 现代医疗风格 */
+        body.result-mode {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            overflow: auto;
+        }
+        
+        /* 全屏沉浸式容器 */
+        .typeform-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* 阶段指示器 */
+        .stage-indicators {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        
+        .stage-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stage-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+        
+        .stage-dot.completed {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 进度指示器 */
+        .typeform-progress {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .progress-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#ffffff 0deg, transparent 0deg);
+            transition: background 0.6s ease;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* 返回按钮 */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        /* 问题幻灯片 */
+        .question-slide {
+            display: none;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .question-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stage-title {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .stage-title:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .question-number {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.7;
+            margin-bottom: 24px;
+        }
+        
+        .question-text {
+            font-size: 32px;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 评分题样式 */
+        .rating-options {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .rating-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+            text-align: center;
+            will-change: transform;
+        }
+        
+        .rating-item:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .rating-item.selected {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rating-number {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .rating-item.selected .rating-number {
+            color: var(--sleep-gradient-start);
+        }
+        
+        .rating-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .rating-item.selected .rating-label {
+            color: #111; /* Changed from var(--oura-white) */
+        }
+        
+        /* 多选题样式 */
+        .choice-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .choice-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            will-change: transform;
+        }
+        
+        .choice-option:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .choice-option.selected {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .choice-option span {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* 强化选中选项的所有文字颜色 */
+        .choice-option.selected,
+        .choice-option.selected * {
+            color: #111 !important;
+        }
+        
+        .choice-option.selected span,
+        .choice-option.selected .score,
+        .choice-option.selected .rating-text {
+            color: #111 !important;
+        }
+        
+        /* 评分选项选中状态强化 */
+        .rating-item.selected,
+        .rating-item.selected * {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .rating-item.selected .rating-number,
+        .rating-item.selected .rating-label {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        /* 使用更强的选择器确保选中状态样式生效 */
+        .typeform-container .choice-option.selected,
+        .typeform-container .choice-option.selected * {
+            color: #111 !important;
+        }
+        
+        .typeform-container .rating-item.selected,
+        .typeform-container .rating-item.selected * {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .question-slide .choice-option.selected span,
+        .question-slide .choice-option.selected .score,
+        .question-slide .choice-option.selected .rating-text {
+            color: #111 !important;
+        }
+        
+        .question-slide .rating-item.selected .rating-number,
+        .question-slide .rating-item.selected .rating-label {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        /* 滑动条样式 */
+        .slider-container {
+            margin: 40px 0 60px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .slider {
+            width: 100%;
+            margin: 0 auto 30px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 1;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .current-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            min-height: 25px;
+            text-align: center;
+        }
+        
+        /* 导航按钮 */
+        .navigation {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .nav-button {
+            padding: 16px 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-button:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-button.primary {
+            background: white;
+            color: var(--sleep-gradient-start) !important;
+            border-color: white;
+        }
+        
+        .nav-button.primary i {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .nav-button.primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .nav-button.primary:focus {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        /* 使用更具体的选择器确保样式生效 */
+        .typeform-container .nav-button.primary,
+        .question-slide .nav-button.primary {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .typeform-container .nav-button.primary i,
+        .question-slide .nav-button.primary i {
+            color: var(--sleep-gradient-start) !important;
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 现代化结果页面容器 */
+        .result-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+            padding: 40px 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .result-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        
+        .result-container.hidden {
+            display: none;
+        }
+        
+        /* 现代化头部区域 */
+        .result-header {
+            text-align: center;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 48px 32px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .result-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        
+        .result-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        /* 现代化分析卡片网格 - 垂直布局 */
+        .sleep-analysis-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        
+        /* 维度卡片网格容器 - 单行布局 */
+        .dimension-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* 总体评分卡片 - 突出显示 */
+        .analysis-card.overall {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .analysis-card.overall::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+        }
+        
+        /* 维度分析卡片 */
+        .analysis-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+        }
+        
+        .analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .analysis-card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(var(--brand-primary-rgb), 0.2);
+            position: relative;
+        }
+        
+        .card-icon::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* 卡片新增样式 */
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .card-score-section {
+            margin-bottom: 16px;
+        }
+        
+        .card-insights {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+            text-align: left;
+        }
+        
+        .problem-description {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .health-impact {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .quick-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: auto;
+        }
+        
+        .suggestion {
+            font-size: 11px;
+            color: var(--brand-primary);
+            background: var(--brand-light);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            border-left: 2px solid var(--brand-primary);
+            line-height: 1.2;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+        
+        .card-score {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        
+        /* 总体评分特殊样式 */
+        .analysis-card.overall .card-score {
+            font-size: 48px;
+            color: var(--brand-primary);
+        }
+        
+        .analysis-card.overall .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .psqi-score {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        
+        .percentage-score {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        
+        .psqi-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .progress-bar-container {
+            margin: 16px 0;
+            width: 100%;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease-out;
+            background: linear-gradient(90deg, #7ed321, #f5a623);
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 4px;
+        }
+        
+        .card-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .sleep-recommendations {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendations-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid white;
+        }
+        
+        .recommendation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-content {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+        
+        .recommendation-section {
+            margin-bottom: 32px;
+        }
+        
+        .recommendation-section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .recommendation-section-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .recommendation-item.immediate {
+            border-left-color: #7ed321;
+            background: rgba(126, 211, 33, 0.1);
+        }
+        
+        .recommendation-item.weekly {
+            border-left-color: #f5a623;
+            background: rgba(245, 166, 35, 0.1);
+        }
+        
+        .recommendation-item.longterm {
+            border-left-color: #ff9500;
+            background: rgba(255, 149, 0, 0.1);
+        }
+        
+        /* AI加载状态样式 */
+        .ai-loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .ai-loading-icon {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #7ed321;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .ai-brain-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+        
+        .ai-loading-text h4 {
+            color: var(--text-primary);
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .ai-loading-text p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .progress-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+        
+        .progress-dots span {
+            color: #7ed321;
+            font-size: 24px;
+            animation: dot-bounce 1.4s ease-in-out infinite both;
+        }
+        
+        .progress-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .progress-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .progress-dots span:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        /* AI建议内容样式 */
+        .ai-recommendation-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .ai-icon {
+            font-size: 20px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+        }
+        
+        .ai-note {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+        
+        .ai-section {
+            margin-bottom: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .ai-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ai-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        
+        .ai-content p {
+            margin-bottom: 12px;
+        }
+        
+        .ai-content strong {
+            color: #7ed321;
+            font-weight: 600;
+        }
+        
+        .ai-content em {
+            color: #f5a623;
+            font-style: normal;
+            background: rgba(245, 166, 35, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .dimension-analysis {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid #7ed321;
+        }
+        
+        .dimension-analysis h5 {
+            color: #7ed321;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .ai-recommendation-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .ai-recommendation-item .recommendation-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .ai-recommendation-item .recommendation-content {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        /* 回退建议样式 */
+        .fallback-notice {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .fallback-icon {
+            font-size: 24px;
+        }
+        
+        .fallback-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .fallback-tip {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        .action-btn {
+            padding: 16px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--sleep-gradient-start);
+        }
+        
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式设计 */
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .dimension-cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .analysis-card {
+                min-height: 180px;
+                padding: 16px 12px;
+            }
+            
+            .card-insights {
+                padding-top: 12px;
+            }
+            
+            .problem-description {
+                font-size: 12px;
+            }
+            
+            .health-impact {
+                font-size: 10px;
+            }
+            
+            .suggestion {
+                font-size: 9px;
+                padding: 2px 4px;
+            }
+        }
+        
+        /* 平板端优化 */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .dimension-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                max-width: 600px;
+            }
+            
+            .analysis-card.overall {
+                max-width: 500px;
+                padding: 40px 32px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .typeform-container {
+                padding: 20px;
+            }
+            
+            /* AI分析区域移动端优化 */
+            .ai-overall-section {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .recommendation-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .question-text {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            
+            .typeform-progress,
+            .back-btn {
+                top: 20px;
+            }
+            
+            .typeform-progress {
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 14px;
+            }
+            
+            .back-btn {
+                left: 20px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .stage-indicators {
+                top: 20px;
+            }
+            
+            .rating-options {
+                gap: 12px;
+            }
+            
+            .rating-item {
+                min-width: 60px;
+                padding: 12px 16px;
+            }
+            
+            .choice-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .sleep-analysis-cards {
+                gap: 24px;
+            }
+            
+            .dimension-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                max-width: 100%;
+            }
+            
+            .analysis-card {
+                min-height: 200px;
+                padding: 18px 14px;
+            }
+            
+            .card-title {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            
+            .card-score {
+                font-size: 24px;
+            }
+            
+            .problem-description {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+            
+            .health-impact {
+                font-size: 11px;
+                margin-bottom: 10px;
+            }
+            
+            .suggestion {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="typeform-container">
+        
+        <!-- 阶段指示器 -->
+        <div class="stage-indicators">
+            <div class="stage-dot active" data-stage="0"></div>
+            <div class="stage-dot" data-stage="1"></div>
+            <div class="stage-dot" data-stage="2"></div>
+            <div class="stage-dot" data-stage="3"></div>
+        </div>
+        
+        <!-- 进度指示器 -->
+        <div class="typeform-progress">
+            <div class="progress-circle"></div>
+            <div class="progress-text">
+                <span id="current-progress">1</span>/<span id="total-questions">30</span>
+            </div>
+        </div>
+        
+        <!-- 返回按钮 -->
+        <a href="health-sleep-center.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回
+        </a>
+        
+        <!-- 第一个问题幻灯片 -->
+        <div id="slide-0" class="question-slide active">
+            <div class="stage-title">主观睡眠质量 · 第一阶段</div>
+            <div class="question-number">问题 1 / 30</div>
+            <h2 class="question-text">总的来说，过去一个月您的睡眠质量如何？</h2>
+            <div class="rating-options">
+                <div class="rating-item" onclick="selectRating(0, 1)">
+                    <div class="rating-number">1</div>
+                    <div class="rating-label">很差</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 2)">
+                    <div class="rating-number">2</div>
+                    <div class="rating-label">较差</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 3)">
+                    <div class="rating-number">3</div>
+                    <div class="rating-label">一般</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 4)">
+                    <div class="rating-number">4</div>
+                    <div class="rating-label">较好</div>
+                </div>
+                <div class="rating-item" onclick="selectRating(0, 5)">
+                    <div class="rating-number">5</div>
+                    <div class="rating-label">很好</div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" style="visibility: hidden;">
+                    <i class="fas fa-arrow-left"></i>
+                    上一题
+                </button>
+                <button class="nav-button primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                    下一题
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他问题幻灯片将通过JavaScript动态生成 -->
+        
+        <div id="result" class="result-container hidden">
+            <div class="result-inner">
+                <!-- 现代化头部区域 -->
+                <div class="result-header">
+                    <h2 class="result-title">睡眠健康评估报告</h2>
+                    <p class="result-subtitle">基于国际标准PSQI量表的专业睡眠质量分析与个性化改善建议</p>
+                </div>
+                
+                <!-- 现代化分析卡片网格 -->
+                <div class="sleep-analysis-cards" id="analysisCards">
+                    <!-- 分析卡片将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- AI分析与建议区域 -->
+                <div class="ai-analysis-section" id="aiAnalysisSection">
+                    <!-- AI分析内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 操作按钮区域 -->
+                <div class="result-actions">
+                    <button onclick="shareResult()" class="action-btn btn-primary">
+                        <i class="fas fa-share-alt"></i>
+                        分享结果
+                    </button>
+                    <a href="health-assessment.html?showDashboard=true" class="action-btn btn-primary">
+                        <i class="fas fa-chart-line"></i>
+                        返回测试中心
+                    </a>
+                    <a href="health-sleep-center.html" class="action-btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        返回睡眠测试
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局错误处理
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('页面错误:', {
+                message: message,
+                source: source,
+                line: lineno,
+                column: colno,
+                error: error
+            });
+            return false;
+        };
+
+        // 深度睡眠分析问卷数据（30题，基于PSQI匹兹堡睡眠质量指数）
+        const questionSections = {
+            subjective: {
+                name: '主观睡眠质量',
+                questions: [
+                    { text: '总的来说，过去一个月您的睡眠质量如何？', type: 'rating', labels: ['很差', '较差', '一般', '较好', '很好'] },
+                    { text: '您对目前睡眠状况的满意程度？', type: 'rating', labels: ['很不满意', '不太满意', '一般', '比较满意', '很满意'] },
+                    { text: '与以前相比，您现在的睡眠质量？', type: 'rating', labels: ['明显变差', '有所变差', '没有变化', '有所改善', '明显改善'] },
+                    { text: '您认为睡眠对您健康的重要性？', type: 'rating', labels: ['不重要', '不太重要', '一般', '比较重要', '非常重要'] },
+                    { text: '您是否担心自己的睡眠问题？', type: 'rating', labels: ['非常担心', '比较担心', '一般', '不太担心', '不担心'] },
+                    { text: '睡眠问题是否影响您的情绪？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '您是否因为睡眠问题而感到沮丧？', type: 'rating', labels: ['经常沮丧', '有时沮丧', '偶尔沮丧', '很少沮丧', '从不沮丧'] }
+                ]
+            },
+            latency: {
+                name: '入睡时间与效率',
+                questions: [
+                    { text: '过去一个月，您通常几点上床睡觉？', type: 'rating', labels: ['晚上12点后', '晚上11-12点', '晚上10-11点', '晚上9-10点', '晚上9点前'] },
+                    { text: '过去一个月，您通常需要多长时间才能入睡？', type: 'rating', labels: ['超过60分钟', '31-60分钟', '16-30分钟', '6-15分钟', '5分钟内'] },
+                    { text: '您躺在床上后，多久开始感到困倦？', type: 'rating', labels: ['超过1小时', '30-60分钟', '15-30分钟', '5-15分钟', '立即困倦'] },
+                    { text: '入睡困难的频率如何？', type: 'rating', labels: ['每晚都有', '每周3次以上', '每周1-2次', '每月1-2次', '从不'] },
+                    { text: '躺下后您的思绪活跃程度？', type: 'rating', labels: ['非常活跃', '比较活跃', '一般', '比较平静', '很快平静'] },
+                    { text: '您是否需要特殊方法才能入睡？', type: 'multiple', options: ['听音乐', '看书', '冥想', '数羊', '服药', '其他', '不需要'] },
+                    { text: '环境因素对您入睡的影响？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] }
+                ]
+            },
+            duration: {
+                name: '睡眠时长与连续性',
+                questions: [
+                    { text: '过去一个月，您每晚实际睡眠时间？', type: 'rating', labels: ['不足5小时', '5-6小时', '6-7小时', '7-8小时', '8小时以上'] },
+                    { text: '您通常几点起床？', type: 'rating', labels: ['上午8点后', '上午7-8点', '上午6-7点', '上午5-6点', '上午5点前'] },
+                    { text: '夜间醒来的频率？', type: 'rating', labels: ['每晚5次以上', '每晚3-4次', '每晚1-2次', '偶尔醒来', '很少醒来'] },
+                    { text: '夜间醒来后再次入睡的难度？', type: 'rating', labels: ['很难入睡', '比较困难', '一般', '比较容易', '很容易'] },
+                    { text: '早晨是否会过早醒来？', type: 'rating', labels: ['经常早醒', '有时早醒', '偶尔早醒', '很少早醒', '从不早醒'] },
+                    { text: '睡眠是否感觉连续完整？', type: 'rating', labels: ['很不连续', '不太连续', '一般', '比较连续', '很连续'] },
+                    { text: '您的睡眠深度如何？', type: 'rating', labels: ['很浅', '较浅', '一般', '较深', '很深'] },
+                    { text: '是否因为上厕所而夜间醒来？', type: 'rating', labels: ['每晚多次', '每晚1-2次', '每周几次', '很少', '从不'] }
+                ]
+            },
+            dysfunction: {
+                name: '日间功能与睡眠障碍',
+                questions: [
+                    { text: '早晨醒来时的精神状态？', type: 'rating', labels: ['很疲惫', '比较疲惫', '一般', '比较精神', '很精神'] },
+                    { text: '白天是否感到困倦？', type: 'rating', labels: ['经常困倦', '有时困倦', '偶尔困倦', '很少困倦', '从不困倦'] },
+                    { text: '白天是否需要小睡？', type: 'rating', labels: ['必须小睡', '经常小睡', '偶尔小睡', '很少小睡', '从不小睡'] },
+                    { text: '睡眠问题是否影响工作效率？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '是否因为睡不好而影响记忆力？', type: 'rating', labels: ['严重影响', '明显影响', '有些影响', '很少影响', '不影响'] },
+                    { text: '是否有打鼾、呼吸暂停等问题？', type: 'multiple', options: ['大声打鼾', '呼吸暂停', '憋气', '鼻塞', '磨牙', '说梦话', '其他', '无'] },
+                    { text: '是否因为身体不适而影响睡眠？', type: 'multiple', options: ['疼痛', '心悸', '胃部不适', '头痛', '腿部不适', '发热', '其他', '无'] },
+                    { text: '过去一个月是否使用过助眠药物？', type: 'rating', labels: ['每天使用', '每周3次以上', '每周1-2次', '偶尔使用', '从不使用'] }
+                ]
+            }
+        };
+
+        let currentQuestion = 0;
+        let currentStage = 0;
+        let answers = [];
+        let allQuestions = [];
+
+        // 初始化所有问题
+        function initializeQuestions() {
+            allQuestions = [];
+            let questionIndex = 0;
+            
+            Object.keys(questionSections).forEach((sectionKey, stageIndex) => {
+                const section = questionSections[sectionKey];
+                section.questions.forEach((question, qIndex) => {
+                    allQuestions.push({
+                        ...question,
+                        section: sectionKey,
+                        sectionName: section.name,
+                        stageIndex: stageIndex,
+                        questionIndex: questionIndex,
+                        sectionQuestionIndex: qIndex
+                    });
+                    questionIndex++;
+                });
+            });
+            
+            // 初始化答案数组
+            answers = new Array(allQuestions.length).fill(null);
+            
+        }
+
+        // 检查答案完整性并启用/禁用按钮
+        function checkAnswerCompleteness(questionIndex) {
+            const question = allQuestions[questionIndex];
+            const answer = answers[questionIndex];
+            let isComplete = false;
+            
+            if (question.type === 'rating') {
+                isComplete = answer !== null && answer !== undefined;
+            } else if (question.type === 'multiple') {
+                isComplete = Array.isArray(answer) && answer.length > 0;
+            } else if (question.type === 'slider') {
+                isComplete = answer !== null && answer !== undefined;
+            }
+            
+            // 更新当前问题的按钮状态
+            const currentSlide = document.getElementById(`slide-${questionIndex}`);
+            if (currentSlide) {
+                const nextBtn = currentSlide.querySelector('.nav-button.primary');
+                if (nextBtn) {
+                    nextBtn.disabled = !isComplete;
+                }
+            }
+            
+        }
+
+        // 生成问题HTML
+        function generateQuestionHTML(question, questionIndex) {
+            const isLastQuestion = questionIndex === allQuestions.length - 1;
+            const stageInfo = `${question.sectionName} · 第${question.stageIndex + 1}阶段`;
+            
+            if (question.type === 'rating') {
+                const ratingOptions = question.labels.map((label, index) => `
+                    <div class="rating-item" onclick="selectRating(${questionIndex}, ${index + 1})">
+                        <div class="rating-number">${index + 1}</div>
+                        <div class="rating-label">${label}</div>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="stage-title">${stageInfo}</div>
+                    <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                    <h2 class="question-text">${question.text}</h2>
+                    <div class="rating-options">
+                        ${ratingOptions}
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                            ${isLastQuestion ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (question.type === 'multiple') {
+                const choiceOptions = question.options.map(option => `
+                    <div class="choice-option" onclick="toggleChoice(${questionIndex}, '${option}')">
+                        <span>${option}</span>
+                    </div>
+                `).join('');
+                
+                return `
+                    <div class="stage-title">${stageInfo}</div>
+                    <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                    <h2 class="question-text">${question.text}</h2>
+                    <div class="choice-options">
+                        ${choiceOptions}
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                            <i class="fas fa-arrow-left"></i>
+                            上一题
+                        </button>
+                        <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                            ${isLastQuestion ? '查看结果' : '下一题'}
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+            } else if (question.type === 'slider') {
+                return generateSlider(question, questionIndex);
+            }
+            
+            return '';
+        }
+
+        // 生成滑动条HTML
+        function generateSlider(question, questionIndex) {
+            const isLastQuestion = questionIndex === allQuestions.length - 1;
+            const stageInfo = `${question.sectionName} · 第${question.stageIndex + 1}阶段`;
+            
+            return `
+                <div class="stage-title">${stageInfo}</div>
+                <div class="question-number">问题 ${questionIndex + 1} / ${allQuestions.length}</div>
+                <h2 class="question-text">${question.text}</h2>
+                <div class="slider-container">
+                    <div class="current-value" id="current-value-${questionIndex}">${question.labels[1]}</div>
+                    <input type="range" class="slider" id="slider-${questionIndex}" min="1" max="${question.labels.length}" value="${Math.ceil(question.labels.length/2)}" 
+                           oninput="selectSlider(${questionIndex}, this.value)" onchange="selectSlider(${questionIndex}, this.value)">
+                    <div class="slider-labels">
+                        ${question.labels.map(label => `<span>${label}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button class="nav-button" onclick="prevQuestion()" ${questionIndex === 0 ? 'style="visibility: hidden;"' : ''}>
+                        <i class="fas fa-arrow-left"></i>
+                        上一题
+                    </button>
+                    <button class="nav-button primary" onclick="${isLastQuestion ? 'showResult()' : 'nextQuestion()'}" disabled>
+                        ${isLastQuestion ? '查看结果' : '下一题'}
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // 选择评分
+        function selectRating(questionIndex, rating) {
+            answers[questionIndex] = rating;
+            
+            // 更新UI
+            const slide = document.getElementById(`slide-${questionIndex}`);
+            if (slide) {
+                const ratingItems = slide.querySelectorAll('.rating-item');
+                ratingItems.forEach((item, index) => {
+                    item.classList.toggle('selected', index === rating - 1);
+                });
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+        }
+
+        // 切换多选选项
+        function toggleChoice(questionIndex, choice) {
+            if (!Array.isArray(answers[questionIndex])) {
+                answers[questionIndex] = [];
+            }
+            
+            const choiceArray = answers[questionIndex];
+            const choiceIndex = choiceArray.indexOf(choice);
+            
+            if (choiceIndex > -1) {
+                choiceArray.splice(choiceIndex, 1);
+            } else {
+                choiceArray.push(choice);
+            }
+            
+            // 更新UI
+            const slide = document.getElementById(`slide-${questionIndex}`);
+            if (slide) {
+                const choiceOptions = slide.querySelectorAll('.choice-option');
+                choiceOptions.forEach(option => {
+                    const text = option.querySelector('span').textContent;
+                    option.classList.toggle('selected', choiceArray.includes(text));
+                });
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+        }
+
+        // 选择滑动条值
+        function selectSlider(questionIndex, value) {
+            const question = allQuestions[questionIndex];
+            answers[questionIndex] = parseInt(value);
+            
+            // 更新显示值
+            const currentValueElement = document.getElementById(`current-value-${questionIndex}`);
+            if (currentValueElement && question.labels) {
+                currentValueElement.textContent = question.labels[value - 1];
+            }
+            
+            checkAnswerCompleteness(questionIndex);
+        }
+
+        // 生成所有问题幻灯片
+        function generateSlides() {
+            const container = document.querySelector('.typeform-container');
+            
+            // 清除除第一个和结果容器外的所有幻灯片
+            const existingSlides = document.querySelectorAll('.question-slide');
+            for (let i = 1; i < existingSlides.length; i++) {
+                existingSlides[i].remove();
+            }
+            
+            // 更新第一个问题的内容
+            const firstSlide = document.getElementById('slide-0');
+            if (firstSlide && allQuestions[0]) {
+                firstSlide.innerHTML = generateQuestionHTML(allQuestions[0], 0);
+            }
+            
+            // 生成剩余的幻灯片
+            for (let i = 1; i < allQuestions.length; i++) {
+                const slide = document.createElement('div');
+                slide.id = `slide-${i}`;
+                slide.className = 'question-slide';
+                slide.innerHTML = generateQuestionHTML(allQuestions[i], i);
+                
+                container.insertBefore(slide, document.getElementById('result'));
+            }
+            
+            // 更新总问题数显示
+            const totalElement = document.getElementById('total-questions');
+            if (totalElement) {
+                totalElement.textContent = allQuestions.length;
+            }
+            
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < allQuestions.length - 1) {
+                // 隐藏当前问题
+                const currentSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion++;
+                
+                // 更新阶段
+                updateStage();
+                
+                // 显示下一题
+                const nextSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (nextSlide) nextSlide.classList.add('active');
+                
+                updateProgress();
+                
+                // 检查当前问题的答案状态
+                checkAnswerCompleteness(currentQuestion);
+            }
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                // 隐藏当前问题
+                const currentSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (currentSlide) currentSlide.classList.remove('active');
+                
+                currentQuestion--;
+                
+                // 更新阶段
+                updateStage();
+                
+                // 显示上一题
+                const prevSlide = document.getElementById(`slide-${currentQuestion}`);
+                if (prevSlide) prevSlide.classList.add('active');
+                
+                updateProgress();
+                
+                // 检查当前问题的答案状态
+                checkAnswerCompleteness(currentQuestion);
+            }
+        }
+
+        // 更新阶段指示器
+        function updateStage() {
+            const newStage = allQuestions[currentQuestion].stageIndex;
+            
+            if (newStage !== currentStage) {
+                currentStage = newStage;
+                
+                const stageDots = document.querySelectorAll('.stage-dot');
+                stageDots.forEach((dot, index) => {
+                    dot.classList.remove('active', 'completed');
+                    if (index < currentStage) {
+                        dot.classList.add('completed');
+                    } else if (index === currentStage) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progressElement = document.getElementById('current-progress');
+            if (progressElement) {
+                progressElement.textContent = currentQuestion + 1;
+            }
+            
+            // 更新圆形进度
+            const progressCircle = document.querySelector('.progress-circle');
+            if (progressCircle) {
+                const percentage = ((currentQuestion + 1) / allQuestions.length) * 360;
+                progressCircle.style.background = `conic-gradient(#ffffff ${percentage}deg, transparent ${percentage}deg)`;
+            }
+        }
+
+        // 隐藏问卷元素但保持容器可见
+        function hideQuestionnaireElements() {
+            try {
+                const progress = document.querySelector('.typeform-progress');
+                if (progress) progress.style.display = 'none';
+                const backBtn = document.querySelector('.back-btn');
+                if (backBtn) backBtn.style.display = 'none';
+                const stageIndicators = document.querySelector('.stage-indicators');
+                if (stageIndicators) stageIndicators.style.display = 'none';
+                const slides = document.querySelectorAll('.question-slide');
+                slides.forEach(slide => {
+                    slide.style.display = 'none';
+                });
+            } catch (error) {
+                console.error('隐藏问卷元素时出错:', error);
+            }
+        }
+
+        // 计算睡眠健康评分
+        function calculateSleepHealth() {
+            try {
+                
+                const sectionScores = {};
+                let totalScore = 0;
+                let validAnswers = 0;
+                
+                // 按阶段计算分数
+                Object.keys(questionSections).forEach((sectionKey, stageIndex) => {
+                    const section = questionSections[sectionKey];
+                    let sectionTotal = 0;
+                    let sectionCount = 0;
+                    
+                    section.questions.forEach((question, qIndex) => {
+                        const globalIndex = Object.keys(questionSections).slice(0, stageIndex).reduce((sum, key) => 
+                            sum + questionSections[key].questions.length, 0) + qIndex;
+                        
+                        const answer = answers[globalIndex];
+                        
+                        if (answer !== null && answer !== undefined) {
+                            let score = 0;
+                            
+                            if (question.type === 'rating') {
+                                score = answer;
+                            } else if (question.type === 'multiple') {
+                                score = Array.isArray(answer) ? Math.min(answer.length, 5) : 0;
+                            } else if (question.type === 'slider') {
+                                score = answer;
+                            }
+                            
+                            sectionTotal += score;
+                            sectionCount++;
+                            validAnswers++;
+                        }
+                    });
+                    
+                    if (sectionCount > 0) {
+                        sectionScores[sectionKey] = {
+                            score: Math.round((sectionTotal / (sectionCount * 5)) * 100),
+                            name: section.name,
+                            total: sectionTotal,
+                            count: sectionCount
+                        };
+                        totalScore += sectionTotal;
+                    }
+                });
+                
+                const maxPossibleScore = validAnswers * 5;
+                const finalScore = Math.round((totalScore / maxPossibleScore) * 100);
+                
+                
+                return {
+                    overallScore: finalScore,
+                    sectionScores: sectionScores,
+                    answers: answers
+                };
+                
+            } catch (error) {
+                console.error('计算睡眠健康评分时出错:', error);
+                return {
+                    overallScore: 0,
+                    sectionScores: {},
+                    recommendations: []
+                };
+            }
+        }
+
+        // 生成分层次个性化建议
+        function generateRecommendations(sectionScores, overallScore) {
+            const psqiTotalScore = convertToPSQIScore(overallScore, false);
+            const recommendations = {
+                immediate: [],
+                weekly: [],
+                longterm: []
+            };
+            
+            // 基于PSQI总分的分层建议
+            if (psqiTotalScore <= 5) {
+                recommendations.immediate.push({
+                    title: '保持现有习惯',
+                    content: '您的睡眠质量很好！今晚继续保持规律的睡眠时间。'
+                });
+                recommendations.weekly.push({
+                    title: '优化睡眠环境',
+                    content: '本周可以进一步优化睡眠环境，如调整房间温度、减少噪音干扰。'
+                });
+            } else if (psqiTotalScore <= 10) {
+                recommendations.immediate.push({
+                    title: '今晚开始改善',
+                    content: '睡前1小时放下手机，尝试深呼吸或轻松阅读来放松身心。'
+                });
+                recommendations.weekly.push({
+                    title: '建立睡前例行程序',
+                    content: '本周开始建立固定的睡前例行程序，每天同一时间上床睡觉。'
+                });
+            } else {
+                recommendations.immediate.push({
+                    title: '紧急改善措施',
+                    content: '今晚确保睡前2小时内不摄入咖啡因，创造安静、黑暗的睡眠环境。'
+                });
+                recommendations.weekly.push({
+                    title: '系统性改善',
+                    content: '本周记录睡眠日记，识别影响睡眠的具体因素并逐一改善。'
+                });
+                recommendations.longterm.push({
+                    title: '寻求专业帮助',
+                    content: '建议咨询睡眠医学专家，进行专业评估和制定治疗方案。'
+                });
+            }
+            
+            // 基于各维度分数的针对性建议
+            Object.keys(sectionScores).forEach(sectionKey => {
+                const section = sectionScores[sectionKey];
+                const psqiSectionScore = convertToPSQIScore(section.score, true);
+                
+                if (psqiSectionScore >= 2) {
+                    switch (sectionKey) {
+                        case 'subjective':
+                            recommendations.immediate.push({
+                                title: '改善睡眠感受',
+                                content: '今晚尝试睡前冥想或渐进性肌肉放松，提升睡眠满意度。'
+                            });
+                            recommendations.weekly.push({
+                                title: '调整睡眠预期',
+                                content: '本周记录每天的睡眠感受，关注睡眠质量而非仅仅关注时长。'
+                            });
+                            break;
+                        case 'latency':
+                            recommendations.immediate.push({
+                                title: '快速入睡技巧',
+                                content: '今晚尝试4-7-8呼吸法：吸气4秒，憋气7秒，呼气8秒。'
+                            });
+                            recommendations.weekly.push({
+                                title: '优化入睡环境',
+                                content: '本周调整卧室温度到18-22°C，使用遮光窗帘，减少光线干扰。'
+                            });
+                            break;
+                        case 'duration':
+                            recommendations.immediate.push({
+                                title: '规律作息',
+                                content: '今晚按时上床，即使不困也要躺在床上，帮助生物钟调节。'
+                            });
+                            recommendations.weekly.push({
+                                title: '睡眠时间管理',
+                                content: '本周限制白天小睡不超过20分钟，且在下午3点前完成。'
+                            });
+                            break;
+                        case 'dysfunction':
+                            recommendations.immediate.push({
+                                title: '提升日间活力',
+                                content: '明天增加日间自然光照射，上午到户外活动15分钟。'
+                            });
+                            recommendations.weekly.push({
+                                title: '改善日间习惯',
+                                content: '本周下午2点后避免咖啡因，睡前3小时内避免剧烈运动。'
+                            });
+                            break;
+                    }
+                }
+            });
+            
+            // 确保每个层次至少有一条建议
+            if (recommendations.weekly.length === 0) {
+                recommendations.weekly.push({
+                    title: '维持良好习惯',
+                    content: '本周继续保持规律作息，每天同一时间上床和起床。'
+                });
+            }
+            
+            if (recommendations.longterm.length === 0 && psqiTotalScore > 5) {
+                recommendations.longterm.push({
+                    title: '建立健康睡眠习惯',
+                    content: '长期坚持良好的睡眠卫生习惯，定期评估和调整睡眠策略。'
+                });
+            }
+            
+            return recommendations;
+        }
+
+        // 显示结果
+        async function showResult() {
+            try {
+                
+                // 计算睡眠健康评分
+                const healthResult = calculateSleepHealth();
+                
+                // 计算PSQI分数和等级
+                const psqiTotalScore = convertToPSQIScore(healthResult.overallScore, false);
+                let sleepLevel = '优秀';
+                if (psqiTotalScore >= 11) {
+                    sleepLevel = '较差';
+                } else if (psqiTotalScore >= 8) {
+                    sleepLevel = '一般';
+                } else if (psqiTotalScore >= 5) {
+                    sleepLevel = '良好';
+                }
+                
+                // 准备结果数据
+                const resultData = {
+                    overallScore: healthResult.overallScore,
+                    psqiScore: psqiTotalScore,
+                    level: sleepLevel,
+                    sectionScores: healthResult.sectionScores,
+                    answers: healthResult.answers,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // 保存到旧格式（向后兼容）
+                localStorage.setItem('sleepDeepResult', JSON.stringify(resultData));
+                console.log('✅ 睡眠深度评估结果已保存（旧格式）');
+                
+                // 保存到统一健康数据系统
+                if (window.healthDataManager) {
+                    window.healthDataManager.saveTestResult(
+                        'sleep',                    // testType
+                        '睡眠深度评估',             // testName
+                        psqiTotalScore,             // score (使用PSQI分数 0-21)
+                        sleepLevel,                 // level
+                        resultData                  // details
+                    );
+                    console.log('✅ 睡眠深度评估结果已保存到统一系统');
+                } else {
+                    console.warn('⚠️ healthDataManager 未加载');
+                }
+                
+                // 隐藏问卷元素并切换到结果模式
+                hideQuestionnaireElements();
+                document.body.classList.add('result-mode');
+                
+                // 显示结果容器
+                const resultContainer = document.getElementById('result');
+                if (resultContainer) {
+                    resultContainer.classList.remove('hidden');
+                    resultContainer.style.display = 'block';
+                } else {
+                    throw new Error('结果容器未找到');
+                }
+                
+                // 生成分析卡片
+                generateAnalysisCards(healthResult);
+                
+                // 显示AI分析加载状态
+                showAILoadingState();
+                
+                // 延迟一点时间让用户看到加载动画
+                setTimeout(async () => {
+                    try {
+                        // 使用AI生成个性化建议
+                        const aiRecommendations = await generateAIRecommendations(
+                            healthResult.sectionScores, 
+                            healthResult.overallScore, 
+                            healthResult.answers
+                        );
+                        
+                        // 显示AI生成的建议
+                        await displayAIRecommendations(aiRecommendations);
+                    } catch (error) {
+                        console.error('AI分析生成失败:', error);
+                        // 显示备用建议
+                        await displayFallbackRecommendations(healthResult);
+                    }
+                }, 1500); // 1.5秒延迟，让用户看到加载动画
+                
+                
+            } catch (error) {
+                console.error('显示结果时出错:', error);
+                alert('显示结果时出现错误，请重新测试');
+            }
+        }
+
+        // 生成现代化分析卡片
+        function generateAnalysisCards(healthResult) {
+            const cardsContainer = document.getElementById('analysisCards');
+            if (!cardsContainer) return;
+            
+            // 计算PSQI总分和详细分析
+            const psqiTotalScore = convertToPSQIScore(healthResult.overallScore, false);
+            const totalColor = getPSQIScoreColor(psqiTotalScore, false);
+            
+            // 获取增强版详细分析
+            const detailedAnalysis = getPSQIDetailedAnalysis(psqiTotalScore, healthResult.sectionScores, healthResult);
+            
+            // 风险等级
+            let riskLevel = '良好';
+            let riskColor = 'var(--success)';
+            if (psqiTotalScore >= 11) {
+                riskLevel = '较差';
+                riskColor = 'var(--danger)';
+            } else if (psqiTotalScore >= 8) {
+                riskLevel = '一般';
+                riskColor = 'var(--warning)';
+            }
+            
+            let cardsHTML = `
+                <!-- 总体评分卡片 - 增强版 -->
+                <div class="analysis-card overall">
+                    <div class="card-title">PSQI 综合评分</div>
+                    <div class="card-score" style="color: ${riskColor}">
+                        ${psqiTotalScore}<span style="font-size: 24px; color: var(--text-secondary);">/21</span>
+                    </div>
+                    <div class="risk-badge" style="background: ${riskColor}20; color: ${riskColor}; padding: 8px 16px; border-radius: var(--radius-md); font-weight: 600; margin: 16px 0;">
+                        睡眠质量：${riskLevel} | 干预级别：${detailedAnalysis.urgencyLevel}
+                    </div>
+                    
+                    <!-- 详细专业分析 -->
+                    <div class="detailed-psqi-analysis" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 16px; margin: 16px 0;">
+                        <div class="analysis-title" style="color: var(--brand-primary); font-weight: 600; font-size: 14px; margin-bottom: 8px;">
+                            📊 专业医学评估
+                        </div>
+                        <div class="analysis-description" style="color: var(--text-primary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+                            ${detailedAnalysis.detailedDescription}
+                        </div>
+                        
+                        ${detailedAnalysis.specificIssues ? `
+                            <div class="specific-issues" style="margin-bottom: 8px;">
+                                <span style="color: var(--text-secondary); font-size: 12px;">主要问题：</span>
+                                <span style="color: ${riskColor}; font-size: 12px; font-weight: 500;">${detailedAnalysis.specificIssues}</span>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="health-impact" style="background: ${riskColor}15; border-left: 3px solid ${riskColor}; padding: 8px 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">健康影响</div>
+                            <div style="font-size: 13px; color: var(--text-primary); font-weight: 500;">${detailedAnalysis.healthImpact}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="medical-recommendation" style="color: var(--text-secondary); font-size: 13px; font-style: italic; text-align: center;">
+                        💡 ${detailedAnalysis.medicalRecommendation}
+                    </div>
+                </div>
+            `;
+            
+            // 各维度分析卡片（专业化设计）
+            const sectionData = [
+                { key: 'subjective', name: '主观质量', icon: '●' },
+                { key: 'latency', name: '入睡效率', icon: '●' },
+                { key: 'duration', name: '睡眠时长', icon: '●' },
+                { key: 'dysfunction', name: '日间功能', icon: '●' }
+            ];
+            
+            sectionData.forEach(({ key, name, icon }) => {
+                const section = healthResult.sectionScores[key];
+                if (!section) return;
+                
+                const psqiSectionScore = convertToPSQIScore(section.score, true);
+                const sectionColor = getPSQIScoreColor(psqiSectionScore, true);
+                
+                // 生成个性化洞察
+                const insight = generateDimensionInsight(key, psqiSectionScore, healthResult.detailedAnswers);
+                
+                // 简化描述
+                let status = '良好';
+                if (psqiSectionScore >= 2) status = '需关注';
+                else if (psqiSectionScore >= 1) status = '一般';
+                
+                cardsHTML += `
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <div class="card-icon">${icon}</div>
+                            <div class="card-title">${name}</div>
+                        </div>
+                        
+                        <div class="card-score-section">
+                            <div class="card-score" style="color: ${sectionColor}">
+                                ${psqiSectionScore}<span style="font-size: 18px; color: var(--text-secondary);">/3</span>
+                            </div>
+                            <div class="card-status" style="font-size: 13px; color: ${sectionColor}; font-weight: 600; padding: 6px 12px; border-radius: var(--radius-full); background: ${sectionColor}15; display: inline-block; margin-top: 6px;">
+                                ${status}
+                            </div>
+                        </div>
+                        
+                        <div class="card-insights">
+                            <div class="problem-description">${insight.problem}</div>
+                            <div class="health-impact">${insight.impact}</div>
+                            <div class="quick-suggestions">
+                                ${insight.suggestions.map(suggestion => `
+                                    <div class="suggestion">${suggestion}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // 将维度卡片包装在网格容器中
+            const dimensionCardsHTML = cardsHTML.split('<!-- 总体评分卡片 - 增强版 -->')[1];
+            const overallCardHTML = cardsHTML.split('<!-- 总体评分卡片 - 增强版 -->')[0] + 
+                cardsHTML.split('<!-- 总体评分卡片 - 增强版 -->')[1].split('</div>')[0] + '</div>';
+            
+            // 提取维度卡片
+            const dimensionCards = [];
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = cardsHTML;
+            const allCards = tempDiv.querySelectorAll('.analysis-card');
+            
+            // 分离总体卡片和维度卡片
+            let overallCard = '';
+            let dimensionCardsArray = [];
+            
+            allCards.forEach((card, index) => {
+                if (card.classList.contains('overall')) {
+                    overallCard = card.outerHTML;
+                } else {
+                    dimensionCardsArray.push(card.outerHTML);
+                }
+            });
+            
+            // 重新组装HTML
+            cardsContainer.innerHTML = `
+                ${overallCard}
+                <div class="dimension-cards-grid">
+                    ${dimensionCardsArray.join('')}
+                </div>
+            `;
+        }
+
+        // 显示备用建议（当AI分析失败时）
+        async function displayFallbackRecommendations(healthResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            const psqiScore = convertToPSQIScore(healthResult.overallScore, false);
+            let recommendations = [];
+            
+            if (psqiScore <= 5) {
+                recommendations = [
+                    "保持现有的良好睡眠习惯",
+                    "继续规律的作息时间",
+                    "定期评估睡眠质量"
+                ];
+            } else if (psqiScore <= 10) {
+                recommendations = [
+                    "优化睡眠环境（温度、光线、噪音）",
+                    "建立固定的睡前放松仪式",
+                    "避免睡前2小时内使用电子设备"
+                ];
+            } else {
+                recommendations = [
+                    "立即调整作息时间，确保充足睡眠",
+                    "考虑寻求专业睡眠医师的帮助",
+                    "记录睡眠日记，找出问题根源"
+                ];
+            }
+            
+            listContainer.innerHTML = `
+                <div class="recommendations-container">
+                    <h3>💡 个性化改善建议</h3>
+                    <div class="recommendation-list">
+                        ${recommendations.map(rec => `
+                            <div class="recommendation-item">
+                                <span class="recommendation-icon">✓</span>
+                                <span class="recommendation-text">${rec}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 12px; margin-top: 16px;">
+                        * AI分析暂时不可用，为您提供基础建议
+                    </p>
+                </div>
+            `;
+        }
+
+        // AI分析状态管理
+        let isAIAnalysisInProgress = false;
+        let aiLoadingStartTime = 0;
+        const MIN_LOADING_TIME = 2000; // 最小显示2秒
+
+        // 显示AI分析加载状态
+        function showAILoadingState() {
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer) return;
+            
+            isAIAnalysisInProgress = true;
+            aiLoadingStartTime = Date.now();
+            
+            listContainer.innerHTML = `
+                <div class="ai-loading-container">
+                    <div class="ai-loading-icon">
+                        <div class="loading-spinner"></div>
+                        <div class="ai-brain-icon">🧠</div>
+                    </div>
+                    <div class="ai-loading-text">
+                        <h4>AI 正在深度分析您的睡眠数据...</h4>
+                        <p>基于您的30项详细问卷答案，AI睡眠专家正在为您生成个性化的专业解读和改善建议</p>
+                        <div class="loading-progress">
+                            <div class="progress-dots">
+                                <span>.</span><span>.</span><span>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示AI生成的建议
+        async function displayAIRecommendations(aiResult) {
+            // 确保加载动画显示足够长时间
+            const elapsedTime = Date.now() - aiLoadingStartTime;
+            const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+            
+            if (remainingTime > 0) {
+                await new Promise(resolve => setTimeout(resolve, remainingTime));
+            }
+            
+            const listContainer = document.getElementById('aiAnalysisSection');
+            if (!listContainer || !isAIAnalysisInProgress) return;
+            
+            isAIAnalysisInProgress = false;
+            
+            let contentHTML = '';
+            
+            if (aiResult.type === 'ai_generated') {
+                // 显示AI生成的内容
+                const parsed = aiResult.parsed;
+                
+                contentHTML = `
+                    <div class="ai-recommendation-header">
+                        <div class="ai-badge">
+                            <span class="ai-icon">🤖</span>
+                            <span>AI 个性化解读</span>
+                        </div>
+                        <div class="ai-note">基于您的具体问卷答案，由阿里云百炼AI生成</div>
+                    </div>
+                `;
+                
+                // 整体分析
+                if (parsed.overall_analysis) {
+                    contentHTML += `
+                        <div class="ai-section">
+                            <h4 class="ai-section-title">📊 整体睡眠健康分析</h4>
+                            <div class="ai-content">${formatAIContent(parsed.overall_analysis)}</div>
+                        </div>
+                    `;
+                }
+                
+                // 维度分析
+                if (Object.keys(parsed.dimension_analysis).length > 0) {
+                    contentHTML += `<div class="ai-section">
+                        <h4 class="ai-section-title">🔍 各维度专业解读</h4>
+                    `;
+                    
+                    Object.entries(parsed.dimension_analysis).forEach(([key, analysis]) => {
+                        const dimensionNames = {
+                            subjective: '主观睡眠质量',
+                            latency: '入睡时间与效率',
+                            duration: '睡眠时长与连续性',
+                            dysfunction: '日间功能与睡眠障碍'
+                        };
+                        
+                        contentHTML += `
+                            <div class="dimension-analysis">
+                                <h5>${dimensionNames[key] || key}</h5>
+                                <div class="ai-content">${formatAIContent(analysis)}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    contentHTML += `</div>`;
+                }
+                
+                // AI建议
+                if (parsed.recommendations.length > 0) {
+                    contentHTML += `
+                        <div class="ai-section">
+                            <h4 class="ai-section-title">💡 个性化改善建议</h4>
+                            ${parsed.recommendations.map(rec => `
+                                <div class="ai-recommendation-item">
+                                    <div class="recommendation-title">${rec.title}</div>
+                                    <div class="recommendation-content">${rec.content}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    // 如果没有解析到具体建议，显示原始AI内容
+                    contentHTML += `
+                        <div class="ai-section">
+                            <h4 class="ai-section-title">💡 AI专业建议</h4>
+                            <div class="ai-content">${formatAIContent(aiResult.content)}</div>
+                        </div>
+                    `;
+                }
+                
+            } else if (aiResult.type === 'fallback') {
+                // 显示回退建议
+                let fallbackMessage = 'AI分析暂时不可用，为您提供基础建议';
+                if (aiResult.error.includes('CORS')) {
+                    fallbackMessage = '🔧 由于浏览器安全限制，AI分析暂时无法使用，为您提供专业的基础建议';
+                } else if (aiResult.error.includes('超时')) {
+                    fallbackMessage = '⏰ AI分析响应超时，为您提供快速的基础建议';
+                } else if (aiResult.error.includes('网络')) {
+                    fallbackMessage = '🌐 网络连接问题，为您提供离线的基础建议';
+                }
+                
+                contentHTML = `
+                    <div class="fallback-notice">
+                        <div class="fallback-icon">🤖</div>
+                        <div class="fallback-text">${fallbackMessage}</div>
+                        <div class="fallback-tip">💡 建议：刷新页面重试，或联系技术支持获取AI分析</div>
+                    </div>
+                `;
+                
+                contentHTML += generateFallbackRecommendationsList(aiResult.content);
+            }
+            
+            listContainer.innerHTML = contentHTML;
+        }
+
+        // 格式化AI内容显示
+        function formatAIContent(content) {
+            return content
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/^/, '<p>')
+                .replace(/$/, '</p>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        }
+
+        // 生成回退建议列表（原有的分层次建议显示）
+        function generateFallbackRecommendationsList(recommendations) {
+            let listHTML = '';
+            
+            // 立即行动建议
+            if (recommendations.immediate && recommendations.immediate.length > 0) {
+                listHTML += `
+                    <div class="recommendation-section">
+                        <h4 class="recommendation-section-title">🚀 立即行动</h4>
+                        <div class="recommendation-section-subtitle">今晚就能开始的改善措施</div>
+                        ${recommendations.immediate.map(rec => `
+                            <div class="recommendation-item immediate">
+                                <div class="recommendation-title">${rec.title}</div>
+                                <div class="recommendation-content">${rec.content}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // 本周目标建议
+            if (recommendations.weekly && recommendations.weekly.length > 0) {
+                listHTML += `
+                    <div class="recommendation-section">
+                        <h4 class="recommendation-section-title">📅 本周目标</h4>
+                        <div class="recommendation-section-subtitle">需要几天培养的健康习惯</div>
+                        ${recommendations.weekly.map(rec => `
+                            <div class="recommendation-item weekly">
+                                <div class="recommendation-title">${rec.title}</div>
+                                <div class="recommendation-content">${rec.content}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // 长期规划建议
+            if (recommendations.longterm && recommendations.longterm.length > 0) {
+                listHTML += `
+                    <div class="recommendation-section">
+                        <h4 class="recommendation-section-title">🎯 长期规划</h4>
+                        <div class="recommendation-section-subtitle">持续关注和改善的方向</div>
+                        ${recommendations.longterm.map(rec => `
+                            <div class="recommendation-item longterm">
+                                <div class="recommendation-title">${rec.title}</div>
+                                <div class="recommendation-content">${rec.content}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            return listHTML;
+        }
+
+        // 将百分制分数转换为PSQI标准分数（0-21分制）
+        function convertToPSQIScore(percentageScore, isSection = false) {
+            if (isSection) {
+                // 单个维度：0-100% → 0-3分
+                return Math.round((percentageScore / 100) * 3);
+            } else {
+                // 总分：0-100% → 0-21分，但反向计算（分数越高睡眠质量越差）
+                return Math.round(((100 - percentageScore) / 100) * 21);
+            }
+        }
+
+        // 获取PSQI专业分数解读
+        function getPSQIScoreDescription(psqiScore, isSection = false) {
+            if (isSection) {
+                // 单个维度解读（0-3分）
+                switch (psqiScore) {
+                    case 0: return '优秀 - 该维度睡眠质量很好';
+                    case 1: return '良好 - 该维度睡眠质量不错';
+                    case 2: return '一般 - 该维度有轻度问题';
+                    case 3: return '较差 - 该维度需要重点关注';
+                    default: return '数据异常';
+                }
+            } else {
+                // 总分解读（0-21分）
+                if (psqiScore <= 5) return '优秀 - 睡眠质量很好，无明显问题';
+                if (psqiScore <= 10) return '良好 - 睡眠质量尚可，有轻微问题';
+                if (psqiScore <= 15) return '一般 - 存在明显睡眠问题，建议改善';
+                return '较差 - 睡眠问题严重，建议咨询专家';
+            }
+        }
+
+        // 维度洞察数据库 - 个性化健康洞察
+        const dimensionInsights = {
+            subjective: {
+                0: { 
+                    problem: "睡眠质量优秀", 
+                    impact: "身心状态良好，精力充沛", 
+                    suggestions: ["保持现有习惯", "定期评估调整"]
+                },
+                1: { 
+                    problem: "偶有睡眠不满", 
+                    impact: "轻微影响日间精神状态", 
+                    suggestions: ["优化睡眠环境", "建立放松仪式"]
+                },
+                2: { 
+                    problem: "睡眠质量较差", 
+                    impact: "明显影响精神状态和情绪", 
+                    suggestions: ["检查睡眠卫生习惯", "减少睡前刺激"]
+                },
+                3: { 
+                    problem: "睡眠质量很差", 
+                    impact: "严重影响生活质量和健康", 
+                    suggestions: ["立即改善作息", "寻求专业帮助"]
+                }
+            },
+            latency: {
+                0: { 
+                    problem: "入睡效率极佳", 
+                    impact: "快速进入深度睡眠", 
+                    suggestions: ["维持良好习惯", "注意睡眠时间"]
+                },
+                1: { 
+                    problem: "入睡稍有困难", 
+                    impact: "轻度影响睡眠效率", 
+                    suggestions: ["睡前放松训练", "避免电子设备"]
+                },
+                2: { 
+                    problem: "入睡困难明显", 
+                    impact: "影响睡眠总时长和质量", 
+                    suggestions: ["建立睡前仪式", "控制咖啡因摄入"]
+                },
+                3: { 
+                    problem: "严重入睡障碍", 
+                    impact: "大幅减少有效睡眠时间", 
+                    suggestions: ["认知行为疗法", "考虑医疗干预"]
+                }
+            },
+            duration: {
+                0: { 
+                    problem: "睡眠时长充足", 
+                    impact: "满足身体恢复需求", 
+                    suggestions: ["保持规律作息", "质量与时长并重"]
+                },
+                1: { 
+                    problem: "睡眠时长略短", 
+                    impact: "可能影响记忆整合", 
+                    suggestions: ["适当延长睡眠", "提高睡眠效率"]
+                },
+                2: { 
+                    problem: "睡眠时长不足", 
+                    impact: "影响免疫力和认知功能", 
+                    suggestions: ["调整作息时间", "减少夜间活动"]
+                },
+                3: { 
+                    problem: "严重睡眠不足", 
+                    impact: "危害身心健康和安全", 
+                    suggestions: ["立即增加睡眠", "排查睡眠障碍"]
+                }
+            },
+            dysfunction: {
+                0: { 
+                    problem: "日间功能正常", 
+                    impact: "精力充沛，工作效率高", 
+                    suggestions: ["维持睡眠质量", "平衡工作休息"]
+                },
+                1: { 
+                    problem: "偶有日间疲劳", 
+                    impact: "轻度影响工作学习", 
+                    suggestions: ["短暂午休", "优化睡眠质量"]
+                },
+                2: { 
+                    problem: "白天易疲劳", 
+                    impact: "明显影响工作学习效率", 
+                    suggestions: ["规律作息", "午休15-20分钟"]
+                },
+                3: { 
+                    problem: "严重日间功能障碍", 
+                    impact: "工作学习能力严重受损", 
+                    suggestions: ["全面改善睡眠", "专业医疗评估"]
+                }
+            }
+        };
+
+        // 生成个性化维度洞察
+        function generateDimensionInsight(dimensionKey, psqiScore, userAnswers) {
+            const baseInsight = dimensionInsights[dimensionKey]?.[psqiScore];
+            if (!baseInsight) {
+                return {
+                    problem: "评估中",
+                    impact: "分析数据中",
+                    suggestions: ["请完成评估"]
+                };
+            }
+            
+            // 基于用户答案进行个性化调整
+            let personalizedInsight = { ...baseInsight };
+            
+            // TODO: 后续可以基于具体答案进一步个性化
+            // const personalizedContent = analyzeUserAnswers(userAnswers, dimensionKey);
+            
+            return personalizedInsight;
+        }
+
+        // 增强版PSQI综合评分详细分析（30字左右专业描述）
+        function getPSQIDetailedAnalysis(psqiScore, dimensionScores, healthResult) {
+            const analysisData = {
+                score: psqiScore,
+                healthImpact: '',
+                urgencyLevel: '',
+                medicalRecommendation: '',
+                detailedDescription: ''
+            };
+
+            if (psqiScore <= 4) {
+                analysisData.healthImpact = '心血管、免疫、认知功能均处于最佳状态';
+                analysisData.urgencyLevel = '维持';
+                analysisData.medicalRecommendation = '继续保持良好睡眠习惯';
+                analysisData.detailedDescription = '睡眠质量达到国际医学标准，各项生理指标优良，有利于身心健康和日间表现';
+            } else if (psqiScore <= 7) {
+                analysisData.healthImpact = '轻微影响免疫功能和情绪调节';
+                analysisData.urgencyLevel = '预防';
+                analysisData.medicalRecommendation = '建议优化睡眠环境和作息';
+                analysisData.detailedDescription = '睡眠质量良好但存在改善空间，及时调整可预防睡眠问题加重，维护最佳健康状态';
+            } else if (psqiScore <= 10) {
+                analysisData.healthImpact = '明显影响日间功能和注意力集中';
+                analysisData.urgencyLevel = '干预';
+                analysisData.medicalRecommendation = '需要积极改善睡眠习惯';
+                analysisData.detailedDescription = '睡眠障碍已影响生活质量，存在心血管和代谢风险，建议系统性睡眠卫生干预';
+            } else if (psqiScore <= 15) {
+                analysisData.healthImpact = '高风险影响心血管和免疫系统';
+                analysisData.urgencyLevel = '治疗';
+                analysisData.medicalRecommendation = '建议寻求专业睡眠评估';
+                analysisData.detailedDescription = '多维度睡眠障碍，长期可致慢性疾病风险增加，强烈建议专业医疗干预和评估';
+            } else {
+                analysisData.healthImpact = '严重威胁多系统健康功能';
+                analysisData.urgencyLevel = '紧急';
+                analysisData.medicalRecommendation = '需要立即医疗干预';
+                analysisData.detailedDescription = '重度睡眠障碍，已严重影响生理和心理健康，建议立即寻求睡眠医学专科诊治';
+            }
+
+            // 根据具体维度问题调整描述
+            const problemAreas = [];
+            if (dimensionScores.subjective?.psqiScore >= 2) problemAreas.push('主观体验差');
+            if (dimensionScores.latency?.psqiScore >= 2) problemAreas.push('入睡困难');
+            if (dimensionScores.duration?.psqiScore >= 2) problemAreas.push('睡眠不足');
+            if (dimensionScores.dysfunction?.psqiScore >= 2) problemAreas.push('日间功能受损');
+
+            if (problemAreas.length > 0) {
+                analysisData.specificIssues = problemAreas.join('、');
+            }
+
+            return analysisData;
+        }
+
+        // 获取PSQI分数颜色
+        function getPSQIScoreColor(psqiScore, isSection = false) {
+            if (isSection) {
+                // 单个维度颜色
+                if (psqiScore <= 1) return '#7ed321'; // 绿色
+                if (psqiScore <= 2) return '#f5a623'; // 黄色
+                return '#ff6b35'; // 橙红色
+            } else {
+                // 总分颜色
+                if (psqiScore <= 5) return '#7ed321'; // 绿色
+                if (psqiScore <= 10) return '#f5a623'; // 黄色
+                if (psqiScore <= 15) return '#ff9500'; // 橙色
+                return '#ff6b35'; // 红色
+            }
+        }
+
+        // 生成进度条HTML
+        function generateProgressBar(score, maxScore, color, label) {
+            const percentage = (score / maxScore) * 100;
+            return `
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>${label}</span>
+                        <span>${score}/${maxScore}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percentage}%; background: ${color};"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 准备发送给AI的用户数据
+        function prepareUserDataForAI(sectionScores, overallScore, answers) {
+            const psqiTotalScore = convertToPSQIScore(overallScore, false);
+            
+            // 构建详细的问答数据
+            const detailedAnswers = [];
+            let questionIndex = 0;
+            
+            Object.keys(questionSections).forEach(sectionKey => {
+                const section = questionSections[sectionKey];
+                section.questions.forEach(question => {
+                    const answer = answers[questionIndex];
+                    let answerText = '';
+                    
+                    if (question.type === 'rating' && answer !== null) {
+                        answerText = question.labels[answer - 1] || answer.toString();
+                    } else if (question.type === 'multiple' && Array.isArray(answer)) {
+                        answerText = answer.join(', ');
+                    } else if (question.type === 'slider' && answer !== null) {
+                        answerText = answer.toString();
+                    } else {
+                        answerText = '未回答';
+                    }
+                    
+                    detailedAnswers.push({
+                        section: section.name,
+                        question: question.text,
+                        answer: answerText,
+                        rawAnswer: answer
+                    });
+                    
+                    questionIndex++;
+                });
+            });
+            
+            // 构建PSQI分数数据
+            const psqiScores = {};
+            Object.keys(sectionScores).forEach(sectionKey => {
+                const section = sectionScores[sectionKey];
+                psqiScores[sectionKey] = {
+                    name: section.name,
+                    psqiScore: convertToPSQIScore(section.score, true),
+                    percentage: section.score
+                };
+            });
+            
+            return {
+                psqiTotalScore: psqiTotalScore,
+                overallPercentage: overallScore,
+                dimensionScores: psqiScores,
+                detailedAnswers: detailedAnswers,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // 调用阿里云百炼AI API
+        async function callBailianAI(userData) {
+            const API_KEY = 'sk-9c3ff6da6d7a4278adb0906afb7bf556';
+            
+            // 首先尝试代理服务，然后尝试直接调用，最后使用备用方案
+            try {
+                return await callProxyAPI(API_KEY, userData);
+            } catch (proxyError) {
+                console.warn('代理API调用失败，尝试直接调用:', proxyError);
+                try {
+                    const API_URL = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation';
+                    return await callDirectAPI(API_URL, API_KEY, userData);
+                } catch (directError) {
+                    console.warn('直接API调用失败，使用备用方案:', directError);
+                    return await callFallbackAPI(userData);
+                }
+            }
+        }
+        
+        // 生成睡眠问题摘要（避免prompt过长）
+        function generateSleepIssueSummary(detailedAnswers) {
+            const issues = [];
+            
+            // 分析关键问题
+            detailedAnswers.forEach(item => {
+                if (item.rawAnswer !== null && item.rawAnswer !== undefined) {
+                    if (item.question.includes('入睡') && (item.rawAnswer <= 2)) {
+                        issues.push('入睡困难');
+                    }
+                    if (item.question.includes('醒来') && (item.rawAnswer >= 4)) {
+                        issues.push('夜间频繁醒来');
+                    }
+                    if (item.question.includes('疲惫') && (item.rawAnswer <= 2)) {
+                        issues.push('早晨疲惫');
+                    }
+                    if (item.question.includes('困倦') && (item.rawAnswer >= 4)) {
+                        issues.push('白天困倦');
+                    }
+                    if (item.question.includes('满意') && (item.rawAnswer <= 2)) {
+                        issues.push('睡眠满意度低');
+                    }
+                }
+            });
+            
+            return issues.length > 0 ? issues.join('、') : '无明显问题';
+        }
+
+        // 通过代理服务调用API
+        async function callProxyAPI(apiKey, userData) {
+            // 使用Vercel部署的AI代理服务（推荐）
+            const PROXY_URL = 'https://www.520rpy.xyz/api/bailian'; // 您的自定义域名
+            
+            // 备用方案
+            // const PROXY_URL = 'http://localhost:3000/api/bailian'; // 本地开发
+            // const PROXY_URL = 'https://ai-prox-service-kbzdxlodcl.cn-hangzhou.fcapp.run'; // 阿里云函数计算（已弃用）
+            
+             const prompt = `作为国际睡眠医学专家，请基于PSQI评估结果提供全面的多维度睡眠健康分析。
+
+用户PSQI评估数据：
+- 总分：${userData.psqiTotalScore}/21分 (${userData.overallPercentage}%)
+- 主观睡眠质量：${userData.dimensionScores.subjective?.psqiScore}/3分 (${userData.dimensionScores.subjective?.percentage}%)
+- 入睡时间与效率：${userData.dimensionScores.latency?.psqiScore}/3分 (${userData.dimensionScores.latency?.percentage}%)
+- 睡眠时长与连续性：${userData.dimensionScores.duration?.psqiScore}/3分 (${userData.dimensionScores.duration?.percentage}%)
+- 日间功能与睡眠障碍：${userData.dimensionScores.dysfunction?.psqiScore}/3分 (${userData.dimensionScores.dysfunction?.percentage}%)
+
+关键睡眠问题：${generateSleepIssueSummary(userData.detailedAnswers)}
+
+请按以下JSON格式返回深度分析：
+{
+  "overall_assessment": {
+    "summary": "专业医学评估(30字内)",
+    "risk_level": "良好|一般|较差",
+    "sleep_type": "夜猫子型|早起鸟型|敏感型|压力型|不规律型",
+    "professional_advice": "核心专业建议(80字内)",
+    "improvement_timeline": "预期改善时间(2-4周|1-2个月|3-6个月)"
+  },
+  "comprehensive_health_assessment": {
+    "sleep_efficiency": {
+      "calculated_efficiency": "基于数据计算的睡眠效率百分比",
+      "efficiency_analysis": "效率分析和对比标准人群的差异(60字内)",
+      "improvement_potential": "效率改善潜力评估(40字内)"
+    },
+    "circadian_rhythm": {
+      "rhythm_assessment": "生物钟紊乱程度和昼夜节律评估(60字内)", 
+      "chronotype_analysis": "时型分析和个体差异(40字内)",
+      "optimization_suggestions": "生物钟优化具体建议(60字内)"
+    },
+    "health_impact_prediction": {
+      "cardiovascular_risk": "心血管健康风险评估和预防建议(50字内)",
+      "immune_impact": "免疫系统影响分析和改善方案(50字内)",
+      "cognitive_effects": "认知功能影响预测和保护措施(50字内)",
+      "metabolic_consequences": "代谢功能影响和调节建议(50字内)"
+    }
+  },
+  "scientific_foundation": {
+    "physiological_mechanisms": "睡眠问题的生理机制和病理过程解释(100字内)",
+    "research_evidence": ["支持性医学研究证据1", "支持性医学研究证据2"],
+    "medical_terminology_explained": "专业术语通俗化解释(80字内)"
+  },
+  "detailed_analysis": {
+    "sleep_personality": "基于30题详细答案的睡眠人格深度分析(80字内)",
+    "risk_factors": ["具体风险因素1", "具体风险因素2", "具体风险因素3"],
+    "protective_factors": ["睡眠保护因素1", "睡眠保护因素2"],
+    "medical_insights": "专业医学角度的深度解读和诊断倾向(100字内)"
+  },
+  "dimension_analysis": {
+    "subjective": "主观睡眠质量的心理学和生理学分析(50字内)",
+    "latency": "入睡效率的神经生理机制和改善策略(50字内)", 
+    "duration": "睡眠时长的健康影响和个性化需求(50字内)",
+    "dysfunction": "日间功能的认知神经科学分析(50字内)"
+  },
+  "enhanced_recommendations": {
+    "phase1_immediate": {
+      "timeline": "0-7天立即行动",
+      "specific_actions": ["具体行动1", "具体行动2"],
+      "expected_outcomes": "预期效果和改善指标"
+    },
+    "phase2_adaptation": {
+      "timeline": "1-3周适应期",
+      "habit_formation": ["习惯养成计划1", "习惯养成计划2"],
+      "monitoring_metrics": "需要监测的关键指标"
+    },
+    "phase3_optimization": {
+      "timeline": "1-3个月优化期",
+      "advanced_strategies": ["高级改善策略1", "高级改善策略2"],
+      "maintenance_plan": "长期维持和预防复发计划"
+    },
+    "environmental_optimization": {
+      "bedroom_setup": "卧室环境的具体优化措施",
+      "lighting_management": "光照管理和昼夜节律调节",
+      "temperature_humidity": "温度湿度的精确控制建议"
+    },
+    "lifestyle_integration": {
+      "nutrition_timing": "营养摄入和进食时间优化",
+      "exercise_scheduling": "运动类型和时间安排",
+      "stress_management": "压力管理和放松技巧"
+    },
+    "professional_intervention": ["如需要的专业医疗建议和转诊建议"]
+  }
+}
+
+要求：
+1. 结合最新睡眠医学研究和循证医学证据
+2. 提供具体可操作的个性化建议
+3. 包含科学机制解释和专业术语
+4. 避免通用建议，基于用户具体数据分析
+5. 返回完整有效的JSON格式`;
+
+            try {
+                
+                // 临时移除AbortController进行测试
+                const response = await fetch(PROXY_URL, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({
+                         prompt: prompt
+                         // apiKey 已内置在Express应用中
+                     })
+                 });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`代理API调用失败: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+
+                const result = await response.json();
+
+                // 兼容多种响应格式
+                let content = '';
+                if (result.output && result.output.choices && result.output.choices[0]) {
+                    // 标准百炼API格式
+                    content = result.output.choices[0].message.content;
+                } else if (result.output && result.output.text) {
+                    // 另一种可能的格式
+                    content = result.output.text;
+                } else if (result.choices && result.choices[0]) {
+                    // 简化格式
+                    content = result.choices[0].message.content;
+                } else if (result.content) {
+                    // 直接内容格式
+                    content = result.content;
+                } else if (result.text) {
+                    // 纯文本格式
+                    content = result.text;
+                } else if (typeof result === 'string') {
+                    // 字符串响应
+                    content = result;
+                } else if (result.error) {
+                    throw new Error(result.error);
+                } else {
+                    // 如果都不匹配，记录完整响应
+                    console.log('未识别的响应格式:', result);
+                    throw new Error('代理API响应格式异常，请检查控制台日志');
+                }
+
+                if (content && content.trim()) {
+                    return {
+                        success: true,
+                        content: content.trim(),
+                        usage: result.usage || {}
+                    };
+                } else {
+                    throw new Error('代理API返回了空内容');
+                }
+
+            } catch (error) {
+                console.error('代理API调用错误:', error);
+                throw error;
+            }
+        }
+        
+        // 直接API调用
+        async function callDirectAPI(API_URL, API_KEY, userData) {
+            
+            // 构建AI提示词
+            const prompt = `您是一位专业的睡眠健康顾问，精通PSQI（匹兹堡睡眠质量指数）评估标准。请基于用户的具体问卷答案，提供专业解读和个性化建议。
+
+用户PSQI评估结果：
+- 总分：${userData.psqiTotalScore}/21分 (${userData.overallPercentage}%)
+- 主观睡眠质量：${userData.dimensionScores.subjective?.psqiScore}/3分 (${userData.dimensionScores.subjective?.percentage}%)
+- 入睡时间与效率：${userData.dimensionScores.latency?.psqiScore}/3分 (${userData.dimensionScores.latency?.percentage}%)
+- 睡眠时长与连续性：${userData.dimensionScores.duration?.psqiScore}/3分 (${userData.dimensionScores.duration?.percentage}%)
+- 日间功能与睡眠障碍：${userData.dimensionScores.dysfunction?.psqiScore}/3分 (${userData.dimensionScores.dysfunction?.percentage}%)
+
+详细问答数据：
+${userData.detailedAnswers.map(item => `${item.section} - ${item.question}：${item.answer}`).join('\n')}
+
+请提供：
+1. 整体睡眠健康评估
+2. 每个维度的专业解读（说明分数含义和可能原因）
+3. 具体可操作的改善建议
+
+要求：语言专业但易懂，语调温和鼓励，建议具体可行。请用中文回复。`;
+
+            const requestBody = {
+                model: 'qwen-turbo',
+                input: {
+                    messages: [
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ]
+                },
+                parameters: {
+                    temperature: 0.7,
+                    top_p: 0.8,
+                    max_tokens: 2000
+                }
+            };
+
+            try {
+                
+                // 临时移除AbortController进行测试
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody),
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API错误响应:', errorText);
+                    throw new Error(`API调用失败: ${response.status} ${response.statusText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.output && result.output.choices && result.output.choices[0]) {
+                    return {
+                        success: true,
+                        content: result.output.choices[0].message.content,
+                        usage: result.usage
+                    };
+                } else {
+                    throw new Error('API响应格式异常');
+                }
+
+            } catch (error) {
+                console.error('百炼AI API调用错误:', error);
+                
+                let errorMessage = error.message;
+                if (error.name === 'AbortError') {
+                    errorMessage = '请求超时，请稍后重试';
+                } else if (error.message === 'Failed to fetch') {
+                    errorMessage = 'CORS跨域限制，建议使用后端代理服务';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMessage = '网络连接错误，请检查网络状态';
+                }
+                
+                return {
+                    success: false,
+                    error: errorMessage
+                };
+            }
+        }
+        
+        // 备用API调用方案
+        async function callFallbackAPI(userData) {
+            // 这里可以实现一个简单的模拟AI响应，或者调用其他AI服务
+            console.log('使用备用AI方案');
+            
+            // 生成基于规则的个性化建议
+            const psqiScore = userData.psqiTotalScore;
+            const dimensions = userData.dimensionScores;
+            
+            let analysis = `根据您的PSQI评分 ${psqiScore}/21分，`;
+            
+            if (psqiScore <= 5) {
+                analysis += '您的睡眠质量整体良好。';
+            } else if (psqiScore <= 10) {
+                analysis += '您的睡眠质量存在一些问题，需要适当改善。';
+            } else if (psqiScore <= 15) {
+                analysis += '您的睡眠质量问题较为明显，建议重点关注。';
+            } else {
+                analysis += '您的睡眠质量问题严重，强烈建议咨询专业医生。';
+            }
+            
+            // 分析各个维度
+            let dimensionAnalysis = '\n\n各维度分析：\n';
+            Object.entries(dimensions).forEach(([key, dim]) => {
+                const score = dim.psqiScore;
+                const names = {
+                    subjective: '主观睡眠质量',
+                    latency: '入睡时间与效率', 
+                    duration: '睡眠时长与连续性',
+                    dysfunction: '日间功能与睡眠障碍'
+                };
+                
+                dimensionAnalysis += `${names[key]}：${score}/3分 - `;
+                if (score <= 1) {
+                    dimensionAnalysis += '表现良好，继续保持。\n';
+                } else if (score <= 2) {
+                    dimensionAnalysis += '存在轻度问题，建议关注改善。\n';
+                } else {
+                    dimensionAnalysis += '问题较为明显，需要重点改善。\n';
+                }
+            });
+            
+            // 生成改善建议
+            let recommendations = '\n\n个性化改善建议：\n';
+            
+            if (dimensions.latency?.psqiScore >= 2) {
+                recommendations += '• 入睡困难：睡前1小时避免使用电子设备，尝试深呼吸放松技巧\n';
+            }
+            
+            if (dimensions.duration?.psqiScore >= 2) {
+                recommendations += '• 睡眠时长问题：建立规律的作息时间，每天同一时间上床和起床\n';
+            }
+            
+            if (dimensions.dysfunction?.psqiScore >= 2) {
+                recommendations += '• 日间疲劳：增加日间自然光照射，适度运动但避免睡前剧烈运动\n';
+            }
+            
+            if (dimensions.subjective?.psqiScore >= 2) {
+                recommendations += '• 睡眠质量感受：优化睡眠环境，保持卧室安静、黑暗、凉爽\n';
+            }
+            
+            recommendations += '• 如症状持续，建议咨询睡眠专科医生获得专业指导\n';
+            
+            const fullContent = analysis + dimensionAnalysis + recommendations;
+            
+            return {
+                success: true,
+                content: fullContent,
+                usage: { total_tokens: fullContent.length }
+            };
+        }
+
+        // 解析AI响应内容
+        function parseAIResponse(aiContent) {
+            try {
+                // 将AI的文本响应解析为结构化数据
+                const sections = aiContent.split('\n\n');
+                const parsedResult = {
+                    overall_analysis: '',
+                    dimension_analysis: {},
+                    recommendations: []
+                };
+
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const trimmedSection = section.trim();
+                    if (!trimmedSection) return;
+
+                    // 识别整体评估部分
+                    if (trimmedSection.includes('整体睡眠健康') || trimmedSection.includes('总体评估') || trimmedSection.includes('综合分析')) {
+                        parsedResult.overall_analysis = trimmedSection;
+                    }
+                    // 识别维度分析部分
+                    else if (trimmedSection.includes('主观睡眠质量') || trimmedSection.includes('主观')) {
+                        parsedResult.dimension_analysis.subjective = trimmedSection;
+                    }
+                    else if (trimmedSection.includes('入睡时间') || trimmedSection.includes('入睡')) {
+                        parsedResult.dimension_analysis.latency = trimmedSection;
+                    }
+                    else if (trimmedSection.includes('睡眠时长') || trimmedSection.includes('时长') || trimmedSection.includes('连续性')) {
+                        parsedResult.dimension_analysis.duration = trimmedSection;
+                    }
+                    else if (trimmedSection.includes('日间功能') || trimmedSection.includes('日间') || trimmedSection.includes('功能')) {
+                        parsedResult.dimension_analysis.dysfunction = trimmedSection;
+                    }
+                    // 识别建议部分
+                    else if (trimmedSection.includes('建议') || trimmedSection.includes('改善') || trimmedSection.includes('方法')) {
+                        // 将建议文本分解为具体的建议项
+                        const recommendationLines = trimmedSection.split('\n').filter(line => 
+                            line.trim() && (line.includes('•') || line.includes('-') || line.includes('1.') || line.includes('2.') || line.includes('3.'))
+                        );
+                        
+                        recommendationLines.forEach(line => {
+                            const cleanLine = line.replace(/^[•\-\d\.]+\s*/, '').trim();
+                            if (cleanLine.length > 10) {
+                                parsedResult.recommendations.push({
+                                    title: cleanLine.split('：')[0] || cleanLine.substring(0, 20) + '...',
+                                    content: cleanLine,
+                                    priority: 'medium'
+                                });
+                            }
+                        });
+                    }
+                });
+
+                // 如果没有解析到结构化内容，将整个响应作为整体分析
+                if (!parsedResult.overall_analysis && !Object.keys(parsedResult.dimension_analysis).length) {
+                    parsedResult.overall_analysis = aiContent;
+                }
+
+                return parsedResult;
+            } catch (error) {
+                console.error('AI响应解析错误:', error);
+                return {
+                    overall_analysis: aiContent,
+                    dimension_analysis: {},
+                    recommendations: []
+                };
+            }
+        }
+
+        // 使用AI生成个性化建议
+        async function generateAIRecommendations(sectionScores, overallScore, answers) {
+            try {
+                // 准备用户数据
+                const userData = prepareUserDataForAI(sectionScores, overallScore, answers);
+                
+                // 调用AI API
+                const aiResult = await callBailianAI(userData);
+                
+                if (aiResult.success) {
+                    // 解析AI响应
+                    const parsedContent = parseAIResponse(aiResult.content);
+                    
+                    return {
+                        type: 'ai_generated',
+                        content: aiResult.content,
+                        parsed: parsedContent,
+                        usage: aiResult.usage
+                    };
+                } else {
+                    throw new Error(aiResult.error);
+                }
+                
+            } catch (error) {
+                console.error('AI建议生成失败:', error);
+                
+                // 回退到原有的分层次建议系统
+                return {
+                    type: 'fallback',
+                    content: generateFallbackRecommendations(sectionScores, overallScore),
+                    error: error.message
+                };
+            }
+        }
+
+        // 回退建议系统（原有的分层次建议）
+        function generateFallbackRecommendations(sectionScores, overallScore) {
+            const psqiTotalScore = convertToPSQIScore(overallScore, false);
+            const recommendations = {
+                immediate: [],
+                weekly: [],
+                longterm: []
+            };
+            
+            // 基于PSQI总分的分层建议
+            if (psqiTotalScore <= 5) {
+                recommendations.immediate.push({
+                    title: '保持现有习惯',
+                    content: '您的睡眠质量很好！今晚继续保持规律的睡眠时间。'
+                });
+                recommendations.weekly.push({
+                    title: '优化睡眠环境',
+                    content: '本周可以进一步优化睡眠环境，如调整房间温度、减少噪音干扰。'
+                });
+            } else if (psqiTotalScore <= 10) {
+                recommendations.immediate.push({
+                    title: '今晚开始改善',
+                    content: '睡前1小时放下手机，尝试深呼吸或轻松阅读来放松身心。'
+                });
+                recommendations.weekly.push({
+                    title: '建立睡前例行程序',
+                    content: '本周开始建立固定的睡前例行程序，每天同一时间上床睡觉。'
+                });
+            } else {
+                recommendations.immediate.push({
+                    title: '紧急改善措施',
+                    content: '今晚确保睡前2小时内不摄入咖啡因，创造安静、黑暗的睡眠环境。'
+                });
+                recommendations.weekly.push({
+                    title: '系统性改善',
+                    content: '本周记录睡眠日记，识别影响睡眠的具体因素并逐一改善。'
+                });
+                recommendations.longterm.push({
+                    title: '寻求专业帮助',
+                    content: '建议咨询睡眠医学专家，进行专业评估和制定治疗方案。'
+                });
+            }
+            
+            return recommendations;
+        }
+
+        // 分享结果
+        function shareResult() {
+            const shareText = '我刚完成了深度睡眠质量分析！获得了AI个性化的睡眠改善方案。快来测测你的睡眠质量吧！';
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'AZ Ring 睡眠质量评估',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(err => console.log('分享失败:', err));
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareText + ' ' + window.location.href).then(() => {
+                    alert('结果已复制到剪贴板！');
+                }).catch(err => {
+                    console.log('复制失败:', err);
+                    alert('分享功能暂不可用');
+                });
+            }
+        }
+
+        // 初始化
+        function init() {
+            
+            // 初始化问题数据
+            initializeQuestions();
+            
+            // 生成所有问题幻灯片
+            generateSlides();
+            
+            // 更新进度显示
+            updateProgress();
+            
+            // 检查第一个问题的答案状态
+            checkAnswerCompleteness(currentQuestion);
+            
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // 生成增强版AI分析HTML
+        function generateEnhancedAIAnalysisHTML(data) {
+            const overallAssessment = data.overall_assessment || {};
+            const detailedAnalysis = data.detailed_analysis || {};
+            const recommendations = data.enhanced_recommendations || data.comprehensive_recommendations || data.recommendations || {};
+            const healthAssessment = data.comprehensive_health_assessment || {};
+            const scientificFoundation = data.scientific_foundation || {};
+            
+            // 睡眠类型对应的图标和颜色
+            const sleepTypeConfig = {
+                '夜猫子型': { icon: '🦉', color: 'var(--warning)' },
+                '早起鸟型': { icon: '🐤', color: 'var(--success)' },
+                '敏感型': { icon: '🌸', color: 'var(--brand-secondary)' },
+                '压力型': { icon: '😰', color: 'var(--danger)' },
+                '不规律型': { icon: '🌀', color: 'var(--text-secondary)' }
+            };
+            
+            const sleepTypeInfo = sleepTypeConfig[overallAssessment.sleep_type] || { icon: '😴', color: 'var(--brand-primary)' };
+            
+            return `
+                <div class="ai-analysis-card" style="background: var(--bg-card); border-radius: var(--radius-xl); padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid #e5e7eb;">
+                    <!-- AI分析头部 -->
+                    <div class="ai-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🤖</div>
+                        <div>
+                            <h3 style="margin: 0; color: var(--text-primary); font-size: 20px; font-weight: 700;">AI 专业睡眠分析</h3>
+                            <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 14px;">基于国际PSQI标准的智能评估</p>
+                        </div>
+                    </div>
+
+                    <!-- 总体评估与睡眠人格 -->
+                    <div class="ai-overall-section" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px;">
+                        <div class="overall-assessment" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px;">
+                            <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 8px; font-size: 16px;">${overallAssessment.summary || '专业评估分析'}</div>
+                            <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">${overallAssessment.professional_advice || '建议您关注睡眠质量改善'}</div>
+                            ${overallAssessment.improvement_timeline ? `
+                                <div style="display: inline-block; background: var(--brand-light); color: var(--brand-primary); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500;">
+                                    预期改善：${overallAssessment.improvement_timeline}
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${overallAssessment.sleep_type ? `
+                            <div class="sleep-personality" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 8px;">${sleepTypeInfo.icon}</div>
+                                <div style="color: ${sleepTypeInfo.color}; font-weight: 600; margin-bottom: 4px;">${overallAssessment.sleep_type}</div>
+                                <div style="color: var(--text-muted); font-size: 12px;">睡眠人格类型</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- 多维度健康评估 -->
+                    ${healthAssessment.sleep_efficiency || healthAssessment.circadian_rhythm || healthAssessment.health_impact_prediction ? `
+                        <div class="health-assessment" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+                            <h4 style="color: var(--text-primary); font-size: 16px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                                <span>🔬</span> 多维度健康评估
+                            </h4>
+                            
+                            ${healthAssessment.sleep_efficiency ? `
+                                <div class="assessment-item" style="background: var(--brand-light); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px;">
+                                    <div style="color: var(--brand-primary); font-weight: 600; font-size: 14px; margin-bottom: 8px;">
+                                        📊 睡眠效率分析
+                                    </div>
+                                    <div style="color: var(--text-primary); font-size: 14px; line-height: 1.5; margin-bottom: 8px;">
+                                        ${healthAssessment.sleep_efficiency.efficiency_analysis}
+                                    </div>
+                                    ${healthAssessment.sleep_efficiency.calculated_efficiency ? `
+                                        <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                            <strong>计算效率：</strong>${healthAssessment.sleep_efficiency.calculated_efficiency}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            ${healthAssessment.circadian_rhythm ? `
+                                <div class="assessment-item" style="background: #f0f9ff; border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px;">
+                                    <div style="color: #0369a1; font-weight: 600; font-size: 14px; margin-bottom: 8px;">
+                                        🕰️ 生物钟评估
+                                    </div>
+                                    <div style="color: var(--text-primary); font-size: 14px; line-height: 1.5; margin-bottom: 8px;">
+                                        ${healthAssessment.circadian_rhythm.rhythm_assessment}
+                                    </div>
+                                    ${healthAssessment.circadian_rhythm.chronotype_analysis ? `
+                                        <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                            <strong>时型分析：</strong>${healthAssessment.circadian_rhythm.chronotype_analysis}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            ${healthAssessment.health_impact_prediction ? `
+                                <div class="assessment-item" style="background: #fef3c7; border-radius: var(--radius-md); padding: 16px;">
+                                    <div style="color: #92400e; font-weight: 600; font-size: 14px; margin-bottom: 12px;">
+                                        ⚕️ 健康影响预测
+                                    </div>
+                                    <div class="health-impacts" style="display: grid; gap: 8px;">
+                                        ${healthAssessment.health_impact_prediction.cardiovascular_risk ? `
+                                            <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                                <strong>💓 心血管：</strong>${healthAssessment.health_impact_prediction.cardiovascular_risk}
+                                            </div>
+                                        ` : ''}
+                                        ${healthAssessment.health_impact_prediction.immune_impact ? `
+                                            <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                                <strong>🛡️ 免疫系统：</strong>${healthAssessment.health_impact_prediction.immune_impact}
+                                            </div>
+                                        ` : ''}
+                                        ${healthAssessment.health_impact_prediction.cognitive_effects ? `
+                                            <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                                <strong>🧠 认知功能：</strong>${healthAssessment.health_impact_prediction.cognitive_effects}
+                                            </div>
+                                        ` : ''}
+                                        ${healthAssessment.health_impact_prediction.metabolic_consequences ? `
+                                            <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 13px;">
+                                                <strong>⚡ 代谢功能：</strong>${healthAssessment.health_impact_prediction.metabolic_consequences}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
+                    <!-- 科学依据与深度分析 -->
+                    ${scientificFoundation.physiological_mechanisms || detailedAnalysis.sleep_personality || detailedAnalysis.medical_insights ? `
+                        <div class="scientific-analysis" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+                            <h4 style="color: var(--text-primary); font-size: 16px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+                                <span>🔬</span> 科学依据与专业分析
+                            </h4>
+                            
+                            ${scientificFoundation.physiological_mechanisms ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: var(--brand-primary); font-weight: 500; font-size: 14px; margin-bottom: 8px;">生理机制解释</div>
+                                    <div style="color: var(--text-primary); font-size: 14px; line-height: 1.6; background: white; padding: 12px; border-radius: var(--radius-sm);">
+                                        ${scientificFoundation.physiological_mechanisms}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.sleep_personality ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: var(--brand-primary); font-weight: 500; font-size: 14px; margin-bottom: 8px;">睡眠人格深度分析</div>
+                                    <div style="color: var(--text-primary); font-size: 14px; line-height: 1.5;">${detailedAnalysis.sleep_personality}</div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.risk_factors && detailedAnalysis.risk_factors.length ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: var(--danger); font-weight: 500; font-size: 14px; margin-bottom: 8px;">风险因素识别</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                        ${detailedAnalysis.risk_factors.map(factor => `
+                                            <span style="background: var(--danger-light); color: var(--danger); padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px;">⚠️ ${factor}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.protective_factors && detailedAnalysis.protective_factors.length ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: var(--success); font-weight: 500; font-size: 14px; margin-bottom: 8px;">保护性因素</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                        ${detailedAnalysis.protective_factors.map(factor => `
+                                            <span style="background: var(--success-light); color: var(--success); padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px;">✓ ${factor}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${scientificFoundation.research_evidence && scientificFoundation.research_evidence.length ? `
+                                <div style="margin-bottom: 16px;">
+                                    <div style="color: var(--brand-primary); font-weight: 500; font-size: 14px; margin-bottom: 8px;">研究证据支持</div>
+                                    <div style="background: #f8fafc; border-left: 4px solid var(--brand-primary); padding: 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;">
+                                        ${scientificFoundation.research_evidence.map(evidence => `
+                                            <div style="font-size: 13px; color: var(--text-primary); margin-bottom: 6px;">📚 ${evidence}</div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailedAnalysis.medical_insights ? `
+                                <div>
+                                    <div style="color: var(--brand-primary); font-weight: 500; font-size: 14px; margin-bottom: 8px;">专业医学见解</div>
+                                    <div style="color: var(--text-primary); font-size: 14px; line-height: 1.6; background: white; padding: 12px; border-radius: var(--radius-sm);">
+                                        ${detailedAnalysis.medical_insights}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
+                    <!-- 分类建议 -->
+                    ${Object.keys(recommendations).length ? `
+                        <div class="ai-recommendations">
+                            <h4 style="color: var(--text-primary); font-size: 16px; font-weight: 600; margin: 0 0 16px 0;">个性化改善建议</h4>
+                            <div class="recommendation-grid" style="display: grid; gap: 16px;">
+                                ${generateRecommendationCategories(recommendations)}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // 生成增强版建议分类HTML
+        function generateRecommendationCategories(recommendations) {
+            // 检查是否有新的分阶段结构
+            if (recommendations.phase1_immediate || recommendations.phase2_adaptation || recommendations.phase3_optimization) {
+                return generatePhaseBasedRecommendations(recommendations);
+            }
+            
+            // 原有分类配置
+            const categoryConfig = {
+                immediate: { name: '立即行动', color: 'var(--success)', icon: '⚡' },
+                weekly: { name: '本周计划', color: 'var(--warning)', icon: '📅' },
+                monthly: { name: '本月目标', color: 'var(--brand-secondary)', icon: '🎯' },
+                environmental: { name: '环境优化', color: 'var(--brand-primary)', icon: '🏠' },
+                lifestyle: { name: '生活方式', color: '#8b5cf6', icon: '🌱' },
+                professional: { name: '专业干预', color: 'var(--danger)', icon: '👨‍⚕️' },
+                longterm: { name: '长期策略', color: '#6366f1', icon: '🔮' }
+            };
+
+            return Object.entries(recommendations)
+                .filter(([key, items]) => items && items.length > 0)
+                .map(([key, items]) => {
+                    const config = categoryConfig[key] || { name: key, color: 'var(--text-secondary)', icon: '💡' };
+                    return `
+                        <div class="rec-category" style="border-left: 4px solid ${config.color}; padding-left: 16px; background: ${config.color}20; border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px;">
+                            <div style="font-weight: 600; color: ${config.color}; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                <span>${config.icon}</span>
+                                <span>${config.name}</span>
+                            </div>
+                            ${items.map(item => `<div style="font-size: 14px; color: var(--text-primary); margin-bottom: 4px;">• ${item}</div>`).join('')}
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        // 生成分阶段建议HTML
+        function generatePhaseBasedRecommendations(recommendations) {
+            let html = '';
+            
+            // 分阶段时间线
+            if (recommendations.phase1_immediate || recommendations.phase2_adaptation || recommendations.phase3_optimization) {
+                html += `
+                    <div class="phase-timeline" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px;">
+                        <div style="color: var(--brand-primary); font-weight: 600; font-size: 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                            <span>⏱️</span> 分阶段改善时间线
+                        </div>
+                `;
+                
+                // 第一阶段
+                if (recommendations.phase1_immediate) {
+                    html += `
+                        <div class="timeline-phase" style="background: #dcfce7; border-left: 4px solid var(--success); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="background: var(--success); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">1</span>
+                                <div style="color: var(--success); font-weight: 600; font-size: 14px;">${recommendations.phase1_immediate.timeline || '立即行动 (0-7天)'}</div>
+                            </div>
+                            ${recommendations.phase1_immediate.specific_actions && recommendations.phase1_immediate.specific_actions.length ? `
+                                <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-primary); font-size: 13px;">
+                                    ${recommendations.phase1_immediate.specific_actions.map(action => `<li style="margin-bottom: 4px;">${action}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            ${recommendations.phase1_immediate.expected_outcomes ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 12px; color: var(--text-secondary);">
+                                    <strong>预期效果：</strong>${recommendations.phase1_immediate.expected_outcomes}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                // 第二阶段
+                if (recommendations.phase2_adaptation) {
+                    html += `
+                        <div class="timeline-phase" style="background: #fef3c7; border-left: 4px solid var(--warning); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="background: var(--warning); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">2</span>
+                                <div style="color: var(--warning); font-weight: 600; font-size: 14px;">${recommendations.phase2_adaptation.timeline || '适应期 (1-3周)'}</div>
+                            </div>
+                            ${recommendations.phase2_adaptation.habit_formation && recommendations.phase2_adaptation.habit_formation.length ? `
+                                <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-primary); font-size: 13px;">
+                                    ${recommendations.phase2_adaptation.habit_formation.map(habit => `<li style="margin-bottom: 4px;">${habit}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            ${recommendations.phase2_adaptation.monitoring_metrics ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 12px; color: var(--text-secondary);">
+                                    <strong>监测指标：</strong>${recommendations.phase2_adaptation.monitoring_metrics}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                // 第三阶段
+                if (recommendations.phase3_optimization) {
+                    html += `
+                        <div class="timeline-phase" style="background: var(--brand-light); border-left: 4px solid var(--brand-primary); border-radius: var(--radius-md); padding: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="background: var(--brand-primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">3</span>
+                                <div style="color: var(--brand-primary); font-weight: 600; font-size: 14px;">${recommendations.phase3_optimization.timeline || '优化期 (1-3个月)'}</div>
+                            </div>
+                            ${recommendations.phase3_optimization.advanced_strategies && recommendations.phase3_optimization.advanced_strategies.length ? `
+                                <ul style="margin: 8px 0; padding-left: 20px; color: var(--text-primary); font-size: 13px;">
+                                    ${recommendations.phase3_optimization.advanced_strategies.map(strategy => `<li style="margin-bottom: 4px;">${strategy}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            ${recommendations.phase3_optimization.maintenance_plan ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 8px; font-size: 12px; color: var(--text-secondary);">
+                                    <strong>维持计划：</strong>${recommendations.phase3_optimization.maintenance_plan}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+            
+            // 环境与生活方式优化网格
+            if (recommendations.environmental_optimization || recommendations.lifestyle_integration) {
+                html += `
+                    <div class="optimization-grid" style="display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 16px;">
+                `;
+                
+                if (recommendations.environmental_optimization) {
+                    html += `
+                        <div class="optimization-category" style="background: #f0fdf4; border-radius: var(--radius-md); padding: 16px;">
+                            <div style="color: #15803d; font-weight: 600; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <span>🏠</span> 环境优化
+                            </div>
+                            ${recommendations.environmental_optimization.bedroom_setup ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 8px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">卧室布置</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.environmental_optimization.bedroom_setup}</div>
+                                </div>
+                            ` : ''}
+                            ${recommendations.environmental_optimization.lighting_management ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 8px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">光照管理</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.environmental_optimization.lighting_management}</div>
+                                </div>
+                            ` : ''}
+                            ${recommendations.environmental_optimization.temperature_humidity ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">温湿度控制</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.environmental_optimization.temperature_humidity}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                if (recommendations.lifestyle_integration) {
+                    html += `
+                        <div class="optimization-category" style="background: #fef7ff; border-radius: var(--radius-md); padding: 16px;">
+                            <div style="color: #a855f7; font-weight: 600; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                <span>🌟</span> 生活方式整合
+                            </div>
+                            ${recommendations.lifestyle_integration.nutrition_timing ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 8px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">营养时机</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.lifestyle_integration.nutrition_timing}</div>
+                                </div>
+                            ` : ''}
+                            ${recommendations.lifestyle_integration.exercise_scheduling ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px; margin-bottom: 8px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">运动安排</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.lifestyle_integration.exercise_scheduling}</div>
+                                </div>
+                            ` : ''}
+                            ${recommendations.lifestyle_integration.stress_management ? `
+                                <div style="background: white; border-radius: var(--radius-sm); padding: 10px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">压力管理</div>
+                                    <div style="font-size: 13px; color: var(--text-primary);">${recommendations.lifestyle_integration.stress_management}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+            }
+            
+            // 专业医疗建议
+            if (recommendations.professional_intervention && recommendations.professional_intervention.length) {
+                html += `
+                    <div class="professional-advice" style="background: var(--danger-light); border-radius: var(--radius-md); padding: 16px;">
+                        <div style="color: var(--danger); font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                            <span>🩺</span> 专业医疗建议
+                        </div>
+                        <ul style="margin: 0; padding-left: 20px; color: var(--text-primary); font-size: 14px; line-height: 1.5;">
+                            ${recommendations.professional_intervention.map(item => `<li style="margin-bottom: 4px;">${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+        
+        // 解析结构化AI响应的新函数
+        function parseAndDisplayStructuredAI(recommendations) {
+            const aiAnalysisSection = document.getElementById('aiAnalysisSection');
+            if (!aiAnalysisSection) return;
+            
+            
+            if (recommendations.success && recommendations.content) {
+                try {
+                    // 尝试从多个可能的路径提取内容
+                    let contentText = '';
+                    if (typeof recommendations.content === 'string') {
+                        contentText = recommendations.content;
+                    } else if (recommendations.content.output && recommendations.content.output.text) {
+                        contentText = recommendations.content.output.text;
+                    } else if (recommendations.content.text) {
+                        contentText = recommendations.content.text;
+                    } else {
+                        contentText = JSON.stringify(recommendations.content);
+                    }
+                    
+                    
+                    // 尝试提取JSON内容
+                    const jsonMatch = contentText.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const data = JSON.parse(jsonMatch[0]);
+                        
+                        // 更新各维度AI分析
+                        if (data.dimension_analysis) {
+                            Object.entries(data.dimension_analysis).forEach(([key, analysis]) => {
+                                const element = document.getElementById(`ai-${key}`);
+                                if (element && analysis) {
+                                    element.innerHTML = `<span style="color: var(--brand-primary); font-weight: 500;">${analysis}</span>`;
+                                }
+                            });
+                        }
+                        
+                        // 显示增强版AI分析区域
+                        aiAnalysisSection.innerHTML = generateEnhancedAIAnalysisHTML(data);
+                        return;
+                    }
+                } catch (error) {
+                    console.warn('JSON解析失败，显示原始内容:', error);
+                }
+                
+                // 备用：显示原始AI内容
+                aiAnalysisSection.innerHTML = `
+                    <div class="ai-analysis-card" style="background: var(--bg-card); border-radius: var(--radius-xl); padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid #e5e7eb;">
+                        <div class="ai-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">🤖</div>
+                            <div>
+                                <h3 style="margin: 0; color: var(--text-primary); font-size: 20px; font-weight: 700;">AI 专业睡眠分析</h3>
+                            </div>
+                        </div>
+                        <div style="color: var(--text-primary); line-height: 1.6; font-size: 14px;">
+                            ${contentText.split('\n').map(line => 
+                                line.trim() ? `<p style="margin-bottom: 12px;">${line.trim()}</p>` : ''
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 显示错误
+                const errorMessage = recommendations.error || '网络连接问题';
+                aiAnalysisSection.innerHTML = `
+                    <div class="ai-error-card" style="background: var(--danger-light); border: 1px solid var(--danger); border-radius: var(--radius-lg); padding: 24px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 12px;">⚠️</div>
+                        <div style="color: var(--danger); font-weight: 600; margin-bottom: 8px;">AI分析暂时不可用</div>
+                        <div style="color: var(--text-secondary); font-size: 14px;">${errorMessage}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 更新显示AI建议的调用
+        const originalDisplayAIRecommendations = displayAIRecommendations;
+        displayAIRecommendations = function(aiResult) {
+            
+            // 将原有格式转换为新格式
+            let convertedRecommendations;
+            if (aiResult.type === 'ai_generated' && aiResult.content) {
+                convertedRecommendations = {
+                    success: true,
+                    content: aiResult.content
+                };
+            } else if (aiResult.success !== undefined) {
+                // 已经是新格式
+                convertedRecommendations = aiResult;
+            } else {
+                // 未知格式，尝试兼容
+                convertedRecommendations = {
+                    success: false,
+                    error: '未知的AI响应格式'
+                };
+            }
+            
+            
+            // 使用新的结构化显示
+            parseAndDisplayStructuredAI(convertedRecommendations);
+        };
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心血管健康风险评估 - 基于Framingham国际标准 | AZ Ring</title>
+    <meta name="description" content="基于Framingham国际权威标准的心血管健康风险评估，科学预测10年心血管疾病风险，AI智能分析提供个性化健康建议。">
+    
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('../fonts/inter-variable.woff2') format('woff2');
+        }
+        
+        :root {
+            --oura-black: #0a0a0a;
+            --oura-dark: #1a1a1a;
+            --oura-gray: #2a2a2a;
+            --oura-light-gray: #666666;
+            --oura-white: #ffffff;
+            --oura-accent: #ff6b35;
+            --oura-blue: #4a90e2;
+            --oura-red: #e74c3c;
+            --oura-green: #7ed321;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
+            color: var(--oura-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* 导航栏 */
+        .oura-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 0;
+        }
+        
+        .oura-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .oura-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--oura-light-gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .back-btn:hover {
+            color: var(--oura-white);
+        }
+        
+        .oura-logo img {
+            height: 40px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+        }
+        
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--oura-red), #c0392b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 8px 24px rgba(231, 76, 60, 0.3);
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--oura-light-gray);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+        
+        .hero-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--oura-light-gray);
+        }
+        
+        .badge i {
+            color: var(--oura-accent);
+        }
+        
+        /* Mode Selection */
+        .mode-selection {
+            padding: 40px 0 80px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 48px;
+        }
+        
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .mode-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--oura-blue), var(--oura-accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .mode-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .mode-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .mode-card.recommended {
+            border-color: var(--oura-accent);
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        
+        .mode-icon {
+            font-size: 48px;
+            line-height: 1;
+        }
+        
+        .recommended-badge {
+            background: var(--oura-accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .mode-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .mode-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--oura-light-gray);
+            margin-bottom: 16px;
+        }
+        
+        .mode-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .mode-description {
+            color: var(--oura-light-gray);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .mode-features {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+        
+        .mode-features li {
+            padding: 8px 0;
+            color: var(--oura-light-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mode-features li i {
+            color: var(--oura-green);
+            font-size: 14px;
+        }
+        
+        .mode-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .mode-card:hover .mode-cta {
+            background: var(--oura-accent);
+            color: white;
+        }
+        
+        .mode-card:hover .mode-cta i {
+            transform: translateX(4px);
+        }
+        
+        .mode-cta i {
+            transition: transform 0.3s;
+        }
+        
+        /* Info Section */
+        .info-section {
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .info-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .info-text {
+            color: var(--oura-light-gray);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+        }
+        
+        .info-item-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .info-item-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .info-item-text {
+            font-size: 14px;
+            color: var(--oura-light-gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 0 60px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .modes-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .mode-card {
+                padding: 32px 24px;
+            }
+            
+            .mode-title {
+                font-size: 24px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="oura-nav">
+        <div class="oura-container">
+            <div class="oura-nav-content">
+                <a href="health-assessment.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    返回健康自测中心
+                </a>
+                <a href="../index.html" class="oura-logo">
+                    <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/logo.png" alt="AZ Ring">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="oura-container">
+            <div class="hero-icon">❤️</div>
+            <h1 class="hero-title">心血管健康风险评估</h1>
+            <p class="hero-subtitle">
+                基于Framingham国际权威标准，科学预测您的10年心血管健康风险<br>
+                AI智能分析，提供个性化健康改善建议
+            </p>
+            <div class="hero-badges">
+                <span class="badge">
+                    <i class="fas fa-certificate"></i>
+                    Framingham标准
+                </span>
+                <span class="badge">
+                    <i class="fas fa-hospital"></i>
+                    70年临床验证
+                </span>
+                <span class="badge">
+                    <i class="fas fa-robot"></i>
+                    AI智能分析
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mode Selection -->
+    <section class="mode-selection">
+        <div class="oura-container">
+            <h2 class="section-title">选择评估模式</h2>
+            
+            <div class="modes-grid">
+                <!-- 快速评估 -->
+                <a href="health-cardiovascular-quick.html" class="mode-card">
+                    <div class="mode-header">
+                        <div class="mode-icon">⚡</div>
+                    </div>
+                    <h3 class="mode-title">快速评估</h3>
+                    <div class="mode-meta">
+                        <span><i class="fas fa-clipboard-list"></i> 10道题</span>
+                        <span><i class="fas fa-clock"></i> 3-5分钟</span>
+                    </div>
+                    <p class="mode-description">
+                        快速筛查心血管健康风险，了解基本健康状况。适合初次评估或时间有限的用户。
+                    </p>
+                    <ul class="mode-features">
+                        <li><i class="fas fa-check"></i> 基础风险因素评估</li>
+                        <li><i class="fas fa-check"></i> 快速获得风险等级</li>
+                        <li><i class="fas fa-check"></i> 简明健康建议</li>
+                        <li><i class="fas fa-check"></i> 适合健康人群筛查</li>
+                    </ul>
+                    <div class="mode-cta">
+                        开始快速评估 <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+
+                <!-- 标准评估 -->
+                <a href="health-cardiovascular-standard.html" class="mode-card recommended">
+                    <div class="mode-header">
+                        <div class="mode-icon">📊</div>
+                        <span class="recommended-badge">推荐</span>
+                    </div>
+                    <h3 class="mode-title">标准评估</h3>
+                    <div class="mode-meta">
+                        <span><i class="fas fa-clipboard-list"></i> 25道题</span>
+                        <span><i class="fas fa-clock"></i> 8-10分钟</span>
+                    </div>
+                    <p class="mode-description">
+                        全面评估心血管健康风险，获得精准的Framingham风险评分和深度AI分析报告。
+                    </p>
+                    <ul class="mode-features">
+                        <li><i class="fas fa-check"></i> 完整Framingham评分</li>
+                        <li><i class="fas fa-check"></i> 深度AI智能分析</li>
+                        <li><i class="fas fa-check"></i> 个性化改善方案</li>
+                        <li><i class="fas fa-check"></i> 戒指数据关联分析</li>
+                    </ul>
+                    <div class="mode-cta">
+                        开始标准评估 <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="oura-container">
+            <div class="info-content">
+                <h2 class="info-title">关于Framingham心血管风险评估</h2>
+                <p class="info-text">
+                    Framingham心脏研究始于1948年，是全球最著名、持续时间最长的心血管疾病流行病学研究项目。
+                    基于该研究开发的Framingham风险评分，是国际公认的心血管疾病风险评估金标准。
+                </p>
+                <p class="info-text">
+                    该评分系统通过综合分析年龄、性别、血压、血脂、吸烟、糖尿病等多个风险因素，
+                    科学预测个体未来10年发生心血管疾病的概率，为早期预防和干预提供重要依据。
+                </p>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-item-icon">🏥</div>
+                        <div class="info-item-title">临床应用</div>
+                        <div class="info-item-text">全球医疗机构广泛采用的风险评估工具</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-icon">🔬</div>
+                        <div class="info-item-title">科学验证</div>
+                        <div class="info-item-text">70年跟踪研究，数据准确可靠</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-item-icon">📈</div>
+                        <div class="info-item-title">预防价值</div>
+                        <div class="info-item-text">早期识别风险，有效预防心血管疾病</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
