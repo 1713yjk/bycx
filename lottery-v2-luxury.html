@@ -756,7 +756,7 @@
 
         .social-platforms {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 60px;
             margin-bottom: 60px;
         }
@@ -836,6 +836,7 @@
             font-weight: 600;
             color: var(--luxury-white);
             margin-bottom: 8px;
+            line-height: 1.4;
         }
 
         .platform-desc {
@@ -870,6 +871,7 @@
             border: 1px solid rgba(255, 107, 53, 0.2);
             padding: 4px 12px;
             border-radius: 20px;
+            white-space: nowrap;
         }
 
         .social-bonus {
@@ -1087,6 +1089,12 @@
             .social-platforms {
                 grid-template-columns: 1fr;
                 gap: 40px;
+            }
+        }
+        
+        @media (max-width: 992px) and (min-width: 769px) {
+            .social-platforms {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .social-item {
@@ -1406,11 +1414,29 @@
                         </div>
                     </div>
                     <div class="social-info">
-                        <h4 class="platform-title">AZ Ring智能健康</h4>
+                        <h4 class="platform-title">AZ Ring<br><span style="white-space: nowrap;">智能健康</span></h4>
                         <p class="platform-desc">抽奖信息 | 中奖通知 | 健康管理</p>
                         <div class="platform-benefits">
                             <span class="benefit-tag">开奖提醒</span>
                             <span class="benefit-tag">专属福利</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-item">
+                    <div class="social-qr" onclick="enlargeQR('service')">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/活动客服二维码.png" alt="活动客服二维码" id="serviceQR">
+                        <div class="qr-overlay">
+                            <div class="social-icon service">👨‍💼</div>
+                            <span class="platform-name">客服</span>
+                        </div>
+                    </div>
+                    <div class="social-info">
+                        <h4 class="platform-title">产品经理答疑</h4>
+                        <p class="platform-desc" style="line-height: 2;">中奖咨询 |<br>产品答疑 |<br>售后服务</p>
+                        <div class="platform-benefits">
+                            <span class="benefit-tag">快速响应</span>
+                            <span class="benefit-tag">一对一服务</span>
                         </div>
                     </div>
                 </div>
@@ -1772,6 +1798,9 @@
             } else if (platform === 'wechat') {
                 imageSrc = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg';
                 text = '扫码关注微信公众号「AZ Ring智能健康」';
+            } else if (platform === 'service') {
+                imageSrc = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品经理二维码.png';
+                text = '扫码添加产品经理，获取专属服务';
             }
             
             modalImage.src = imageSrc;
