@@ -11,6 +11,8 @@
     
     <!-- 健康数据管理系统 -->
     <script src="js/health-data-manager.js"></script>
+    <script src="js/points-manager.js"></script>
+    <script src="js/coupon-manager.js"></script>
     
     <!-- 本地Inter字体 -->
     <style>
@@ -1330,6 +1332,83 @@
             
             // 保存结果
             saveResult(scores);
+            
+            // 🔥 显示积分奖励提示
+            setTimeout(() => {
+                showPointsReward();
+            }, 2000);
+        }
+        
+        // 显示积分奖励提示
+        function showPointsReward() {
+            if (!window.pointsManager) return;
+            
+            // 检查是否获得了积分（标准版送50分）
+            const testType = 'tcm';
+            const testName = '体质标准评估';
+            
+            // 查看最近的积分记录
+            const earnedHistory = window.pointsManager.getEarnedHistory(10);
+            const recentPoints = earnedHistory.find(record => 
+                record.testType === testType && 
+                record.testName === testName
+            );
+            
+            if (recentPoints) {
+                // 创建积分提示弹窗
+                const pointsAlert = document.createElement('div');
+                pointsAlert.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(135deg, #ff6b35, #f7931e);
+                    color: white;
+                    padding: 30px 40px;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 60px rgba(255, 107, 53, 0.5);
+                    z-index: 10000;
+                    text-align: center;
+                    animation: bounceIn 0.5s ease;
+                `;
+                
+                pointsAlert.innerHTML = `
+                    <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
+                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 10px;">恭喜您！</div>
+                    <div style="font-size: 16px; margin-bottom: 20px;">完成测评获得 <strong>${recentPoints.amount}积分</strong></div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="window.location.href='points-center.html'" style="
+                            background: white;
+                            color: #ff6b35;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 10px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">查看积分</button>
+                        <button onclick="this.parentElement.parentElement.remove()" style="
+                            background: rgba(255,255,255,0.2);
+                            color: white;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 10px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 14px;
+                        ">知道了</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(pointsAlert);
+                
+                // 3秒后自动消失
+                setTimeout(() => {
+                    pointsAlert.style.opacity = '0';
+                    pointsAlert.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => pointsAlert.remove(), 500);
+                }, 5000);
+            }
         }
         
         // 计算体质得分

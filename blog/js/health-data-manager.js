@@ -58,6 +58,24 @@ class HealthDataManager {
         
         console.log('✅ 测试结果已保存:', record);
         
+        // 🔥 新增：自动送积分（快速版除外）
+        if (window.pointsManager && !testName.includes('快速')) {
+            const points = this.calculatePointsReward(testType, testName);
+            if (points > 0 && !window.pointsManager.hasEarnedPointsForTest(testType, testName)) {
+                const pointsRecord = window.pointsManager.addPoints(
+                    points,
+                    `完成${testName}`,
+                    testType,
+                    testName,
+                    record.id
+                );
+                if (pointsRecord) {
+                    console.log(`🎉 恭喜！您获得了 ${points} 积分！`);
+                    record.pointsEarned = points;  // 记录获得的积分
+                }
+            }
+        }
+        
         return record;
     }
     
@@ -224,6 +242,32 @@ class HealthDataManager {
             alert('❌ 数据导入失败：' + error.message);
             return false;
         }
+    }
+    
+    // 计算积分奖励
+    calculatePointsReward(testType, testName) {
+        // 快速版不送积分
+        if (testName.includes('快速')) {
+            return 0;
+        }
+        
+        // 深度版送100分
+        if (testName.includes('深度')) {
+            return 100;
+        }
+        
+        // 中心版送80分
+        if (testName.includes('中心')) {
+            return 80;
+        }
+        
+        // 标准版、情感版送50分
+        if (testName.includes('标准') || testName.includes('情感')) {
+            return 50;
+        }
+        
+        // 默认不送积分
+        return 0;
     }
     
     // 清空所有数据
