@@ -954,10 +954,28 @@
           <h4 class="text-white font-semibold mb-3">订单信息</h4>
           <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">订单状态：</strong>${data.orderInfo.statusText}</p>
           <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">商品名称：</strong>${data.orderInfo.batchName || '-'}</p>
-          ${data.orderInfo.shippedAt ? `<p class="text-sm text-gray-400"><strong class="text-gray-300">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
-        </div>
+          ${data.orderInfo.shippedAt ? `<p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
       `;
       
+      // 如果已发货，显示快递信息（始终显示，不依赖物流轨迹）
+      if (data.orderInfo.status >= 3 && data.orderInfo.trackingNumber) {
+        html += `
+          <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10">
+            <div>
+              <p class="text-xs text-gray-500 mb-1">快递公司</p>
+              <p class="text-sm text-white">${data.orderInfo.logisticsCompany || '-'}</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">快递单号</p>
+              <p class="text-sm text-white font-mono">${data.orderInfo.trackingNumber}</p>
+            </div>
+          </div>
+        `;
+      }
+      
+      html += `</div>`;
+      
+      // 物流轨迹区域（独立判断）
       if (data.logistics && data.logistics.traces && data.logistics.traces.length > 0) {
         const statusClass = data.logistics.status === 'SIGN' ? 'bg-green-500' : 
                            data.logistics.status === 'DELIVERING' ? 'bg-yellow-500' :
@@ -968,17 +986,6 @@
             <div class="flex items-center justify-between mb-4">
               <h4 class="text-white font-semibold">物流轨迹</h4>
               <span class="px-3 py-1 ${statusClass} text-white text-xs rounded-full">${data.logistics.statusDesc}</span>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-              <div>
-                <p class="text-gray-400">快递公司</p>
-                <p class="text-white">${data.orderInfo.logisticsCompany || '-'}</p>
-              </div>
-              <div>
-                <p class="text-gray-400">快递单号</p>
-                <p class="text-white">${data.orderInfo.trackingNumber || '-'}</p>
-              </div>
             </div>
             
             <div class="mt-4">
@@ -1001,7 +1008,18 @@
           </div>
         `;
       } else if (data.orderInfo.status >= 3) {
-        html += '<p class="text-gray-400 text-center py-8">订单已发货，物流信息更新中...</p>';
+        // 已发货但暂无物流轨迹
+        html += `
+          <div class="p-6 text-center">
+            <div class="inline-block p-4 rounded-full bg-yellow-500/10 mb-4">
+              <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <p class="text-gray-400 text-sm">订单已发货，物流信息更新中...</p>
+            <p class="text-gray-500 text-xs mt-2">快递公司揽件后，轨迹信息将在此显示</p>
+          </div>
+        `;
       } else {
         html += '<p class="text-gray-400 text-center py-8">订单正在准备中，我们会尽快为您发货</p>';
       }
