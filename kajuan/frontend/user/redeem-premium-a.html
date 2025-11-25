@@ -676,8 +676,8 @@
             <input type="radio" name="product_model_id" value="${model.id}" required onchange="onModelChange(${model.id})">
             <div class="text-center">
               ${model.image_url ?
-                `<img src="${model.image_url}" alt="${model.name}" class="w-full h-32 object-cover rounded mb-3">` :
-                `<div class="w-full h-32 flex items-center justify-center bg-white/5 rounded mb-3 text-gray-400">${model.name}</div>`
+                `<img src="${model.image_url}" alt="${model.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
+                `<div class="w-full h-48 flex items-center justify-center bg-white/5 rounded mb-3 text-gray-400">${model.name}</div>`
               }
               <span class="block text-white font-semibold">${model.name}</span>
               ${priceText ? `<span class="block text-sm mt-1">${priceText}</span>` : ''}
@@ -732,8 +732,8 @@
           <input type="radio" name="ring_color" value="${color.code}" required>
           <div class="text-center">
             ${color.image_url ?
-              `<img src="${color.image_url}" alt="${color.name}" class="w-full h-32 object-cover rounded mb-3">` :
-              `<div class="w-full h-32 rounded mb-3" style="background: ${getColorGradient(color.code)}"></div>`
+              `<img src="${color.image_url}" alt="${color.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
+              `<div class="w-full h-48 rounded mb-3" style="background: ${getColorGradient(color.code)}"></div>`
             }
             <span class="block text-white font-semibold">${color.name}</span>
             ${index === 0 ? '<span class="inline-block mt-2 px-3 py-1 bg-luxury-gold text-black text-xs rounded-full">热门</span>' : ''}
