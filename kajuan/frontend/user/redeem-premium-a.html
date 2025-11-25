@@ -217,24 +217,28 @@
       <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
         
         <!-- 左侧：品牌视觉 + 轮播 -->
-        <div class="relative border-r-0 lg:border-r border-hairline p-8 lg:p-16 flex flex-col justify-center">
+        <div class="relative border-r-0 lg:border-r border-hairline overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0" id="heroCarousel">
             <div class="carousel-slide active">
               <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/玻璃3.png" 
-                   class="w-full h-full object-cover grayscale-img opacity-40" alt="AZ Ring">
+                   class="w-full h-full object-cover opacity-70" alt="AZ Ring">
             </div>
             <div class="carousel-slide">
               <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/双戒指.png" 
-                   class="w-full h-full object-cover grayscale-img opacity-40" alt="AZ Ring Detail">
+                   class="w-full h-full object-cover opacity-70" alt="AZ Ring Detail">
             </div>
           </div>
           
-          <div class="relative z-10">
-            <span class="text-luxury-gold text-xs tracking-[0.3em] uppercase mb-4 block">Exclusive Access</span>
-            <h1 class="text-5xl lg:text-7xl font-light tracking-tighter text-white leading-[1.1] mb-6">
+          <!-- 底部渐变遮罩确保文字可读性 -->
+          <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-0"></div>
+          
+          <!-- 左下角文字 -->
+          <div class="absolute bottom-8 left-8 z-10 max-w-md">
+            <span class="text-luxury-gold text-xs tracking-[0.3em] uppercase mb-3 block">Exclusive Access</span>
+            <h1 class="text-4xl lg:text-6xl font-light tracking-tighter text-white leading-[1.1] mb-4">
               Master <br>Your Body.
             </h1>
-            <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+            <p class="text-gray-200 text-sm leading-relaxed">
               融合精密钛合金工艺与医疗级传感器。<br>这不仅是一枚戒指，更是您健康管理的终极形态。
             </p>
           </div>
@@ -299,19 +303,19 @@
       <div class="max-w-7xl mx-auto py-16 px-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div class="flex flex-col border-l border-white/10 pl-6">
-            <span class="text-4xl font-light text-gray-800 mb-4">01</span>
-            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">验证</h3>
-            <p class="text-gray-500 text-xs leading-relaxed">系统将自动核验您的专属兑换码的有效性与权益等级。</p>
+            <span class="text-5xl font-light text-gray-800 mb-4">01</span>
+            <h3 class="text-white text-lg font-bold uppercase tracking-widest mb-3">验证</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">系统将自动核验您的专属兑换码的有效性与权益等级。</p>
           </div>
           <div class="flex flex-col border-l border-white/10 pl-6">
-            <span class="text-4xl font-light text-gray-800 mb-4">02</span>
-            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">定制</h3>
-            <p class="text-gray-500 text-xs leading-relaxed">确认收货地址，我们提供尊享快递服务，确保安全送达。</p>
+            <span class="text-5xl font-light text-gray-800 mb-4">02</span>
+            <h3 class="text-white text-lg font-bold uppercase tracking-widest mb-3">定制</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">确认收货地址，我们提供尊享快递服务，确保安全送达。</p>
           </div>
           <div class="flex flex-col border-l border-white/10 pl-6">
-            <span class="text-4xl font-light text-gray-800 mb-4">03</span>
-            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">交付</h3>
-            <p class="text-gray-500 text-xs leading-relaxed">极速发货。开启您的 24 小时全天候健康监测之旅。</p>
+            <span class="text-5xl font-light text-gray-800 mb-4">03</span>
+            <h3 class="text-white text-lg font-bold uppercase tracking-widest mb-3">交付</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">极速发货。开启您的 24 小时全天候健康监测之旅。</p>
           </div>
         </div>
       </div>
@@ -472,52 +476,57 @@
         <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 border-b border-white/10">
           <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
             <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </div>
-            <h4 class="text-sm text-white font-semibold mb-1">Sleep Analysis</h4>
-            <p class="text-xs text-gray-500">多阶段深度睡眠追踪</p>
+            <h4 class="text-lg text-white font-semibold mb-2">Sleep Analysis</h4>
+            <p class="text-sm text-gray-400">多阶段深度睡眠追踪</p>
           </div>
           <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
             <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
             </div>
-            <h4 class="text-sm text-white font-semibold mb-1">Heart Rate</h4>
-            <p class="text-xs text-gray-500">HRV 心率变异性监测</p>
+            <h4 class="text-lg text-white font-semibold mb-2">Heart Rate</h4>
+            <p class="text-sm text-gray-400">HRV 心率变异性监测</p>
           </div>
           <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
             <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
-            <h4 class="text-sm text-white font-semibold mb-1">Activity</h4>
-            <p class="text-xs text-gray-500">自动识别运动模式</p>
+            <h4 class="text-lg text-white font-semibold mb-2">Activity</h4>
+            <p class="text-sm text-gray-400">自动识别运动模式</p>
           </div>
           <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
             <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
             </div>
-            <h4 class="text-sm text-white font-semibold mb-1">Titanium</h4>
-            <p class="text-xs text-gray-500">航空级钛合金机身</p>
+            <h4 class="text-lg text-white font-semibold mb-2">Titanium</h4>
+            <p class="text-sm text-gray-400">航空级钛合金机身</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 场景展示 (黑白风格) -->
+    <!-- 场景展示 (彩色 + 动态交互) -->
     <section class="w-full border-b border-hairline">
       <div class="grid grid-cols-1 md:grid-cols-2 h-[500px]">
         <div class="relative group overflow-hidden">
-          <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" class="absolute inset-0 w-full h-full object-cover grayscale-img" alt="功能展示">
-          <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500"></div>
-          <div class="absolute bottom-8 left-8">
-            <h3 class="text-2xl font-light text-white mb-2">Focus</h3>
-            <p class="text-xs text-gray-300 uppercase tracking-widest">Every movement counts</p>
+          <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" 
+               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="功能展示">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90"></div>
+          <div class="absolute bottom-10 left-10 z-10">
+            <h3 class="text-3xl font-light text-white mb-3">Focus <span class="text-lg opacity-70 ml-2 font-normal">· 专注</span></h3>
+            <p class="text-sm text-gray-300 tracking-widest uppercase mb-2">Every movement counts</p>
+            <p class="text-xs text-gray-400">全天候精准监测您的运动数据</p>
           </div>
         </div>
         <div class="relative group overflow-hidden border-l border-hairline">
-          <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" class="absolute inset-0 w-full h-full object-cover grayscale-img" alt="功能展示">
-          <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500"></div>
-          <div class="absolute bottom-8 left-8">
-            <h3 class="text-2xl font-light text-white mb-2">Elegance</h3>
-            <p class="text-xs text-gray-300 uppercase tracking-widest">Seamless integration</p>
+          <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" 
+               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="功能展示">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90"></div>
+          <div class="absolute bottom-10 left-10 z-10">
+            <h3 class="text-3xl font-light text-white mb-3">Elegance <span class="text-lg opacity-70 ml-2 font-normal">· 优雅</span></h3>
+            <p class="text-sm text-gray-300 tracking-widest uppercase mb-2">Seamless integration</p>
+            <p class="text-xs text-gray-400">航空级钛合金，极致无感佩戴</p>
           </div>
         </div>
       </div>
