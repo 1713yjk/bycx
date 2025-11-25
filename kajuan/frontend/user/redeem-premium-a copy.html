@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>兑换礼品卡 - AZ Rings 智能健康戒指</title>
+  <style>
+    :root {
+      --color-primary: #ffffff;
+      --color-secondary: #f0f0f0;
+      --color-text: #ffffff;
+      --color-text-light: #999999;
+      --color-text-muted: #666666;
+      --color-bg: #0a0a0a;
+      --color-bg-dark: #1a1a1a;
+      --color-bg-gray: #2a2a2a;
+      --color-border: rgba(255,255,255,0.1);
+      --color-accent: #ff6b35;
+      --color-accent-hover: #ff8a65;
+      --color-success: #10B981;
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 32px;
+      --space-xl: 48px;
+      --space-2xl: 64px;
+      --space-3xl: 80px;
+      --font-size-sm: 14px;
+      --font-size-base: 16px;
+      --font-size-lg: 18px;
+      --font-size-xl: 24px;
+      --font-size-2xl: 32px;
+      --font-size-3xl: 48px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    /* Hero区域 */
+    .hero-section {
+      position: relative;
+      height: 50vh;
+      min-height: 400px;
+      background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-carousel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+    }
+
+    .carousel-slide img {
+      max-width: 50%;
+      max-height: 350px;
+      object-fit: contain;
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: var(--space-xl);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: var(--space-sm);
+      z-index: 10;
+    }
+
+    .indicator {
+      width: 40px;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      background: var(--color-accent);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      color: var(--color-text);
+      max-width: 600px;
+      padding: 40px 20px;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-light);
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: 16px 48px;
+      background: var(--color-accent);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .hero-cta:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-2px);
+    }
+
+    /* 产品特色区 */
+    .features-section {
+      padding: var(--space-3xl) 0;
+      background: var(--color-bg-dark);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .feature-card {
+      padding: var(--space-xl);
+      background: var(--color-bg-gray);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--color-accent);
+    }
+
+    .feature-title {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+
+    .feature-desc {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    /* 兑换表单区 */
+    .redeem-section {
+      padding: var(--space-3xl) 0;
+      background: var(--color-bg);
+    }
+
+    .redeem-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--color-bg-dark);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      border: 1px solid var(--color-border);
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+
+    .step-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--color-bg-gray);
+      border-radius: 999px;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+
+    .btn-back {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      font-family: inherit;
+      color: var(--color-text-light);
+      transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    .product-info {
+      padding: var(--space-md);
+      background: var(--color-bg-gray);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .product-info p {
+      margin-bottom: var(--space-xs);
+      font-size: var(--font-size-sm);
+    }
+
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--space-xs);
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      color: var(--color-text-light);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg-gray);
+      color: var(--color-text);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-family: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      background: var(--color-bg-dark);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: var(--color-bg);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-secondary);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg-gray);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      margin-top: var(--space-md);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-bg-dark);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .success-content {
+      text-align: center;
+      padding: var(--space-xl) 0;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto var(--space-lg);
+    }
+
+    .success-icon svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--color-success);
+    }
+
+    .success-content h3 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-md);
+      color: var(--color-text);
+    }
+
+    .success-content p {
+      color: var(--color-text-light);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* 物流查询区（折叠） */
+    .tracking-section {
+      max-width: 600px;
+      margin: var(--space-xl) auto 0;
+      background: var(--color-bg-dark);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      border: 1px solid var(--color-border);
+    }
+
+    .tracking-toggle {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--color-bg-dark);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--color-text);
+      transition: background 0.2s ease;
+    }
+
+    .tracking-toggle:hover {
+      background: var(--color-bg-gray);
+    }
+
+    .tracking-toggle .chevron {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+      stroke: var(--color-text);
+    }
+
+    .tracking-section.expanded .chevron {
+      transform: rotate(180deg);
+    }
+
+    .tracking-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding: 0 var(--space-md);
+    }
+
+    .tracking-section.expanded .tracking-content {
+      max-height: 800px;
+      overflow-y: auto;
+      padding: var(--space-md);
+    }
+
+    .tracking-result {
+      margin-top: var(--space-md);
+      padding: var(--space-md);
+      background: var(--color-bg-gray);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      display: none;
+    }
+
+    .tracking-result.show {
+      display: block;
+    }
+
+    .tracking-result h4 {
+      margin-bottom: var(--space-sm);
+      font-size: var(--font-size-base);
+      color: var(--color-text);
+    }
+
+    .tracking-result p {
+      margin-bottom: var(--space-xs);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+
+    .tracking-result hr {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 16px 0;
+    }
+
+    /* 物流轨迹时间线样式 */
+    .logistics-timeline {
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--color-bg-gray);
+      border-radius: var(--radius-md);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    /* 滚动条样式 */
+    .logistics-timeline::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .logistics-timeline::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+    }
+
+    .logistics-timeline::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+
+    .logistics-timeline::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .logistics-status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    .status-transporting { background: #3B82F6; color: white; }
+    .status-signed { background: #10B981; color: white; }
+    .status-delivering { background: #F59E0B; color: white; }
+    .status-problem { background: #EF4444; color: white; }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 30px;
+      padding-bottom: 20px;
+      border-left: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .timeline-item:last-child {
+      border-left: none;
+      padding-bottom: 0;
+    }
+
+    .timeline-item.latest {
+      border-left-color: #10B981;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -6px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .timeline-item.latest .timeline-dot {
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .timeline-time {
+      font-size: 13px;
+      color: var(--color-text-light);
+      margin-bottom: 4px;
+    }
+
+    .timeline-item.latest .timeline-time {
+      color: #10B981;
+      font-weight: bold;
+    }
+
+    .timeline-content {
+      color: var(--color-text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .timeline-location {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+
+    .logistics-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+    }
+
+    .logistics-info-item {
+      font-size: 14px;
+    }
+
+    .logistics-info-item strong {
+      color: var(--color-text-light);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    /* 产品画廊区 */
+    .gallery-section {
+      padding: var(--space-3xl) 0;
+      background: var(--color-bg-dark);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .gallery-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      border: 1px solid var(--color-border);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .gallery-item p {
+      padding: var(--space-md);
+      text-align: center;
+      font-weight: 500;
+      background: var(--color-bg-gray);
+      color: var(--color-text);
+    }
+
+    /* Footer */
+    .footer {
+      padding: var(--space-xl) 0;
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* 3步流程区 */
+    .steps-section {
+      padding: 60px 0;
+      background: var(--color-bg);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--color-bg-dark);
+      border-radius: 12px;
+      border: 1px solid var(--color-border);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background: var(--color-accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 auto 20px;
+    }
+
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--color-text);
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    /* 区块说明文案 */
+    .section-intro {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .section-intro h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--color-text);
+    }
+
+    .section-intro p {
+      font-size: 1rem;
+      color: var(--color-text-light);
+      line-height: 1.8;
+    }
+
+    /* 客服卡片 */
+    .service-card {
+      background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-gray) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 40px;
+      margin: 60px 0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .service-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .service-text {
+      flex: 1;
+    }
+
+    .service-text h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--color-text);
+    }
+
+    .service-text p {
+      font-size: 1rem;
+      color: var(--color-text-light);
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+
+    .service-features {
+      display: flex;
+      gap: 30px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+    }
+
+    .feature-item svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--color-accent);
+      fill: none;
+    }
+
+    .service-qr {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .service-qr img {
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      border: 3px solid var(--color-border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .service-qr p {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      font-weight: 500;
+    }
+
+    /* 戒指选择区 */
+    .ring-selection {
+      margin-bottom: var(--space-lg);
+      padding: var(--space-lg);
+      background: var(--color-bg-gray);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .ring-selection h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 型号选择卡片 */
+    .model-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .model-card {
+      position: relative;
+      display: block;
+      cursor: pointer;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background: var(--color-bg-dark);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .model-card:hover {
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    .model-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .model-card input[type="radio"]:checked ~ .check-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .model-card:has(input[type="radio"]:checked) {
+      border-color: var(--color-accent);
+      background: linear-gradient(135deg, var(--color-bg-dark) 0%, rgba(255,107,53,0.1) 100%);
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.2);
+    }
+
+    .model-card-content {
+      position: relative;
+      text-align: center;
+    }
+
+    .model-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--color-bg-gray);
+    }
+
+    .model-name {
+      display: block;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    .model-price-adjustment {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--color-text-light);
+      margin-top: 4px;
+    }
+
+    /* 颜色选择卡片 */
+    .color-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .color-card {
+      position: relative;
+      display: block;
+      cursor: pointer;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      background: var(--color-bg-dark);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .color-card:hover {
+      border-color: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    .color-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .color-card input[type="radio"]:checked ~ .check-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .color-card:has(input[type="radio"]:checked) {
+      border-color: var(--color-accent);
+      background: linear-gradient(135deg, var(--color-bg-dark) 0%, rgba(255,107,53,0.1) 100%);
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.2);
+    }
+
+    .color-card-content {
+      position: relative;
+      text-align: center;
+    }
+
+    .color-card-content img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 12px;
+      filter: brightness(0.9);
+      transition: filter 0.3s ease;
+    }
+
+    .color-card:hover .color-card-content img {
+      filter: brightness(1);
+    }
+
+    .color-name {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: 8px;
+    }
+
+    .popular-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 8px;
+      background: var(--color-accent);
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .check-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s ease;
+    }
+
+    .check-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
+    }
+
+    /* 圈号选择器 */
+    .size-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--color-bg-gray);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .size-select:hover {
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .size-select:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      background: var(--color-bg-dark);
+    }
+
+    .size-select option {
+      background: var(--color-bg-dark);
+      color: var(--color-text);
+      padding: 12px;
+    }
+
+    .help-text {
+      margin-top: 8px;
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .help-text a {
+      color: var(--color-accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .help-text a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    /* 尺寸指南弹窗 */
+    .size-guide-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(4px);
+    }
+
+    .size-guide-overlay.show {
+      display: flex;
+    }
+
+    .size-guide-modal {
+      background: var(--color-bg-dark);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .size-guide-modal h3 {
+      font-size: 1.5rem;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+    }
+
+    .size-guide-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-light);
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+
+    .size-guide-close:hover {
+      color: var(--color-text);
+    }
+
+    .size-guide-content {
+      color: var(--color-text-light);
+      line-height: 1.8;
+    }
+
+    .size-guide-content ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    .size-guide-content li {
+      margin-bottom: 12px;
+    }
+
+    .size-table {
+      width: 100%;
+      margin: 20px 0;
+      border-collapse: collapse;
+    }
+
+    .size-table th,
+    .size-table td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid var(--color-border);
+    }
+
+    .size-table th {
+      background: var(--color-bg-gray);
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    .size-table td {
+      color: var(--color-text-light);
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .hero-title { font-size: var(--font-size-2xl); }
+      .carousel-slide img { max-width: 80%; }
+      .features-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .service-card {
+        padding: 30px 20px;
+      }
+      
+      .service-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .service-features {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .ring-selection {
+        padding: var(--space-md);
+      }
+      
+      .color-options {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .color-card-content img {
+        height: 100px;
+      }
+      
+      .size-guide-modal {
+        width: 95%;
+        padding: var(--space-md);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero区域 -->
+  <section class="hero-section">
+    <div class="hero-carousel">
+      <div class="carousel-slide active">
+        <div style="width: 100%; height: 400px; background: linear-gradient(135deg, #2c3e50, #34495e); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; border-radius: 8px;">
+          AZ Ring 经典黑
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <div style="width: 100%; height: 400px; background: linear-gradient(135deg, #d4af37, #f4e5a1); display: flex; align-items: center; justify-content: center; color: #333; font-size: 24px; border-radius: 8px;">
+          AZ Ring 奢华金
+        </div>
+      </div>
+      <div class="carousel-indicators">
+        <button class="indicator active" data-slide="0" aria-label="查看黑色戒指"></button>
+        <button class="indicator" data-slide="1" aria-label="查看金色戒指"></button>
+      </div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-title">兑换您的 AZ Ring 智能健康戒指</h1>
+      <p class="hero-subtitle">由宝格丽设计师操刀 · 360度全时段健康守护</p>
+      <a href="#redeem-section" class="hero-cta">立即兑换</a>
+    </div>
+  </section>
+
+  <!-- 3步流程区 -->
+  <section class="steps-section">
+    <div class="container">
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3 class="step-title">验证兑换码</h3>
+          <p class="step-desc">输入您的兑换码，系统将自动验证有效性</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3 class="step-title">填写收货信息</h3>
+          <p class="step-desc">填写准确的收货地址，确保顺利送达</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3 class="step-title">完成兑换</h3>
+          <p class="step-desc">提交后我们将尽快安排发货，可随时查询物流</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 产品特色区 -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">产品特色</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">专业睡眠监测</h3>
+          <p class="feature-desc">15+项睡眠专项分析，覆盖深睡、浅睡、REM全阶段</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">24小时心率追踪</h3>
+          <p class="feature-desc">实时监测心率变化，精准记录运动与睡眠状态</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <h3 class="feature-title">智能运动分析</h3>
+          <p class="feature-desc">支持数十种运动类型，自动识别并记录运动数据</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="22"></line>
+            </svg>
+          </div>
+          <h3 class="feature-title">极致轻盈</h3>
+          <p class="feature-desc">仅重3g，7天超长续航，5ATM防水防尘</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 兑换表单区 -->
+  <section class="redeem-section" id="redeem-section">
+    <div class="container">
+      <div class="section-intro">
+        <h2>兑换您的礼品</h2>
+        <p>每个兑换码仅可使用一次，请确保信息准确无误。如有疑问，请联系客服咨询。</p>
+      </div>
+      
+      <div class="redeem-card">
+        <!-- 步骤1 -->
+        <div class="step active" id="step1">
+          <div class="step-header">
+            <span class="step-badge">步骤 1/2</span>
+          </div>
+          <h3 style="margin-bottom: 16px; color: var(--color-text);">验证兑换码</h3>
+          <div class="form-group">
+            <label>兑换码</label>
+            <input type="text" id="redeemCode" placeholder="请输入卡片背面的兑换码" maxlength="20">
+          </div>
+          <button class="btn-primary" onclick="validateCodeA()">继续</button>
+        </div>
+
+        <!-- 步骤2 -->
+        <div class="step" id="step2">
+          <div class="step-header">
+            <span class="step-badge">步骤 2/2</span>
+            <button class="btn-back" onclick="goBackToStep1()">返回</button>
+          </div>
+          
+          <h3 style="margin-bottom: 16px; color: var(--color-text);">填写收货信息</h3>
+          
+          <div class="product-info">
+            <p><strong>商品：</strong><span id="productName"></span></p>
+            <p><strong>价值：</strong><span id="productValue"></span></p>
+          </div>
+
+          <form id="redeemForm">
+            <!-- 戒指选择区 -->
+            <div class="ring-selection">
+              <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: var(--color-text);">选择您的戒指</h4>
+
+              <!-- 型号选择 -->
+              <div class="form-group" id="modelSelectionGroup" style="display: none;">
+                <label>戒指型号 <span style="color: var(--color-accent);">*</span></label>
+                <div class="model-options" id="modelOptions">
+                  <!-- 动态渲染型号选项 -->
+                </div>
+              </div>
+
+              <!-- 颜色选择 -->
+              <div class="form-group" id="colorSelectionGroup" style="display: none;">
+                <label>戒指颜色 <span style="color: var(--color-accent);">*</span></label>
+                <div class="color-options" id="colorOptions">
+                  <!-- 动态渲染颜色选项 -->
+                </div>
+              </div>
+
+              <!-- 圈号选择 -->
+              <div class="form-group" id="sizeSelectionGroup" style="display: none;">
+                <label>戒指尺寸（圈号） <span style="color: var(--color-accent);">*</span></label>
+                <select name="ring_size" required class="size-select" id="sizeSelect">
+                  <option value="">请选择圈号</option>
+                  <!-- 动态渲染尺寸选项 -->
+                </select>
+                <p class="help-text">
+
+
+                </p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>收货人姓名</label>
+                <input type="text" name="user_name" required placeholder="请输入真实姓名">
+              </div>
+              <div class="form-group">
+                <label>联系电话</label>
+                <input type="tel" name="user_phone" required placeholder="请输入手机号">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>省份</label>
+                <input type="text" name="user_province" required placeholder="如: 广东省">
+              </div>
+              <div class="form-group">
+                <label>城市</label>
+                <input type="text" name="user_city" required placeholder="如: 深圳市">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>区县</label>
+              <input type="text" name="user_district" required placeholder="如: 南山区">
+            </div>
+            <div class="form-group">
+              <label>详细地址</label>
+              <textarea name="user_address" required placeholder="请输入详细地址（街道、门牌号等）"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">提交兑换</button>
+          </form>
+        </div>
+
+        <!-- 步骤3：成功 -->
+        <div class="step" id="step3">
+          <div class="success-content">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h3>兑换成功</h3>
+            <p>感谢您选择 AZ Rings 智能戒指</p>
+            <p>我们将在 1-3 个工作日内为您发货</p>
+            <p>您可以在下方查询物流信息</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 客服卡片 -->
+      <div class="service-card">
+        <div class="service-content">
+          <div class="service-text">
+            <h3>需要帮助？</h3>
+            <p>如需修改地址、查询进度或其他问题，请扫码添加客服微信</p>
+            <div class="service-features">
+              <div class="feature-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>地址修改</span>
+              </div>
+              <div class="feature-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>订单咨询</span>
+              </div>
+              <div class="feature-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>售后服务</span>
+              </div>
+            </div>
+          </div>
+          <div class="service-qr">
+            <div style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin: 0 auto;">
+              <p style="text-align: center; color: #999; margin: 0;">客服二维码<br>请联系管理员<br>配置图片</p>
+            </div>
+            <p>扫码添加客服</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 物流查询区（折叠） -->
+      <div class="tracking-section" id="trackingSection">
+        <button class="tracking-toggle" onclick="toggleTracking()">
+          <span>查询物流信息</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="tracking-content" id="trackingContent">
+          <div class="form-group">
+            <label>兑换码或追溯码</label>
+            <input type="text" id="trackingCode" placeholder="输入兑换码或追溯码">
+          </div>
+          <button class="btn-secondary" onclick="queryTracking()">查询</button>
+          
+          <div class="tracking-result" id="trackingResult"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 产品画廊区 -->
+  <section class="gallery-section">
+    <div class="container">
+      <h2 class="section-title">佩戴场景</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;">运动健身</div>
+          <p>运动健身</p>
+        </div>
+        <div class="gallery-item">
+          <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;">睡眠监测</div>
+          <p>睡眠监测</p>
+        </div>
+        <div class="gallery-item">
+          <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px;">日常佩戴</div>
+          <p>日常佩戴</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2024 AZ Rings. All rights reserved.</p>
+  </footer>
+
+  <!-- 尺寸指南弹窗 -->
+  <div class="size-guide-overlay" id="sizeGuideOverlay" onclick="if(event.target === this) closeSizeGuide()">
+    <div class="size-guide-modal">
+      <button class="size-guide-close" onclick="closeSizeGuide()">&times;</button>
+      <h3>戒指尺寸测量指南</h3>
+      <div class="size-guide-content">
+        <p>请按照以下步骤测量您的手指尺寸：</p>
+        <ol>
+          <li><strong>准备工具：</strong>一根细绳或纸条、一把尺子</li>
+          <li><strong>缠绕手指：</strong>将绳子围绕您想佩戴戒指的手指根部缠绕一圈</li>
+          <li><strong>标记位置：</strong>用笔标记绳子重叠的位置</li>
+          <li><strong>测量长度：</strong>将绳子拉直，用尺子测量两个标记点之间的长度（周长）</li>
+          <li><strong>对照下表：</strong>根据周长选择对应的圈号</li>
+        </ol>
+        
+        <table class="size-table">
+          <thead>
+            <tr>
+              <th>圈号</th>
+              <th>内径 (mm)</th>
+              <th>周长 (mm)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>7号</td><td>17mm</td><td>53.4mm</td></tr>
+            <tr><td>8号</td><td>18mm</td><td>56.5mm</td></tr>
+            <tr><td>9号</td><td>19mm</td><td>59.7mm</td></tr>
+            <tr><td>10号</td><td>20mm</td><td>62.8mm</td></tr>
+            <tr><td>11号</td><td>21mm</td><td>66.0mm</td></tr>
+            <tr><td>12号</td><td>22mm</td><td>69.1mm</td></tr>
+            <tr><td>13号</td><td>23mm</td><td>72.3mm</td></tr>
+          </tbody>
+        </table>
+        
+        <p style="color: var(--color-accent); font-size: 0.9rem; margin-top: 16px;">
+          💡 提示：如果测量结果介于两个尺寸之间，建议选择较大的尺寸以确保舒适度。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = '/api';  // 使用相对路径，自动适配当前域名
+    let currentRedeemCode = '';
+    let currentCarouselSlide = 0;
+
+    // Hero轮播
+    function initCarousel() {
+      const indicators = document.querySelectorAll('.indicator');
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          showSlide(index);
+        });
+      });
+      
+      // 自动轮播
+      setInterval(() => {
+        currentCarouselSlide = (currentCarouselSlide + 1) % 2;
+        showSlide(currentCarouselSlide);
+      }, 5000);
+    }
+
+    function showSlide(index) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      const indicators = document.querySelectorAll('.indicator');
+      
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      
+      indicators.forEach((indicator, i) => {
+        indicator.classList.toggle('active', i === index);
+      });
+      
+      currentCarouselSlide = index;
+    }
+
+    // 全局变量存储当前选择
+    let currentProductId = null;
+    let currentModels = [];
+    let selectedModelId = null;
+
+    // 渲染型号选项
+    function renderModels(models) {
+      const modelContainer = document.getElementById('modelOptions');
+      const modelGroup = document.getElementById('modelSelectionGroup');
+      
+      if (!modelContainer) return;
+
+      if (!models || models.length === 0) {
+        modelGroup.style.display = 'none';
+        return;
+      }
+
+      // 如果只有一个型号，自动选择并隐藏
+      if (models.length === 1) {
+        selectedModelId = models[0].id;
+        modelGroup.style.display = 'none';
+        loadModelOptions(currentProductId, selectedModelId);
+        return;
+      }
+
+      // 显示型号选择区域
+      modelGroup.style.display = 'block';
+      currentModels = models;
+
+      modelContainer.innerHTML = models.map((model, index) => {
+        const priceAdj = parseFloat(model.price_adjustment) || 0;
+        let priceText = '';
+        if (priceAdj > 0) priceText = `<span style="color: #4ade80;">+¥${priceAdj.toFixed(2)}</span>`;
+        else if (priceAdj < 0) priceText = `<span style="color: #f87171;">¥${priceAdj.toFixed(2)}</span>`;
+
+        return `
+          <label class="model-card">
+            <input type="radio" name="product_model_id" value="${model.id}" required onchange="onModelChange(${model.id})">
+            <div class="model-card-content">
+              ${model.image_url ?
+                `<img src="${model.image_url}" alt="${model.name}" class="model-image">` :
+                `<div class="model-image" style="display: flex; align-items: center; justify-content: center; color: var(--color-text-light); font-size: 14px;">${model.name}</div>`
+              }
+              <span class="model-name">${model.name}</span>
+              ${priceText ? `<span class="model-price-adjustment">${priceText}</span>` : ''}
+            </div>
+            <div class="check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    // 型号选择改变时的处理
+    function onModelChange(modelId) {
+      selectedModelId = modelId;
+      loadModelOptions(currentProductId, modelId);
+    }
+
+    // 加载型号对应的颜色和尺寸
+    function loadModelOptions(productId, modelId) {
+      fetch(`${API_BASE_URL}/redeem/model-options?product_id=${productId}&model_id=${modelId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.code === 200) {
+            renderColors(data.data.colors);
+            renderSizes(data.data.sizes);
+          } else {
+            alert(data.message || '获取型号选项失败');
+          }
+        })
+        .catch(error => {
+          console.error('加载型号选项失败:', error);
+          alert('网络错误，请稍后重试');
+        });
+    }
+
+    // 渲染颜色选项
+    function renderColors(colors) {
+      const colorContainer = document.querySelector('.color-options');
+      const colorGroup = document.getElementById('colorSelectionGroup');
+      if (!colorContainer) return;
+
+      if (!colors || colors.length === 0) {
+        colorGroup.style.display = 'none';
+        colorContainer.innerHTML = '<p style="color: var(--color-text-muted);">暂无可选颜色</p>';
+        return;
+      }
+
+      colorGroup.style.display = 'block';
+      colorContainer.innerHTML = colors.map((color, index) => `
+        <label class="color-card">
+          <input type="radio" name="ring_color" value="${color.code}" required>
+          <div class="color-card-content">
+            ${color.image_url ?
+              `<img src="${color.image_url}" alt="${color.name}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px;">` :
+              `<div style="width: 100%; height: 120px; background: ${getColorGradient(color.code)}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;">${color.name}</div>`
+            }
+            <span class="color-name">${color.name}</span>
+            ${index === 0 ? '<span class="popular-badge">热门</span>' : ''}
+          </div>
+          <div class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    // 获取颜色渐变（用于没有图片的颜色）
+    function getColorGradient(colorCode) {
+      const gradients = {
+        'black': 'linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%)',
+        'gold': 'linear-gradient(135deg, #d4af37 0%, #c5a028 100%)',
+        'blue': 'linear-gradient(135deg, #4a90e2 0%, #357abd 100%)',
+        'silver': 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)',
+        'rose': 'linear-gradient(135deg, #e8a0a0 0%, #d88888 100%)'
+      };
+      return gradients[colorCode] || 'linear-gradient(135deg, #888 0%, #666 100%)';
+    }
+
+    // 渲染尺寸选项
+    function renderSizes(sizes) {
+      const sizeSelect = document.querySelector('select[name="ring_size"]');
+      const sizeGroup = document.getElementById('sizeSelectionGroup');
+      if (!sizeSelect) return;
+
+      if (!sizes || sizes.length === 0) {
+        sizeGroup.style.display = 'none';
+        sizeSelect.innerHTML = '<option value="">暂无可选尺寸</option>';
+        return;
+      }
+
+      sizeGroup.style.display = 'block';
+      sizeSelect.innerHTML = '<option value="">请选择圈号</option>' +
+        sizes.map(size => `<option value="${size.code}">${size.name}</option>`).join('');
+    }
+
+    // 验证兑换码
+    async function validateCodeA() {
+      const code = document.getElementById('redeemCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码');
+        return;
+      }
+
+      // 调用后端API验证
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ redeem_code: code })
+        });
+
+        const res = await response.json();
+
+        if (res.code === 200) {
+          currentRedeemCode = code;
+          currentProductId = res.data.product_id;
+          document.getElementById('productName').textContent = res.data.product_name;
+          document.getElementById('productValue').textContent = `¥${parseFloat(res.data.product_value).toFixed(2)}`;
+
+          // 判断是否有型号
+          if (res.data.models && res.data.models.length > 0) {
+            // 有型号：渲染型号列表
+            renderModels(res.data.models);
+          } else {
+            // 无型号：直接渲染颜色和尺寸
+            renderColors(res.data.colors || []);
+            renderSizes(res.data.sizes || []);
+          }
+
+          showStep(2);
+        } else {
+          alert(res.message || '兑换码验证失败');
+        }
+      } catch (err) {
+        alert('网络错误，请稍后重试');
+        console.error(err);
+      }
+    }
+
+    // 提交兑换
+    document.addEventListener('DOMContentLoaded', function() {
+      initCarousel();
+      
+      const form = document.getElementById('redeemForm');
+      if (form) {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(e.target);
+          const data = {
+            redeem_code: currentRedeemCode,
+            ring_color: formData.get('ring_color'),
+            ring_size: formData.get('ring_size'),
+            user_name: formData.get('user_name'),
+            user_phone: formData.get('user_phone'),
+            user_province: formData.get('user_province'),
+            user_city: formData.get('user_city'),
+            user_district: formData.get('user_district'),
+            user_address: formData.get('user_address')
+          };
+
+          // 如果有选择型号，添加到数据中
+          if (selectedModelId) {
+            data.product_model_id = selectedModelId;
+          } else if (formData.get('product_model_id')) {
+            data.product_model_id = formData.get('product_model_id');
+          }
+          
+          // 验证型号（如果显示了型号选择）
+          if (currentModels && currentModels.length > 0 && !data.product_model_id) {
+            alert('请选择戒指型号');
+            return;
+          }
+
+          // 验证戒指颜色和尺寸
+          if (!data.ring_color) {
+            alert('请选择戒指颜色');
+            return;
+          }
+
+          if (!data.ring_size) {
+            alert('请选择戒指尺寸（圈号）');
+            return;
+          }
+
+          if (!/^1[3-9]\d{9}$/.test(data.user_phone)) {
+            alert('请输入正确的手机号');
+            return;
+          }
+          
+          // 提交到后端
+          try {
+            const response = await fetch(`${API_BASE_URL}/redeem/submit`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            
+            const res = await response.json();
+            
+            if (res.code === 200) {
+              showStep(3);
+              // 自动展开物流查询区
+              document.getElementById('trackingCode').value = currentRedeemCode;
+            } else {
+              alert(res.message || '兑换失败');
+            }
+          } catch (err) {
+            alert('网络错误，请稍后重试');
+            console.error(err);
+          }
+        });
+      }
+    });
+
+    function showStep(stepNum) {
+      document.querySelectorAll('.step').forEach(step => {
+        step.classList.remove('active');
+      });
+      document.getElementById(`step${stepNum}`).classList.add('active');
+    }
+
+    function goBackToStep1() {
+      showStep(1);
+    }
+
+    // 物流查询折叠
+    function toggleTracking() {
+      const section = document.getElementById('trackingSection');
+      section.classList.toggle('expanded');
+    }
+
+    async function queryTracking() {
+      const code = document.getElementById('trackingCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码或追溯码');
+        return;
+      }
+      
+      // 显示加载状态
+      const resultDiv = document.getElementById('trackingResult');
+      resultDiv.innerHTML = '<p style="text-align:center;padding:20px;color:#999;">正在查询物流信息...</p>';
+      resultDiv.classList.add('show');
+      
+      // 查询后端物流追踪API
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/track?redeem_code=${encodeURIComponent(code)}`);
+        const res = await response.json();
+        
+        if (res.code === 200) {
+          displayLogisticsTracking(res.data);
+        } else {
+          resultDiv.innerHTML = `<p style="text-align:center;padding:20px;color:#EF4444;">${res.message || '查询失败'}</p>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<p style="text-align:center;padding:20px;color:#EF4444;">网络错误，请稍后重试</p>';
+        console.error(err);
+      }
+    }
+
+    function displayLogisticsTracking(data) {
+      const resultDiv = document.getElementById('trackingResult');
+      
+      // 基础订单信息
+      let html = `
+        <div style="margin-bottom: 24px;">
+          <h4 style="margin-bottom: 16px; color: var(--color-text);">订单信息</h4>
+          <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px;">
+            <p style="margin-bottom: 8px;"><strong style="color: #999;">订单状态：</strong>${data.orderInfo.statusText}</p>
+            <p style="margin-bottom: 8px;"><strong style="color: #999;">商品名称：</strong>${data.orderInfo.batchName || '-'}</p>
+            ${data.orderInfo.shippedAt ? `<p style="margin-bottom: 0;"><strong style="color: #999;">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
+          </div>
+        </div>
+      `;
+      
+      // 物流轨迹
+      if (data.logistics && data.logistics.traces && data.logistics.traces.length > 0) {
+        const statusClass = data.logistics.status === 'SIGN' ? 'status-signed' : 
+                           data.logistics.status === 'DELIVERING' ? 'status-delivering' :
+                           data.logistics.status === 'PROBLEM' ? 'status-problem' : 
+                           'status-transporting';
+        
+        html += `
+          <div class="logistics-timeline">
+            <h4 style="margin-bottom: 16px; color: var(--color-text);">
+              物流轨迹
+              <span class="logistics-status-badge ${statusClass}">${data.logistics.statusDesc}</span>
+            </h4>
+            
+            <div class="logistics-info-grid">
+              <div class="logistics-info-item">
+                <strong>快递公司</strong>
+                <div>${data.orderInfo.logisticsCompany || '-'}</div>
+              </div>
+              <div class="logistics-info-item">
+                <strong>快递单号</strong>
+                <div>${data.orderInfo.trackingNumber || '-'}</div>
+              </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+        `;
+        
+        data.logistics.traces.forEach((trace, index) => {
+          const isLatest = index === 0;
+          html += `
+            <div class="timeline-item ${isLatest ? 'latest' : ''}">
+              <div class="timeline-dot"></div>
+              <div class="timeline-time">${trace.time}</div>
+              <div class="timeline-content">${trace.context}</div>
+              ${trace.location ? `<div class="timeline-location">📍 ${trace.location}</div>` : ''}
+            </div>
+          `;
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+      } else if (data.orderInfo.status >= 3) {
+        html += '<p style="color: #999; text-align: center; padding: 20px;">订单已发货，物流信息更新中...</p>';
+      } else {
+        html += '<p style="color: #999; text-align: center; padding: 20px;">订单正在准备中，我们会尽快为您发货</p>';
+      }
+      
+      resultDiv.innerHTML = html;
+      resultDiv.classList.add('show');
+    }
+
+    function formatDateTime(datetime) {
+      if (!datetime) return '-';
+      const date = new Date(datetime);
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // 显示尺寸指南
+    function showSizeGuide() {
+      document.getElementById('sizeGuideOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden'; // 禁止背景滚动
+    }
+
+    // 关闭尺寸指南
+    function closeSizeGuide() {
+      document.getElementById('sizeGuideOverlay').classList.remove('show');
+      document.body.style.overflow = ''; // 恢复滚动
+    }
+
+    // 键盘ESC关闭
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSizeGuide();
+      }
+    });
+  </script>
+</body>
+</html>
+

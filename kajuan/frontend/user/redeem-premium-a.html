@@ -1,0 +1,1018 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZ Ring | Premium Redemption</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Manrope"', '"Noto Sans SC"', 'sans-serif'],
+          },
+          colors: {
+            'luxury-gold': '#D4AF37',
+            'neutral-850': '#1f1f1f',
+          },
+          letterSpacing: {
+            'tighter': '-0.05em',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #050505;
+      background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 70%);
+      color: #e5e5e5;
+    }
+    
+    .border-hairline {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    
+    .text-gray-500 {
+      color: #a3a3a3; /* 提亮灰色 */
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .input-underline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: #fff;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    input:focus ~ .input-underline {
+      width: 100%;
+    }
+    
+    .grayscale-img {
+      filter: grayscale(100%) contrast(110%);
+      transition: filter 0.5s ease;
+    }
+    
+    .group:hover .grayscale-img {
+      filter: grayscale(0%) contrast(100%);
+    }
+    
+    .step-hidden {
+      display: none !important;
+    }
+    
+    .step-visible {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .selection-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .selection-card:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .selection-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .selection-card:has(input[type="radio"]:checked) {
+      border-color: #D4AF37;
+      background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(212,175,55,0.1) 100%);
+      box-shadow: 0 0 0 2px rgba(212,175,55,0.3);
+    }
+    
+    .check-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      background: #D4AF37;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.3s ease;
+    }
+    
+    .selection-card input[type="radio"]:checked ~ .check-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .carousel-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    
+    .carousel-slide.active {
+      opacity: 1;
+    }
+    
+    .timeline-item {
+      position: relative;
+      padding-left: 30px;
+      padding-bottom: 20px;
+      border-left: 2px solid rgba(255,255,255,0.1);
+    }
+    
+    .timeline-item:last-child {
+      border-left: none;
+      padding-bottom: 0;
+    }
+    
+    .timeline-item.latest {
+      border-left-color: #10B981;
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      left: -6px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .timeline-item.latest .timeline-dot {
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+  <!-- 顶部导航 -->
+  <header class="w-full border-b border-hairline bg-black z-50">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="../../../index.html" class="hover:opacity-80 transition-opacity">
+        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/logo.png" alt="AZLG Logo" class="h-10 w-auto">
+      </a>
+      <!-- 返回首页链接 -->
+      <a href="../../../index.html" class="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        返回首页
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    
+    <!-- Hero Section: 左侧视觉，右侧功能 -->
+    <section class="border-b border-hairline">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+        
+        <!-- 左侧：品牌视觉 + 轮播 -->
+        <div class="relative border-r-0 lg:border-r border-hairline p-8 lg:p-16 flex flex-col justify-center">
+          <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0" id="heroCarousel">
+            <div class="carousel-slide active">
+              <img src="https://images.unsplash.com/photo-1617042375876-a72e36732fcc?q=80&w=2000&auto=format&fit=crop" 
+                   class="w-full h-full object-cover grayscale-img opacity-40" alt="Ring">
+            </div>
+            <div class="carousel-slide">
+              <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=2000&auto=format&fit=crop" 
+                   class="w-full h-full object-cover grayscale-img opacity-40" alt="Ring Detail">
+            </div>
+          </div>
+          
+          <div class="relative z-10">
+            <span class="text-luxury-gold text-xs tracking-[0.3em] uppercase mb-4 block">Exclusive Access</span>
+            <h1 class="text-5xl lg:text-7xl font-light tracking-tighter text-white leading-[1.1] mb-6">
+              Master <br>Your Body.
+            </h1>
+            <p class="text-gray-400 text-sm leading-relaxed max-w-md">
+              融合精密钛合金工艺与医疗级传感器。<br>这不仅是一枚戒指，更是您健康管理的终极形态。
+            </p>
+          </div>
+        </div>
+
+        <!-- 右侧：兑换表单 -->
+        <div class="p-8 lg:p-16 flex flex-col justify-center bg-black">
+          <div class="max-w-md mx-auto w-full">
+            <h2 class="text-2xl font-light text-white mb-12 tracking-tight">兑换您的礼遇</h2>
+            
+            <!-- 步骤1：验证兑换码 -->
+            <div id="step1" class="step-visible">
+              <div class="input-group">
+                <input type="text" id="redeemCode" required 
+                  class="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white outline-none placeholder-gray-700 font-light rounded-none"
+                  placeholder="输入兑换码">
+                <div class="input-underline"></div>
+              </div>
+
+              <button type="button" onclick="validateCodeA()" class="group w-full flex items-center justify-between border border-white/20 px-6 py-5 hover:bg-white hover:text-black transition-all duration-300 mt-12">
+                <span class="tracking-widest uppercase text-sm font-semibold">立即验证</span>
+                <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </button>
+              
+              <div class="flex items-center justify-between pt-8 mt-6 border-t border-white/10">
+                <button type="button" onclick="document.getElementById('trackingSection').scrollIntoView({ behavior: 'smooth' })" class="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group/track">
+                  <svg class="w-4 h-4 text-luxury-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                  </svg>
+                  <span>已有订单？<span class="border-b border-gray-700 group-hover/track:border-white pb-0.5 transition-colors">查询物流进度</span></span>
+                </button>
+
+                <button type="button" onclick="showServiceQR()" class="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+                  <span>联系顾问</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 步骤2：显示产品信息 (验证成功后) -->
+            <div id="step2Hero" class="step-hidden">
+              <div class="mb-6 p-4 border border-white/10 rounded">
+                <p class="text-sm text-gray-400 mb-2"><strong class="text-white">商品：</strong><span id="productNameHero"></span></p>
+                <p class="text-sm text-gray-400"><strong class="text-white">价值：</strong><span id="productValueHero"></span></p>
+              </div>
+              <p class="text-gray-400 text-sm">验证成功！请向下滚动填写详细信息</p>
+              <button type="button" onclick="scrollToForm()" class="group w-full flex items-center justify-between border border-white/20 px-6 py-5 hover:bg-white hover:text-black transition-all duration-300 mt-6">
+                <span class="tracking-widest uppercase text-sm font-semibold">填写收货信息</span>
+                <svg class="w-5 h-5 transform group-hover:translate-y-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 流程指引 -->
+    <section class="border-b border-hairline bg-black">
+      <div class="max-w-7xl mx-auto py-16 px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="flex flex-col border-l border-white/10 pl-6">
+            <span class="text-4xl font-light text-gray-800 mb-4">01</span>
+            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">验证</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">系统将自动核验您的专属兑换码的有效性与权益等级。</p>
+          </div>
+          <div class="flex flex-col border-l border-white/10 pl-6">
+            <span class="text-4xl font-light text-gray-800 mb-4">02</span>
+            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">定制</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">确认收货地址，我们提供顺丰尊享快递服务，确保安全送达。</p>
+          </div>
+          <div class="flex flex-col border-l border-white/10 pl-6">
+            <span class="text-4xl font-light text-gray-800 mb-4">03</span>
+            <h3 class="text-white text-sm font-bold uppercase tracking-widest mb-2">交付</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">极速发货。开启您的 24 小时全天候健康监测之旅。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 定制表单区 (隐藏，验证成功后展示) -->
+    <section id="customSection" class="border-b border-hairline bg-black step-hidden">
+      <div class="max-w-4xl mx-auto py-16 px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-light text-white mb-4 tracking-tight">完成您的定制</h2>
+          <p class="text-gray-400 text-sm">请仔细填写以下信息，确保您的戒指完美送达</p>
+        </div>
+
+        <form id="redeemForm" class="max-w-2xl mx-auto">
+          <!-- 产品信息卡片 -->
+          <div class="mb-8 p-6 border border-white/10 rounded-lg bg-black/50">
+            <p class="text-sm text-gray-400 mb-2">
+              <strong class="text-white text-base">商品：</strong>
+              <span id="productName" class="text-white"></span>
+            </p>
+            <p class="text-sm text-gray-400">
+              <strong class="text-white text-base">价值：</strong>
+              <span id="productValue" class="text-white"></span>
+            </p>
+          </div>
+
+          <!-- 型号选择 -->
+          <div id="modelSelectionGroup" class="mb-12 step-hidden">
+            <label class="block text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">
+              戒指型号 <span class="text-luxury-gold">*</span>
+            </label>
+            <div id="modelOptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- 动态渲染 -->
+            </div>
+          </div>
+
+          <!-- 颜色选择 -->
+          <div id="colorSelectionGroup" class="mb-12 step-hidden">
+            <label class="block text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">
+              戒指颜色 <span class="text-luxury-gold">*</span>
+            </label>
+            <div id="colorOptions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- 动态渲染 -->
+            </div>
+          </div>
+
+          <!-- 尺寸选择 -->
+          <div id="sizeSelectionGroup" class="mb-12 step-hidden">
+            <label class="block text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">
+              戒指尺寸（圈号） <span class="text-luxury-gold">*</span>
+            </label>
+            <select name="ring_size" required id="sizeSelect" class="w-full bg-transparent border-b border-white/20 py-4 text-lg text-white outline-none">
+              <option value="" class="bg-black">请选择圈号</option>
+              <!-- 动态渲染 -->
+            </select>
+          </div>
+          <!-- 收货信息 -->
+          <div class="border-t border-white/10 pt-12 mt-12">
+            <h3 class="text-xl font-light text-white mb-8 tracking-tight">收货信息</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div class="input-group relative mt-4">
+                <input type="text" name="user_name" required maxlength="20"
+                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                  placeholder="收货人姓名">
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                  收货人姓名
+                </label>
+                <div class="input-underline"></div>
+              </div>
+              <div class="input-group relative mt-4">
+                <input type="tel" name="user_phone" required maxlength="20"
+                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                  placeholder="联系电话">
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                  联系电话
+                </label>
+                <div class="input-underline"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div class="input-group relative mt-4">
+                <input type="text" name="user_province" required maxlength="50"
+                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                  placeholder="省份">
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                  省份
+                </label>
+                <div class="input-underline"></div>
+              </div>
+              <div class="input-group relative mt-4">
+                <input type="text" name="user_city" required maxlength="50"
+                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                  placeholder="城市">
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                  城市
+                </label>
+                <div class="input-underline"></div>
+              </div>
+              <div class="input-group relative mt-4">
+                <input type="text" name="user_district" required maxlength="50"
+                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                  placeholder="区县">
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                  区县
+                </label>
+                <div class="input-underline"></div>
+              </div>
+            </div>
+
+            <div class="input-group relative mb-12 mt-4">
+              <input type="text" name="user_address" required maxlength="100"
+                class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
+                placeholder="详细地址">
+              <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                详细地址（街道、门牌号等）
+              </label>
+              <div class="input-underline"></div>
+            </div>
+
+            <button type="submit" class="group w-full flex items-center justify-between border border-white/20 px-8 py-6 hover:bg-white hover:text-black transition-all duration-300">
+              <span class="tracking-widest uppercase text-base font-semibold">提交兑换</span>
+              <svg class="w-6 h-6 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 成功页面 (隐藏) -->
+    <section id="successSection" class="border-b border-hairline bg-black step-hidden">
+      <div class="max-w-2xl mx-auto py-24 px-6 text-center">
+        <div class="w-20 h-20 mx-auto mb-8">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" class="w-full h-full">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 class="text-4xl font-light text-white mb-6 tracking-tight">兑换成功</h2>
+        <p class="text-gray-400 mb-3">感谢您选择 AZ Ring 智能健康戒指</p>
+        <p class="text-gray-400 mb-3">我们将在 1-3 个工作日内为您发货</p>
+        <p class="text-gray-400 mb-12">您可以在下方查询物流信息</p>
+        
+        <a href="#trackingSection" class="inline-flex items-center gap-2 border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all duration-300">
+          <span class="tracking-widest uppercase text-sm font-semibold">查询物流</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- 规格参数 (网格化设计) -->
+    <section class="border-b border-hairline bg-black">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10 border-b border-white/10">
+          <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
+            <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </div>
+            <h4 class="text-sm text-white font-semibold mb-1">Sleep Analysis</h4>
+            <p class="text-xs text-gray-500">多阶段深度睡眠追踪</p>
+          </div>
+          <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
+            <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+            </div>
+            <h4 class="text-sm text-white font-semibold mb-1">Heart Rate</h4>
+            <p class="text-xs text-gray-500">HRV 心率变异性监测</p>
+          </div>
+          <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
+            <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <h4 class="text-sm text-white font-semibold mb-1">Activity</h4>
+            <p class="text-xs text-gray-500">自动识别运动模式</p>
+          </div>
+          <div class="p-8 md:p-12 hover:bg-white/5 transition-colors duration-500 cursor-default group">
+            <div class="text-gray-500 mb-4 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            </div>
+            <h4 class="text-sm text-white font-semibold mb-1">Titanium</h4>
+            <p class="text-xs text-gray-500">航空级钛合金机身</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 场景展示 (黑白风格) -->
+    <section class="w-full border-b border-hairline">
+      <div class="grid grid-cols-1 md:grid-cols-2 h-[500px]">
+        <div class="relative group overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover grayscale-img" alt="Workout">
+          <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500"></div>
+          <div class="absolute bottom-8 left-8">
+            <h3 class="text-2xl font-light text-white mb-2">Focus</h3>
+            <p class="text-xs text-gray-300 uppercase tracking-widest">Every movement counts</p>
+          </div>
+        </div>
+        <div class="relative group overflow-hidden border-l border-hairline">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover grayscale-img" alt="Lifestyle">
+          <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500"></div>
+          <div class="absolute bottom-8 left-8">
+            <h3 class="text-2xl font-light text-white mb-2">Elegance</h3>
+            <p class="text-xs text-gray-300 uppercase tracking-widest">Seamless integration</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 物流查询区 -->
+    <section class="border-b border-hairline bg-black py-16" id="trackingSection">
+      <div class="max-w-2xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-light text-white mb-4 tracking-tight">物流追踪</h2>
+          <p class="text-gray-400 text-sm">输入您的兑换码查询订单物流信息</p>
+        </div>
+
+        <div class="border border-white/10 rounded-lg overflow-hidden bg-black/50">
+          <div class="p-6">
+            <div class="input-group mb-6">
+              <input type="text" id="trackingCode" 
+                class="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white outline-none placeholder-gray-700 font-light rounded-none"
+                placeholder="输入兑换码或追溯码">
+              <div class="input-underline"></div>
+            </div>
+            
+            <button onclick="queryTracking()" class="group w-full flex items-center justify-between border border-white/20 px-6 py-5 hover:bg-white hover:text-black transition-all duration-300">
+              <span class="tracking-widest uppercase text-sm font-semibold">查询物流</span>
+              <svg class="w-5 h-5 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div id="trackingResult" class="step-hidden p-6 border-t border-white/10">
+            <!-- 动态渲染物流信息 -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 客服二维码弹窗 -->
+  <div id="serviceQRModal" class="step-hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center" onclick="if(event.target === this) hideServiceQR()">
+    <div class="bg-black border border-white/10 rounded-lg p-8 max-w-sm mx-4 relative">
+      <button onclick="hideServiceQR()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <h3 class="text-xl font-light text-white mb-6 tracking-tight text-center">联系专属顾问</h3>
+      
+      <div class="bg-white p-4 rounded-lg mb-4">
+        <div class="w-48 h-48 mx-auto bg-gray-100 flex items-center justify-center text-gray-400 text-sm text-center">
+          客服二维码<br>请扫码添加
+        </div>
+      </div>
+      
+      <p class="text-gray-400 text-sm text-center">扫描二维码添加客服微信</p>
+      <p class="text-gray-500 text-xs text-center mt-2">工作时间：周一至周日 9:00-21:00</p>
+    </div>
+  </div>
+
+  <!-- 极简页脚 -->
+  <footer class="border-t border-hairline bg-black py-8">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-gray-600 text-xs">
+        &copy; 2024 AZ Ring. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE_URL = '/api';
+    let currentRedeemCode = '';
+    let currentCarouselSlide = 0;
+    let currentProductId = null;
+    let currentModels = [];
+    let selectedModelId = null;
+
+    // Hero轮播
+    function initCarousel() {
+      setInterval(() => {
+        currentCarouselSlide = (currentCarouselSlide + 1) % 2;
+        showSlide(currentCarouselSlide);
+      }, 5000);
+    }
+
+    function showSlide(index) {
+      const slides = document.querySelectorAll('.carousel-slide');
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      currentCarouselSlide = index;
+    }
+
+    // 滚动到表单
+    function scrollToForm() {
+      document.getElementById('customSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 显示客服二维码
+    function showServiceQR() {
+      const modal = document.getElementById('serviceQRModal');
+      modal.classList.remove('step-hidden');
+      modal.classList.add('step-visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 隐藏客服二维码
+    function hideServiceQR() {
+      const modal = document.getElementById('serviceQRModal');
+      modal.classList.add('step-hidden');
+      modal.classList.remove('step-visible');
+      document.body.style.overflow = '';
+    }
+
+    // 渲染型号选项
+    function renderModels(models) {
+      const modelContainer = document.getElementById('modelOptions');
+      const modelGroup = document.getElementById('modelSelectionGroup');
+      
+      if (!modelContainer) return;
+
+      if (!models || models.length === 0) {
+        modelGroup.classList.add('step-hidden');
+        return;
+      }
+
+      if (models.length === 1) {
+        selectedModelId = models[0].id;
+        modelGroup.classList.add('step-hidden');
+        loadModelOptions(currentProductId, selectedModelId);
+        return;
+      }
+
+      modelGroup.classList.remove('step-hidden');
+      modelGroup.classList.add('step-visible');
+      currentModels = models;
+
+      modelContainer.innerHTML = models.map((model) => {
+        const priceAdj = parseFloat(model.price_adjustment) || 0;
+        let priceText = '';
+        if (priceAdj > 0) priceText = `<span class="text-green-400">+¥${priceAdj.toFixed(2)}</span>`;
+        else if (priceAdj < 0) priceText = `<span class="text-red-400">¥${priceAdj.toFixed(2)}</span>`;
+
+        return `
+          <label class="selection-card border border-white/10 p-4 rounded-lg">
+            <input type="radio" name="product_model_id" value="${model.id}" required onchange="onModelChange(${model.id})">
+            <div class="text-center">
+              ${model.image_url ?
+                `<img src="${model.image_url}" alt="${model.name}" class="w-full h-32 object-cover rounded mb-3">` :
+                `<div class="w-full h-32 flex items-center justify-center bg-white/5 rounded mb-3 text-gray-400">${model.name}</div>`
+              }
+              <span class="block text-white font-semibold">${model.name}</span>
+              ${priceText ? `<span class="block text-sm mt-1">${priceText}</span>` : ''}
+            </div>
+            <div class="check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function onModelChange(modelId) {
+      selectedModelId = modelId;
+      loadModelOptions(currentProductId, modelId);
+    }
+
+    function loadModelOptions(productId, modelId) {
+      fetch(`${API_BASE_URL}/redeem/model-options?product_id=${productId}&model_id=${modelId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.code === 200) {
+            renderColors(data.data.colors);
+            renderSizes(data.data.sizes);
+          } else {
+            alert(data.message || '获取型号选项失败');
+          }
+        })
+        .catch(error => {
+          console.error('加载型号选项失败:', error);
+          alert('网络错误，请稍后重试');
+        });
+    }
+
+    // 渲染颜色选项
+    function renderColors(colors) {
+      const colorContainer = document.getElementById('colorOptions');
+      const colorGroup = document.getElementById('colorSelectionGroup');
+      if (!colorContainer) return;
+
+      if (!colors || colors.length === 0) {
+        colorGroup.classList.add('step-hidden');
+        return;
+      }
+
+      colorGroup.classList.remove('step-hidden');
+      colorGroup.classList.add('step-visible');
+      colorContainer.innerHTML = colors.map((color, index) => `
+        <label class="selection-card border border-white/10 p-4 rounded-lg">
+          <input type="radio" name="ring_color" value="${color.code}" required>
+          <div class="text-center">
+            ${color.image_url ?
+              `<img src="${color.image_url}" alt="${color.name}" class="w-full h-32 object-cover rounded mb-3">` :
+              `<div class="w-full h-32 rounded mb-3" style="background: ${getColorGradient(color.code)}"></div>`
+            }
+            <span class="block text-white font-semibold">${color.name}</span>
+            ${index === 0 ? '<span class="inline-block mt-2 px-3 py-1 bg-luxury-gold text-black text-xs rounded-full">热门</span>' : ''}
+          </div>
+          <div class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    function getColorGradient(colorCode) {
+      const gradients = {
+        'black': 'linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%)',
+        'gold': 'linear-gradient(135deg, #d4af37 0%, #c5a028 100%)',
+        'blue': 'linear-gradient(135deg, #4a90e2 0%, #357abd 100%)',
+        'silver': 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)',
+        'rose': 'linear-gradient(135deg, #e8a0a0 0%, #d88888 100%)'
+      };
+      return gradients[colorCode] || 'linear-gradient(135deg, #888 0%, #666 100%)';
+    }
+
+    // 渲染尺寸选项
+    function renderSizes(sizes) {
+      const sizeSelect = document.getElementById('sizeSelect');
+      const sizeGroup = document.getElementById('sizeSelectionGroup');
+      if (!sizeSelect) return;
+
+      if (!sizes || sizes.length === 0) {
+        sizeGroup.classList.add('step-hidden');
+        return;
+      }
+
+      sizeGroup.classList.remove('step-hidden');
+      sizeGroup.classList.add('step-visible');
+      sizeSelect.innerHTML = '<option value="" class="bg-black">请选择圈号</option>' +
+        sizes.map(size => `<option value="${size.code}" class="bg-black">${size.name}</option>`).join('');
+    }
+
+    // 验证兑换码
+    async function validateCodeA() {
+      const code = document.getElementById('redeemCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ redeem_code: code })
+        });
+
+        const res = await response.json();
+
+        if (res.code === 200) {
+          handleValidationSuccess(res.data, code);
+        } else {
+          alert(res.message || '兑换码验证失败');
+        }
+      } catch (err) {
+        alert('网络错误，请稍后重试');
+        console.error(err);
+      }
+    }
+
+    function handleValidationSuccess(data, code) {
+      currentRedeemCode = code;
+      currentProductId = data.product_id;
+      
+      // 更新Hero区域的产品信息
+      document.getElementById('productNameHero').textContent = data.product_name;
+      document.getElementById('productValueHero').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
+      
+      // 更新表单区域的产品信息
+      document.getElementById('productName').textContent = data.product_name;
+      document.getElementById('productValue').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
+
+      // 显示Hero的步骤2
+      document.getElementById('step1').classList.remove('step-visible');
+      document.getElementById('step1').classList.add('step-hidden');
+      document.getElementById('step2Hero').classList.remove('step-hidden');
+      document.getElementById('step2Hero').classList.add('step-visible');
+
+      // 显示定制表单区域
+      document.getElementById('customSection').classList.remove('step-hidden');
+      document.getElementById('customSection').classList.add('step-visible');
+
+      // 判断是否有型号
+      if (data.models && data.models.length > 0) {
+        renderModels(data.models);
+      } else {
+        renderColors(data.colors || []);
+        renderSizes(data.sizes || []);
+      }
+
+      // 平滑滚动到表单
+      setTimeout(() => {
+        document.getElementById('customSection').scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    // 提交兑换表单
+    document.addEventListener('DOMContentLoaded', function() {
+      initCarousel();
+      
+      const form = document.getElementById('redeemForm');
+      if (form) {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(e.target);
+          const data = {
+            redeem_code: currentRedeemCode,
+            ring_color: formData.get('ring_color'),
+            ring_size: formData.get('ring_size'),
+            user_name: formData.get('user_name'),
+            user_phone: formData.get('user_phone'),
+            user_province: formData.get('user_province'),
+            user_city: formData.get('user_city'),
+            user_district: formData.get('user_district'),
+            user_address: formData.get('user_address')
+          };
+
+          if (selectedModelId) {
+            data.product_model_id = selectedModelId;
+          } else if (formData.get('product_model_id')) {
+            data.product_model_id = formData.get('product_model_id');
+          }
+          
+          if (currentModels && currentModels.length > 0 && !data.product_model_id) {
+            alert('请选择戒指型号');
+            return;
+          }
+
+          if (!data.ring_color) {
+            alert('请选择戒指颜色');
+            return;
+          }
+
+          if (!data.ring_size) {
+            alert('请选择戒指尺寸（圈号）');
+            return;
+          }
+
+          if (!/^1[3-9]\d{9}$/.test(data.user_phone)) {
+            alert('请输入正确的手机号');
+            return;
+          }
+          
+          try {
+            const response = await fetch(`${API_BASE_URL}/redeem/submit`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            
+            const res = await response.json();
+            
+            if (res.code === 200) {
+              // 隐藏表单，显示成功页面
+              document.getElementById('customSection').classList.add('step-hidden');
+              document.getElementById('successSection').classList.remove('step-hidden');
+              document.getElementById('successSection').classList.add('step-visible');
+              
+              // 滚动到成功页面
+              document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
+              
+              // 自动填充追踪码
+              document.getElementById('trackingCode').value = currentRedeemCode;
+            } else {
+              alert(res.message || '兑换失败');
+            }
+          } catch (err) {
+            alert('网络错误，请稍后重试');
+            console.error(err);
+          }
+        });
+      }
+    });
+
+    // 查询物流
+    async function queryTracking() {
+      const code = document.getElementById('trackingCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码或追溯码');
+        return;
+      }
+      
+      const resultDiv = document.getElementById('trackingResult');
+      resultDiv.innerHTML = '<p class="text-center py-8 text-gray-400">正在查询物流信息...</p>';
+      resultDiv.classList.remove('step-hidden');
+      resultDiv.classList.add('step-visible');
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/track?redeem_code=${encodeURIComponent(code)}`);
+        const res = await response.json();
+        
+        if (res.code === 200) {
+          displayLogisticsTracking(res.data);
+        } else {
+          resultDiv.innerHTML = `<p class="text-center py-8 text-red-400">${res.message || '查询失败'}</p>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<p class="text-center py-8 text-red-400">网络错误，请稍后重试</p>';
+        console.error(err);
+      }
+    }
+
+    function displayLogisticsTracking(data) {
+      const resultDiv = document.getElementById('trackingResult');
+      
+      let html = `
+        <div class="mb-6 p-4 bg-white/5 rounded-lg">
+          <h4 class="text-white font-semibold mb-3">订单信息</h4>
+          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">订单状态：</strong>${data.orderInfo.statusText}</p>
+          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">商品名称：</strong>${data.orderInfo.batchName || '-'}</p>
+          ${data.orderInfo.shippedAt ? `<p class="text-sm text-gray-400"><strong class="text-gray-300">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
+        </div>
+      `;
+      
+      if (data.logistics && data.logistics.traces && data.logistics.traces.length > 0) {
+        const statusClass = data.logistics.status === 'SIGN' ? 'bg-green-500' : 
+                           data.logistics.status === 'DELIVERING' ? 'bg-yellow-500' :
+                           data.logistics.status === 'PROBLEM' ? 'bg-red-500' : 'bg-blue-500';
+        
+        html += `
+          <div class="mb-6 p-4 bg-white/5 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-white font-semibold">物流轨迹</h4>
+              <span class="px-3 py-1 ${statusClass} text-white text-xs rounded-full">${data.logistics.statusDesc}</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+              <div>
+                <p class="text-gray-400">快递公司</p>
+                <p class="text-white">${data.orderInfo.logisticsCompany || '-'}</p>
+              </div>
+              <div>
+                <p class="text-gray-400">快递单号</p>
+                <p class="text-white">${data.orderInfo.trackingNumber || '-'}</p>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+        `;
+        
+        data.logistics.traces.forEach((trace, index) => {
+          const isLatest = index === 0;
+          html += `
+            <div class="timeline-item ${isLatest ? 'latest' : ''}">
+              <div class="timeline-dot"></div>
+              <div class="text-xs ${isLatest ? 'text-green-400' : 'text-gray-400'} mb-1">${trace.time}</div>
+              <div class="text-sm text-white mb-1">${trace.context}</div>
+              ${trace.location ? `<div class="text-xs text-gray-500">📍 ${trace.location}</div>` : ''}
+            </div>
+          `;
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+      } else if (data.orderInfo.status >= 3) {
+        html += '<p class="text-gray-400 text-center py-8">订单已发货，物流信息更新中...</p>';
+      } else {
+        html += '<p class="text-gray-400 text-center py-8">订单正在准备中，我们会尽快为您发货</p>';
+      }
+      
+      resultDiv.innerHTML = html;
+    }
+
+    function formatDateTime(datetime) {
+      if (!datetime) return '-';
+      const date = new Date(datetime);
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  </script>
+
+</body>
+</html>
