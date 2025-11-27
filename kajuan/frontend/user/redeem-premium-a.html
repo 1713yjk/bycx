@@ -189,10 +189,141 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255,255,255,0.3);
     }
+
+    /* ========== 移动端抽屉样式 ========== */
+    .bg-zoom {
+      animation: zoomEffect 20s infinite alternate;
+    }
+    @keyframes zoomEffect {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(20, 20, 20, 0.95);
+      backdrop-filter: blur(20px);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 50;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      margin: 12px auto;
+      cursor: pointer;
+    }
+
+    .sheet-content {
+      overflow-y: auto;
+      padding: 0 24px 32px 24px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .sheet-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .floating-input {
+      background: transparent;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 12px 0;
+      width: 100%;
+      color: white;
+      font-size: 16px;
+      border-radius: 0;
+      transition: border-color 0.3s;
+    }
+    .floating-input:focus {
+      border-color: #D4AF37;
+      outline: none;
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      background: #D4AF37;
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .mobile-option-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .mobile-option-card.selected {
+      border-color: #D4AF37;
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    /* ========== 响应式布局控制 ========== */
+    .desktop-layout {
+      display: block;
+    }
+
+    .mobile-layout {
+      display: none;
+    }
+
+    @media (max-width: 767px) {
+      .desktop-layout {
+        display: none !important;
+      }
+      
+      .mobile-layout {
+        display: block !important;
+      }
+
+      body {
+        overflow: hidden;
+      }
+
+      /* 刘海屏安全区域适配 */
+      .safe-area-top {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      /* 小屏设备优化 (iPhone SE等) */
+      @media (max-height: 667px) {
+        #mobile-heroText h1 {
+          font-size: 2rem !important;
+        }
+        #mobile-heroText {
+          bottom: 11rem !important;
+        }
+      }
+    }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
+  <!-- ========== PC端布局 (桌面端) ========== -->
+  <div class="desktop-layout">
+  
   <!-- 顶部导航 -->
   <header class="w-full border-b border-hairline bg-black z-50">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -597,9 +728,177 @@
     </div>
   </footer>
 
+  </div>
+  <!-- ========== PC端布局结束 ========== -->
+
+  <!-- ========== 移动端布局 (手机端) ========== -->
+  <div class="mobile-layout">
+    
+    <!-- 背景视觉层 -->
+    <div class="fixed inset-0 z-0">
+      <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" 
+           class="w-full h-full object-cover opacity-60 bg-zoom" alt="Background">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/95"></div>
+      
+      <!-- 品牌Logo -->
+      <div class="absolute top-12 left-0 w-full flex justify-center safe-area-top">
+        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/logo.png" alt="Logo" class="h-8 drop-shadow-lg">
+      </div>
+
+      <!-- 初始Slogan -->
+      <div class="absolute bottom-48 left-8 right-8 text-center transition-opacity duration-500" id="mobile-heroText">
+        <h1 class="text-4xl font-light mb-2 tracking-tighter">Master Your Body</h1>
+        <p class="text-gray-300 text-sm tracking-widest uppercase">尊享兑换 · 开启健康之旅</p>
+      </div>
+
+      <!-- 初始按钮 -->
+      <div class="absolute bottom-8 left-8 right-8 z-10 transition-all duration-500 transform translate-y-0" id="mobile-startBtnContainer">
+        <button onclick="openMobileSheet()" class="w-full bg-gradient-to-r from-white to-gray-100 text-black font-bold py-4 rounded-full shadow-2xl hover:shadow-white/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+          <span>立即兑换</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </button>
+        <button onclick="showMobileTracking()" class="w-full mt-4 text-gray-400 text-xs py-2">查询物流进度</button>
+      </div>
+    </div>
+
+    <!-- 底部抽屉 -->
+    <div class="bottom-sheet" id="mobileSheet">
+      <div class="sheet-handle" onclick="closeMobileSheet()"></div>
+      
+      <!-- 步骤指示器 -->
+      <div class="flex justify-center gap-2 mb-6" id="mobile-stepIndicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <div class="sheet-content relative min-h-[60vh]">
+        
+        <!-- 视图1: 验证 -->
+        <div id="mobile-view1" class="space-y-6 transition-all duration-300">
+          <div class="text-center">
+            <h2 class="text-2xl font-light">输入兑换码</h2>
+            <p class="text-gray-400 text-xs mt-1">请输入卡片背面的16位兑换码</p>
+          </div>
+
+          <div class="relative">
+            <input type="text" id="mobile-redeemCode" class="floating-input text-center text-2xl font-mono tracking-widest uppercase" placeholder="XXXX-XXXX-XXXX">
+          </div>
+
+          <button onclick="validateCodeMobile()" class="w-full bg-luxury-gold text-black font-bold py-4 rounded-xl shadow-lg mt-8">
+            验证
+          </button>
+        </div>
+
+        <!-- 视图2: 选择规格 (初始隐藏) -->
+        <div id="mobile-view2" class="hidden space-y-6 pb-20">
+          <div class="flex gap-4 items-start mb-6 p-4 bg-white/5 rounded-xl">
+            <img src="" id="mobile-productImg" class="w-16 h-16 object-cover rounded bg-black">
+            <div>
+              <h3 class="font-medium text-lg" id="mobile-productName">AZ Ring</h3>
+              <p class="text-luxury-gold text-sm" id="mobile-productValue">¥2,999</p>
+            </div>
+          </div>
+
+          <!-- 型号 -->
+          <div id="mobile-modelSection">
+            <label class="text-xs text-gray-500 uppercase tracking-wider block mb-3">选择型号</label>
+            <div class="grid grid-cols-1 gap-3" id="mobile-modelOptions">
+              <!-- 动态渲染 -->
+            </div>
+          </div>
+
+          <!-- 颜色 -->
+          <div id="mobile-colorSection" class="hidden">
+            <label class="text-xs text-gray-500 uppercase tracking-wider block mb-3">选择颜色</label>
+            <div class="grid grid-cols-3 gap-3" id="mobile-colorOptions">
+              <!-- 动态渲染 -->
+            </div>
+          </div>
+
+          <!-- 尺寸 -->
+          <div id="mobile-sizeSection" class="hidden">
+            <label class="text-xs text-gray-500 uppercase tracking-wider block mb-3">选择尺寸</label>
+            <select id="mobile-sizeSelect" class="floating-input">
+              <option value="">请选择圈号</option>
+              <!-- 动态渲染 -->
+            </select>
+          </div>
+
+          <button onclick="goToMobileView3()" id="mobile-view2NextBtn" disabled class="w-full bg-gray-700 text-gray-400 font-bold py-4 rounded-xl mt-4 transition-colors">
+            下一步：填写地址
+          </button>
+        </div>
+
+        <!-- 视图3: 地址 (初始隐藏) -->
+        <div id="mobile-view3" class="hidden space-y-6 pb-20">
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-light">收货信息</h2>
+          </div>
+
+          <div class="space-y-4">
+            <input type="text" id="mobile-userName" class="floating-input" placeholder="收货人姓名">
+            <input type="tel" id="mobile-userPhone" class="floating-input" placeholder="联系电话">
+            
+            <div class="grid grid-cols-3 gap-4">
+              <input type="text" id="mobile-userProvince" class="floating-input text-center" placeholder="省份">
+              <input type="text" id="mobile-userCity" class="floating-input text-center" placeholder="城市">
+              <input type="text" id="mobile-userDistrict" class="floating-input text-center" placeholder="区县">
+            </div>
+            
+            <input type="text" id="mobile-userAddress" class="floating-input" placeholder="详细地址 (街道/门牌号)">
+          </div>
+
+          <button onclick="submitOrderMobile()" class="w-full bg-luxury-gold text-black font-bold py-4 rounded-xl shadow-lg mt-8">
+            确认兑换
+          </button>
+          
+          <button onclick="backToMobileView2()" class="w-full text-gray-500 text-sm py-2">
+            返回修改规格
+          </button>
+        </div>
+
+        <!-- 视图4: 成功 -->
+        <div id="mobile-view4" class="hidden text-center py-12">
+          <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          <h2 class="text-3xl font-light mb-2">兑换成功!</h2>
+          <p class="text-gray-400 text-sm">我们将尽快为您发货</p>
+          <button onclick="location.href='../../../index.html'" class="mt-12 text-luxury-gold border-b border-luxury-gold pb-1">返回首页</button>
+        </div>
+
+        <!-- 物流查询视图 -->
+        <div id="mobile-trackingView" class="hidden space-y-6">
+          <button onclick="hideMobileTracking()" class="text-gray-400 flex items-center gap-2 mb-6">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            返回
+          </button>
+          
+          <div class="text-center mb-6">
+            <h2 class="text-2xl font-light">物流查询</h2>
+          </div>
+          
+          <div class="space-y-4">
+            <input type="text" id="mobile-trackingCodeInput" class="floating-input" placeholder="输入兑换码">
+            <button onclick="queryLogisticsMobile()" class="w-full bg-white text-black font-semibold py-3 rounded-xl">查询</button>
+          </div>
+
+          <div id="mobile-logisticsResult" class="mt-8 p-4 bg-white/5 rounded-xl hidden">
+            <!-- 动态内容 -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- ========== 移动端布局结束 ========== -->
+
   <script>
     const API_BASE_URL = 'https://kajuan.oramemoai.com/api';
     let currentRedeemCode = '';
+    let isMobileView = window.innerWidth < 768;
     let currentCarouselSlide = 0;
     let currentProductId = null;
     let currentModels = [];
@@ -1037,6 +1336,175 @@
         hour: '2-digit',
         minute: '2-digit'
       });
+    }
+
+    // ========== 移动端专用函数 ==========
+
+    let mobileSelectedModelId = null;
+    let mobileSelectedColorCode = null;
+    let mobileSelectedSizeCode = null;
+
+    function openMobileSheet() {
+      document.getElementById('mobileSheet').classList.add('open');
+      document.getElementById('mobile-startBtnContainer').classList.add('translate-y-full', 'opacity-0');
+      document.getElementById('mobile-heroText').classList.add('opacity-0');
+    }
+
+    function closeMobileSheet() {
+      if (!document.getElementById('mobile-view1').classList.contains('hidden')) {
+        document.getElementById('mobileSheet').classList.remove('open');
+        document.getElementById('mobile-startBtnContainer').classList.remove('translate-y-full', 'opacity-0');
+        document.getElementById('mobile-heroText').classList.remove('opacity-0');
+      }
+    }
+
+    function updateMobileDots(index) {
+      const dots = document.querySelectorAll('#mobile-stepIndicator .step-dot');
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+    }
+
+    async function validateCodeMobile() {
+      const code = document.getElementById('mobile-redeemCode').value.trim();
+      if (!code) return alert('请输入兑换码');
+
+      if (code === '123456') {
+        currentRedeemCode = code;
+        currentProductId = 999;
+        document.getElementById('mobile-productName').textContent = 'AZ Ring Pro (测试)';
+        document.getElementById('mobile-productValue').textContent = '¥2,999';
+        document.getElementById('mobile-productImg').src = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/双戒指.png';
+        renderModelsMobile([{id:1,name:'标准版',price_adjustment:0},{id:2,name:'Pro版',price_adjustment:200}]);
+        document.getElementById('mobile-view1').classList.add('hidden');
+        document.getElementById('mobile-view2').classList.remove('hidden');
+        updateMobileDots(1);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/redeem/validate`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({redeem_code:code})}).then(r=>r.json());
+        if (res.code === 200) {
+          currentRedeemCode = code;
+          currentProductId = res.data.product_id;
+          document.getElementById('mobile-productName').textContent = res.data.product_name;
+          document.getElementById('mobile-productValue').textContent = '¥' + parseFloat(res.data.product_value).toFixed(2);
+          document.getElementById('mobile-productImg').src = 'https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/双戒指.png';
+          if (res.data.models && res.data.models.length > 0) renderModelsMobile(res.data.models);
+          else { renderColorsMobile(res.data.colors || []); renderSizesMobile(res.data.sizes || []); }
+          document.getElementById('mobile-view1').classList.add('hidden');
+          document.getElementById('mobile-view2').classList.remove('hidden');
+          updateMobileDots(1);
+        } else alert(res.message || '验证失败');
+      } catch(e) { alert('网络错误'); }
+    }
+
+    function renderModelsMobile(models) {
+      const c = document.getElementById('mobile-modelOptions');
+      if (!models || !models.length) return document.getElementById('mobile-modelSection').classList.add('hidden');
+      c.innerHTML = models.map(m=>`<div onclick="selectModelMobile(${m.id})" class="mobile-option-card p-4 rounded-xl flex items-center justify-between" data-model-id="${m.id}"><span>${m.name}</span>${m.price_adjustment>0?`<span class="text-xs bg-white/10 px-2 py-1 rounded">+¥${m.price_adjustment}</span>`:''}</div>`).join('');
+    }
+
+    async function selectModelMobile(id) {
+      document.querySelectorAll('#mobile-modelOptions .mobile-option-card').forEach(e=>e.classList.remove('selected'));
+      document.querySelector(`[data-model-id="${id}"]`).classList.add('selected');
+      mobileSelectedModelId = id;
+      try {
+        const res = await fetch(`${API_BASE_URL}/redeem/model-options?product_id=${currentProductId}&model_id=${id}`).then(r=>r.json());
+        if (res.code===200) { renderColorsMobile(res.data.colors); renderSizesMobile(res.data.sizes); document.getElementById('mobile-colorSection').classList.remove('hidden'); }
+      } catch(e) {}
+      checkMobileView2Complete();
+    }
+
+    function renderColorsMobile(colors) {
+      const c = document.getElementById('mobile-colorOptions');
+      if (!colors || !colors.length) return document.getElementById('mobile-colorSection').classList.add('hidden');
+      c.innerHTML = colors.map(co=>`<div onclick="selectColorMobile('${co.code}')" class="mobile-option-card p-3 rounded-xl flex flex-col items-center gap-2" data-color-code="${co.code}">${co.image_url?`<img src="${co.image_url}" class="w-12 h-12 rounded">` :`<div class="w-12 h-12 rounded" style="background:${getColorGradient(co.code)}"></div>`}<span class="text-xs">${co.name}</span></div>`).join('');
+    }
+
+    function selectColorMobile(code) {
+      document.querySelectorAll('#mobile-colorOptions .mobile-option-card').forEach(e=>e.classList.remove('selected'));
+      document.querySelector(`[data-color-code="${code}"]`).classList.add('selected');
+      mobileSelectedColorCode = code;
+      document.getElementById('mobile-sizeSection').classList.remove('hidden');
+      checkMobileView2Complete();
+    }
+
+    function renderSizesMobile(sizes) {
+      const s = document.getElementById('mobile-sizeSelect');
+      if (!sizes || !sizes.length) return document.getElementById('mobile-sizeSection').classList.add('hidden');
+      s.innerHTML = '<option value="">请选择圈号</option>' + sizes.map(sz=>`<option value="${sz.code}">${sz.name}</option>`).join('');
+      s.onchange = ()=>{ mobileSelectedSizeCode = s.value; checkMobileView2Complete(); };
+    }
+
+    function checkMobileView2Complete() {
+      const b = document.getElementById('mobile-view2NextBtn');
+      if (mobileSelectedModelId && mobileSelectedColorCode && mobileSelectedSizeCode) {
+        b.disabled = false;
+        b.classList.remove('bg-gray-700','text-gray-400');
+        b.classList.add('bg-luxury-gold','text-black');
+      }
+    }
+
+    function goToMobileView3() {
+      document.getElementById('mobile-view2').classList.add('hidden');
+      document.getElementById('mobile-view3').classList.remove('hidden');
+      updateMobileDots(2);
+    }
+
+    function backToMobileView2() {
+      document.getElementById('mobile-view3').classList.add('hidden');
+      document.getElementById('mobile-view2').classList.remove('hidden');
+      updateMobileDots(1);
+    }
+
+    async function submitOrderMobile() {
+      const name = document.getElementById('mobile-userName').value.trim();
+      const phone = document.getElementById('mobile-userPhone').value.trim();
+      const province = document.getElementById('mobile-userProvince').value.trim();
+      const city = document.getElementById('mobile-userCity').value.trim();
+      const district = document.getElementById('mobile-userDistrict').value.trim();
+      const address = document.getElementById('mobile-userAddress').value.trim();
+      if (!name||!phone||!province||!city||!district||!address) return alert('请完整填写收货信息');
+      if (!/^1[3-9]\d{9}$/.test(phone)) return alert('请输入正确的手机号');
+      try {
+        const res = await fetch(`${API_BASE_URL}/redeem/submit`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({redeem_code:currentRedeemCode,product_model_id:mobileSelectedModelId,ring_color:mobileSelectedColorCode,ring_size:mobileSelectedSizeCode,user_name:name,user_phone:phone,user_province:province,user_city:city,user_district:district,user_address:address})}).then(r=>r.json());
+        if (res.code===200) {
+          document.getElementById('mobile-view3').classList.add('hidden');
+          document.getElementById('mobile-view4').classList.remove('hidden');
+          document.getElementById('mobile-stepIndicator').style.opacity='0';
+        } else alert(res.message||'提交失败');
+      } catch(e) { alert('网络错误'); }
+    }
+
+    function showMobileTracking() {
+      document.getElementById('mobile-view1').classList.add('hidden');
+      document.getElementById('mobile-trackingView').classList.remove('hidden');
+      openMobileSheet();
+      if (currentRedeemCode) document.getElementById('mobile-trackingCodeInput').value = currentRedeemCode;
+    }
+
+    function hideMobileTracking() {
+      document.getElementById('mobile-trackingView').classList.add('hidden');
+      document.getElementById('mobile-view1').classList.remove('hidden');
+    }
+
+    async function queryLogisticsMobile() {
+      const code = document.getElementById('mobile-trackingCodeInput').value.trim();
+      if (!code) return alert('请输入兑换码');
+      const r = document.getElementById('mobile-logisticsResult');
+      r.innerHTML = '<p class="text-center py-4 text-gray-400">查询中...</p>';
+      r.classList.remove('hidden');
+      try {
+        const res = await fetch(`${API_BASE_URL}/redeem/track?redeem_code=${encodeURIComponent(code)}`).then(r=>r.json());
+        if (res.code===200) {
+          let html = `<div class="mb-4 p-3 bg-white/5 rounded-lg"><p class="text-sm text-gray-400"><strong class="text-white">状态：</strong>${res.data.orderInfo.statusText}</p></div>`;
+          if (res.data.logistics?.traces?.length) {
+            html += '<div class="space-y-3">';
+            res.data.logistics.traces.forEach((t,i)=> html+=`<div class="p-3 rounded ${i===0?'bg-green-500/10 border-l-2 border-green-500':'bg-white/5'}"><div class="text-xs ${i===0?'text-green-400':'text-gray-400'}">${t.time}</div><div class="text-sm text-white mt-1">${t.context}</div></div>`);
+            html += '</div>';
+          } else html += '<p class="text-gray-400 text-center py-4 text-sm">暂无物流信息</p>';
+          r.innerHTML = html;
+        } else r.innerHTML = `<p class="text-center py-4 text-red-400">${res.message||'查询失败'}</p>`;
+      } catch(e) { r.innerHTML = '<p class="text-center py-4 text-red-400">网络错误</p>'; }
     }
   </script>
 
