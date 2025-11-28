@@ -255,6 +255,21 @@
       outline: none;
     }
 
+    /* 移动端select选择器option样式优化 */
+    .floating-input option {
+      background-color: #1a1a1a;
+      color: white;
+      padding: 12px;
+    }
+    
+    /* iOS原生选择器适配 */
+    @supports (-webkit-touch-callout: none) {
+      .floating-input option {
+        background-color: white;
+        color: #000;
+      }
+    }
+
     .step-dot {
       width: 8px;
       height: 8px;
