@@ -1162,6 +1162,143 @@
         sizes.map(size => `<option value="${size.code}" class="bg-black">${size.name}</option>`).join('');
     }
 
+    // PC端省市区级联选择器初始化
+    function initAreaSelector() {
+      const provinceSelect = document.getElementById('provinceSelect');
+      const citySelect = document.getElementById('citySelect');
+      const districtSelect = document.getElementById('districtSelect');
+      
+      if (!provinceSelect || !CHINA_AREA_DATA) return;
+      
+      // 清空并填充省份
+      provinceSelect.innerHTML = '<option value="">请选择省份</option>';
+      CHINA_AREA_DATA.provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province.name;
+        option.textContent = province.name;
+        provinceSelect.appendChild(option);
+      });
+      
+      // 省份改变事件
+      provinceSelect.addEventListener('change', function() {
+        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === this.value);
+        citySelect.innerHTML = '<option value="">请先选择省份</option>';
+        districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+        districtSelect.disabled = true;
+        
+        if (selectedProvince) {
+          citySelect.disabled = false;
+          citySelect.innerHTML = '<option value="">请选择城市</option>';
+          selectedProvince.cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city.name;
+            option.textContent = city.name;
+            citySelect.appendChild(option);
+          });
+        } else {
+          citySelect.disabled = true;
+        }
+      });
+      
+      // 城市改变事件
+      citySelect.addEventListener('change', function() {
+        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === provinceSelect.value);
+        if (!selectedProvince) return;
+        
+        const selectedCity = selectedProvince.cities.find(c => c.name === this.value);
+        districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+        
+        if (selectedCity && selectedCity.districts) {
+          districtSelect.disabled = false;
+          districtSelect.innerHTML = '<option value="">请选择区县</option>';
+          selectedCity.districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district.name;
+            option.textContent = district.name;
+            districtSelect.appendChild(option);
+          });
+        } else {
+          districtSelect.disabled = true;
+        }
+      });
+    }
+
+    // PC端物流查询
+    async function queryTracking() {
+      const code = document.getElementById('trackingCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码');
+        return;
+      }
+
+      const resultDiv = document.getElementById('trackingResult');
+      if (!resultDiv) return;
+
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<div class="text-center py-8 text-gray-400">查询中...</div>';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/track?redeem_code=${encodeURIComponent(code)}`);
+        const res = await response.json();
+
+        if (res.code === 200) {
+          let html = '<div class="space-y-6">';
+          
+          // 订单状态
+          html += `
+            <div class="bg-white/5 rounded-lg p-6">
+              <h3 class="text-lg font-semibold mb-2">订单状态</h3>
+              <p class="text-gray-300">${res.data.orderInfo.statusText}</p>
+            </div>
+          `;
+
+          // 物流信息
+          if (res.data.logistics && res.data.logistics.traces && res.data.logistics.traces.length > 0) {
+            html += `
+              <div class="bg-white/5 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">物流轨迹</h3>
+                <div class="space-y-4">
+            `;
+            
+            res.data.logistics.traces.forEach((trace, index) => {
+              const isLatest = index === 0;
+              html += `
+                <div class="flex gap-4 ${isLatest ? 'text-green-400' : 'text-gray-400'}">
+                  <div class="flex flex-col items-center">
+                    <div class="w-3 h-3 rounded-full ${isLatest ? 'bg-green-400' : 'bg-gray-600'}"></div>
+                    ${index < res.data.logistics.traces.length - 1 ? '<div class="w-0.5 h-full bg-gray-700 mt-2"></div>' : ''}
+                  </div>
+                  <div class="flex-1 pb-6">
+                    <div class="text-sm mb-1">${trace.time}</div>
+                    <div class="text-white">${trace.context}</div>
+                  </div>
+                </div>
+              `;
+            });
+
+            html += `
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="bg-white/5 rounded-lg p-6 text-center text-gray-400">
+                暂无物流信息
+              </div>
+            `;
+          }
+
+          html += '</div>';
+          resultDiv.innerHTML = html;
+        } else {
+          resultDiv.innerHTML = `<div class="text-center py-8 text-red-400">${res.message || '查询失败'}</div>`;
+        }
+      } catch (error) {
+        console.error('查询物流失败:', error);
+        resultDiv.innerHTML = '<div class="text-center py-8 text-red-400">网络错误，请稍后重试</div>';
+      }
+    }
+
     // ========== 移动端专用函数 ==========
 
     function openMobileSheet() {
