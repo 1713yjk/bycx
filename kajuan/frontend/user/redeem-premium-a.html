@@ -24,6 +24,7 @@
       }
     }
   </script>
+  <script src="./assets/china-area-data.js"></script>
   <style>
     body {
       background-color: #050505;
@@ -522,51 +523,36 @@
           <div class="border-t border-white/10 pt-12 mt-12">
             <h3 class="text-xl font-light text-white mb-8 tracking-tight">收货信息</h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div class="input-group relative mt-4">
-                <input type="text" name="user_name" required maxlength="20"
-                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
-                  placeholder="收货人姓名">
-                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
-                  收货人姓名
-                </label>
-                <div class="input-underline"></div>
-              </div>
-              <div class="input-group relative mt-4">
-                <input type="tel" name="user_phone" required maxlength="20"
-                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
-                  placeholder="联系电话">
-                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
-                  联系电话
-                </label>
-                <div class="input-underline"></div>
-              </div>
-            </div>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div class="input-group relative mt-4">
-                <input type="text" name="user_province" required maxlength="50"
-                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
-                  placeholder="省份">
-                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                <select name="user_province" id="provinceSelect" required
+                  class="peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors appearance-none cursor-pointer"
+                  style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
+                  <option value="">请选择省份</option>
+                </select>
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   省份
                 </label>
                 <div class="input-underline"></div>
               </div>
               <div class="input-group relative mt-4">
-                <input type="text" name="user_city" required maxlength="50"
-                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
-                  placeholder="城市">
-                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                <select name="user_city" id="citySelect" required disabled
+                  class="peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
+                  <option value="">请先选择省份</option>
+                </select>
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   城市
                 </label>
                 <div class="input-underline"></div>
               </div>
               <div class="input-group relative mt-4">
-                <input type="text" name="user_district" required maxlength="50"
-                  class="peer w-full bg-transparent border-b border-white/20 py-4 text-white outline-none placeholder-transparent focus:border-white transition-colors"
-                  placeholder="区县">
-                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-4 peer-focus:-top-3.5 peer-focus:text-gray-400 peer-focus:text-sm">
+                <select name="user_district" id="districtSelect" required disabled
+                  class="peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
+                  <option value="">请先选择城市</option>
+                </select>
+                <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   区县
                 </label>
                 <div class="input-underline"></div>
@@ -856,9 +842,15 @@
             <input type="tel" id="mobile-userPhone" class="floating-input" placeholder="联系电话">
             
             <div class="grid grid-cols-3 gap-4">
-              <input type="text" id="mobile-userProvince" class="floating-input text-center" placeholder="省份">
-              <input type="text" id="mobile-userCity" class="floating-input text-center" placeholder="城市">
-              <input type="text" id="mobile-userDistrict" class="floating-input text-center" placeholder="区县">
+              <select id="mobile-userProvince" class="floating-input text-center">
+                <option value="">省份</option>
+              </select>
+              <select id="mobile-userCity" class="floating-input text-center" disabled>
+                <option value="">城市</option>
+              </select>
+              <select id="mobile-userDistrict" class="floating-input text-center" disabled>
+                <option value="">区县</option>
+              </select>
             </div>
             
             <input type="text" id="mobile-userAddress" class="floating-input" placeholder="详细地址 (街道/门牌号)">
@@ -919,456 +911,79 @@
     let currentModels = [];
     let selectedModelId = null;
 
-    // Hero轮播
-    function initCarousel() {
-      setInterval(() => {
-        currentCarouselSlide = (currentCarouselSlide + 1) % 2;
-        showSlide(currentCarouselSlide);
-      }, 5000);
-    }
-
-    function showSlide(index) {
-      const slides = document.querySelectorAll('.carousel-slide');
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
-      });
-      currentCarouselSlide = index;
-    }
-
-    // 滚动到表单
-    function scrollToForm() {
-      document.getElementById('customSection').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // 显示客服二维码
-    function showServiceQR() {
-      const modal = document.getElementById('serviceQRModal');
-      modal.classList.remove('step-hidden');
-      modal.classList.add('step-visible');
-      document.body.style.overflow = 'hidden';
-    }
-
-    // 隐藏客服二维码
-    function hideServiceQR() {
-      const modal = document.getElementById('serviceQRModal');
-      modal.classList.add('step-hidden');
-      modal.classList.remove('step-visible');
-      document.body.style.overflow = '';
-    }
-
-    // 渲染型号选项
-    function renderModels(models) {
-      const modelContainer = document.getElementById('modelOptions');
-      const modelGroup = document.getElementById('modelSelectionGroup');
-      
-      if (!modelContainer) return;
-
-      if (!models || models.length === 0) {
-        modelGroup.classList.add('step-hidden');
-        return;
-      }
-
-      if (models.length === 1) {
-        selectedModelId = models[0].id;
-        modelGroup.classList.add('step-hidden');
-        loadModelOptions(currentProductId, selectedModelId);
-        return;
-      }
-
-      modelGroup.classList.remove('step-hidden');
-      modelGroup.classList.add('step-visible');
-      currentModels = models;
-
-      modelContainer.innerHTML = models.map((model) => {
-        const priceAdj = parseFloat(model.price_adjustment) || 0;
-        let priceText = '';
-        if (priceAdj > 0) priceText = `<span class="text-green-400">+¥${priceAdj.toFixed(2)}</span>`;
-        else if (priceAdj < 0) priceText = `<span class="text-red-400">¥${priceAdj.toFixed(2)}</span>`;
-
-        return `
-          <label class="selection-card border border-white/10 p-4 rounded-lg">
-            <input type="radio" name="product_model_id" value="${model.id}" required onchange="onModelChange(${model.id})">
-            <div class="text-center">
-              ${model.image_url ?
-                `<img src="${model.image_url}" alt="${model.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
-                `<div class="w-full h-48 flex items-center justify-center bg-white/5 rounded mb-3 text-gray-400">${model.name}</div>`
-              }
-              <span class="block text-white font-semibold">${model.name}</span>
-              ${priceText ? `<span class="block text-sm mt-1">${priceText}</span>` : ''}
-            </div>
-            <div class="check-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </div>
-          </label>
-        `;
-      }).join('');
-    }
-
-    function onModelChange(modelId) {
-      selectedModelId = modelId;
-      loadModelOptions(currentProductId, modelId);
-    }
-
-    function loadModelOptions(productId, modelId) {
-      fetch(`${API_BASE_URL}/redeem/model-options?product_id=${productId}&model_id=${modelId}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.code === 200) {
-            renderColors(data.data.colors);
-            renderSizes(data.data.sizes);
-          } else {
-            alert(data.message || '获取型号选项失败');
-          }
-        })
-        .catch(error => {
-          console.error('加载型号选项失败:', error);
-          alert('网络错误，请稍后重试');
-        });
-    }
-
-    // 渲染颜色选项
-    function renderColors(colors) {
-      const colorContainer = document.getElementById('colorOptions');
-      const colorGroup = document.getElementById('colorSelectionGroup');
-      if (!colorContainer) return;
-
-      if (!colors || colors.length === 0) {
-        colorGroup.classList.add('step-hidden');
-        return;
-      }
-
-      colorGroup.classList.remove('step-hidden');
-      colorGroup.classList.add('step-visible');
-      colorContainer.innerHTML = colors.map((color, index) => `
-        <label class="selection-card border border-white/10 p-4 rounded-lg">
-          <input type="radio" name="ring_color" value="${color.code}" required>
-          <div class="text-center">
-            ${color.image_url ?
-              `<img src="${color.image_url}" alt="${color.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
-              `<div class="w-full h-48 rounded mb-3" style="background: ${getColorGradient(color.code)}"></div>`
-            }
-            <span class="block text-white font-semibold">${color.name}</span>
-            ${index === 0 ? '<span class="inline-block mt-2 px-3 py-1 bg-luxury-gold text-black text-xs rounded-full">热门</span>' : ''}
-          </div>
-          <div class="check-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </div>
-        </label>
-      `).join('');
-    }
-
-    function getColorGradient(colorCode) {
-      const gradients = {
-        'black': 'linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%)',
-        'gold': 'linear-gradient(135deg, #d4af37 0%, #c5a028 100%)',
-        'blue': 'linear-gradient(135deg, #4a90e2 0%, #357abd 100%)',
-        'silver': 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)',
-        'rose': 'linear-gradient(135deg, #e8a0a0 0%, #d88888 100%)'
-      };
-      return gradients[colorCode] || 'linear-gradient(135deg, #888 0%, #666 100%)';
-    }
-
-    // 渲染尺寸选项
-    function renderSizes(sizes) {
-      const sizeSelect = document.getElementById('sizeSelect');
-      const sizeGroup = document.getElementById('sizeSelectionGroup');
-      if (!sizeSelect) return;
-
-      if (!sizes || sizes.length === 0) {
-        sizeGroup.classList.add('step-hidden');
-        return;
-      }
-
-      sizeGroup.classList.remove('step-hidden');
-      sizeGroup.classList.add('step-visible');
-      sizeSelect.innerHTML = '<option value="" class="bg-black">请选择圈号</option>' +
-        sizes.map(size => `<option value="${size.code}" class="bg-black">${size.name}</option>`).join('');
-    }
-
-    // 验证兑换码
-    async function validateCodeA() {
-      const code = document.getElementById('redeemCode').value.trim();
-      if (!code) {
-        alert('请输入兑换码');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE_URL}/redeem/validate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ redeem_code: code })
-        });
-
-        const res = await response.json();
-
-        if (res.code === 200) {
-          handleValidationSuccess(res.data, code);
-        } else {
-          alert(res.message || '兑换码验证失败');
-        }
-      } catch (err) {
-        alert('网络错误，请稍后重试');
-        console.error(err);
-      }
-    }
-
-    function handleValidationSuccess(data, code) {
-      currentRedeemCode = code;
-      currentProductId = data.product_id;
-      
-      // 更新Hero区域的产品信息
-      document.getElementById('productNameHero').textContent = data.product_name;
-      document.getElementById('productValueHero').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
-      
-      // 更新表单区域的产品信息
-      document.getElementById('productName').textContent = data.product_name;
-      document.getElementById('productValue').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
-
-      // 显示Hero的步骤2
-      document.getElementById('step1').classList.remove('step-visible');
-      document.getElementById('step1').classList.add('step-hidden');
-      document.getElementById('step2Hero').classList.remove('step-hidden');
-      document.getElementById('step2Hero').classList.add('step-visible');
-
-      // 显示定制表单区域
-      document.getElementById('customSection').classList.remove('step-hidden');
-      document.getElementById('customSection').classList.add('step-visible');
-
-      // 判断是否有型号
-      if (data.models && data.models.length > 0) {
-        renderModels(data.models);
-      } else {
-        renderColors(data.colors || []);
-        renderSizes(data.sizes || []);
-      }
-
-      // 平滑滚动到表单
-      setTimeout(() => {
-        document.getElementById('customSection').scrollIntoView({ behavior: 'smooth' });
-      }, 500);
-    }
-
-    // 提交兑换表单
-    document.addEventListener('DOMContentLoaded', function() {
-      initCarousel();
-      
-      const form = document.getElementById('redeemForm');
-      if (form) {
-        form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          const formData = new FormData(e.target);
-          const data = {
-            redeem_code: currentRedeemCode,
-            ring_color: formData.get('ring_color'),
-            ring_size: formData.get('ring_size'),
-            user_name: formData.get('user_name'),
-            user_phone: formData.get('user_phone'),
-            user_province: formData.get('user_province'),
-            user_city: formData.get('user_city'),
-            user_district: formData.get('user_district'),
-            user_address: formData.get('user_address')
-          };
-
-          if (selectedModelId) {
-            data.product_model_id = selectedModelId;
-          } else if (formData.get('product_model_id')) {
-            data.product_model_id = formData.get('product_model_id');
-          }
-          
-          if (currentModels && currentModels.length > 0 && !data.product_model_id) {
-            alert('请选择戒指型号');
-            return;
-          }
-
-          if (!data.ring_color) {
-            alert('请选择戒指颜色');
-            return;
-          }
-
-          if (!data.ring_size) {
-            alert('请选择戒指尺寸（圈号）');
-            return;
-          }
-
-          if (!/^1[3-9]\d{9}$/.test(data.user_phone)) {
-            alert('请输入正确的手机号');
-            return;
-          }
-          
-          try {
-            const response = await fetch(`${API_BASE_URL}/redeem/submit`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data)
-            });
-            
-            const res = await response.json();
-            
-            if (res.code === 200) {
-              // 隐藏表单，显示成功页面
-              document.getElementById('customSection').classList.add('step-hidden');
-              document.getElementById('successSection').classList.remove('step-hidden');
-              document.getElementById('successSection').classList.add('step-visible');
-              
-              // 滚动到成功页面
-              document.getElementById('successSection').scrollIntoView({ behavior: 'smooth' });
-              
-              // 自动填充追踪码
-              document.getElementById('trackingCode').value = currentRedeemCode;
-            } else {
-              alert(res.message || '兑换失败');
-            }
-          } catch (err) {
-            alert('网络错误，请稍后重试');
-            console.error(err);
-          }
-        });
-      }
-    });
-
-    // 查询物流
-    async function queryTracking() {
-      const code = document.getElementById('trackingCode').value.trim();
-      if (!code) {
-        alert('请输入兑换码或追溯码');
-        return;
-      }
-      
-      const resultDiv = document.getElementById('trackingResult');
-      resultDiv.innerHTML = '<p class="text-center py-8 text-gray-400">正在查询物流信息...</p>';
-      resultDiv.classList.remove('step-hidden');
-      resultDiv.classList.add('step-visible');
-      
-      try {
-        const response = await fetch(`${API_BASE_URL}/redeem/track?redeem_code=${encodeURIComponent(code)}`);
-        const res = await response.json();
-        
-        if (res.code === 200) {
-          displayLogisticsTracking(res.data);
-        } else {
-          resultDiv.innerHTML = `<p class="text-center py-8 text-red-400">${res.message || '查询失败'}</p>`;
-        }
-      } catch (err) {
-        resultDiv.innerHTML = '<p class="text-center py-8 text-red-400">网络错误，请稍后重试</p>';
-        console.error(err);
-      }
-    }
-
-    function displayLogisticsTracking(data) {
-      const resultDiv = document.getElementById('trackingResult');
-      
-      let html = `
-        <div class="mb-6 p-4 bg-white/5 rounded-lg">
-          <h4 class="text-white font-semibold mb-3">订单信息</h4>
-          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">订单状态：</strong>${data.orderInfo.statusText}</p>
-          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">商品名称：</strong>${data.orderInfo.batchName || '-'}</p>
-          ${data.orderInfo.shippedAt ? `<p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
-      `;
-      
-      // 如果已发货，显示快递信息（始终显示，不依赖物流轨迹）
-      if (data.orderInfo.status >= 3 && data.orderInfo.trackingNumber) {
-        html += `
-          <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10">
-            <div>
-              <p class="text-xs text-gray-500 mb-1">快递公司</p>
-              <p class="text-sm text-white">${data.orderInfo.logisticsCompany || '-'}</p>
-            </div>
-            <div>
-              <p class="text-xs text-gray-500 mb-1">快递单号</p>
-              <p class="text-sm text-white font-mono">${data.orderInfo.trackingNumber}</p>
-            </div>
-          </div>
-        `;
-      }
-      
-      html += `</div>`;
-      
-      // 物流轨迹区域（独立判断）
-      if (data.logistics && data.logistics.traces && data.logistics.traces.length > 0) {
-        const statusClass = data.logistics.status === 'SIGN' ? 'bg-green-500' : 
-                           data.logistics.status === 'DELIVERING' ? 'bg-yellow-500' :
-                           data.logistics.status === 'PROBLEM' ? 'bg-red-500' : 'bg-blue-500';
-        
-        html += `
-          <div class="mb-6 p-4 bg-white/5 rounded-lg">
-            <div class="flex items-center justify-between mb-4">
-              <h4 class="text-white font-semibold">物流轨迹</h4>
-              <span class="px-3 py-1 ${statusClass} text-white text-xs rounded-full">${data.logistics.statusDesc}</span>
-            </div>
-            
-            <div class="mt-4">
-        `;
-        
-        data.logistics.traces.forEach((trace, index) => {
-          const isLatest = index === 0;
-          html += `
-            <div class="timeline-item ${isLatest ? 'latest' : ''}">
-              <div class="timeline-dot"></div>
-              <div class="text-xs ${isLatest ? 'text-green-400' : 'text-gray-400'} mb-1">${trace.time}</div>
-              <div class="text-sm text-white mb-1">${trace.context}</div>
-              ${trace.location ? `<div class="text-xs text-gray-500">📍 ${trace.location}</div>` : ''}
-            </div>
-          `;
-        });
-        
-        html += `
-            </div>
-          </div>
-        `;
-      } else if (data.orderInfo.status >= 3) {
-        // 已发货但暂无物流轨迹
-        html += `
-          <div class="p-6 text-center">
-            <div class="inline-block p-4 rounded-full bg-yellow-500/10 mb-4">
-              <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <p class="text-gray-400 text-sm">订单已发货，物流信息更新中...</p>
-            <p class="text-gray-500 text-xs mt-2">快递公司揽件后，轨迹信息将在此显示</p>
-          </div>
-        `;
-      } else {
-        html += '<p class="text-gray-400 text-center py-8">订单正在准备中，我们会尽快为您发货</p>';
-      }
-      
-      resultDiv.innerHTML = html;
-    }
-
-    function formatDateTime(datetime) {
-      if (!datetime) return '-';
-      const date = new Date(datetime);
-      return date.toLocaleString('zh-CN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-
-    // ========== 移动端专用函数 ==========
-
+    // ========== 移动端专用变量 ==========
     let mobileSelectedModelId = null;
     let mobileSelectedColorCode = null;
     let mobileSelectedSizeCode = null;
+
+    // 初始化移动端省市区级联选择器
+    function initMobileAreaSelector() {
+      const provinceSelect = document.getElementById('mobile-userProvince');
+      const citySelect = document.getElementById('mobile-userCity');
+      const districtSelect = document.getElementById('mobile-userDistrict');
+      
+      if (!provinceSelect || !CHINA_AREA_DATA) return;
+      
+      // 清空并填充省份
+      provinceSelect.innerHTML = '<option value="">省份</option>';
+      CHINA_AREA_DATA.provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province.name;
+        option.textContent = province.name;
+        provinceSelect.appendChild(option);
+      });
+      
+      // 省份改变
+      provinceSelect.addEventListener('change', function() {
+        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === this.value);
+        citySelect.innerHTML = '<option value="">城市</option>';
+        districtSelect.innerHTML = '<option value="">区县</option>';
+        districtSelect.disabled = true;
+        
+        if (selectedProvince) {
+          citySelect.disabled = false;
+          selectedProvince.cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city.name;
+            option.textContent = city.name;
+            citySelect.appendChild(option);
+          });
+        } else {
+          citySelect.disabled = true;
+        }
+      });
+      
+      // 城市改变
+      citySelect.addEventListener('change', function() {
+        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === provinceSelect.value);
+        if (!selectedProvince) return;
+        const selectedCity = selectedProvince.cities.find(c => c.name === this.value);
+        districtSelect.innerHTML = '<option value="">区县</option>';
+        
+        if (selectedCity && selectedCity.districts) {
+          districtSelect.disabled = false;
+          selectedCity.districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district.name;
+            option.textContent = district.name;
+            districtSelect.appendChild(option);
+          });
+        } else {
+          districtSelect.disabled = true;
+        }
+      });
+    }
 
     function openMobileSheet() {
       document.getElementById('mobileSheet').classList.add('open');
       document.getElementById('mobile-startBtnContainer').classList.add('translate-y-full', 'opacity-0');
       document.getElementById('mobile-heroText').classList.add('opacity-0');
+      initMobileAreaSelector(); // 初始化移动端省市区级联
     }
 
     function closeMobileSheet() {
       if (!document.getElementById('mobile-view1').classList.contains('hidden')) {
         document.getElementById('mobileSheet').classList.remove('open');
-        document.getElementById('mobile-startBtnContainer').classList.remove('translate-y-full', 'opacity-0');
         document.getElementById('mobile-heroText').classList.remove('opacity-0');
       }
     }
@@ -1488,6 +1103,17 @@
           document.getElementById('mobile-stepIndicator').style.opacity='0';
         } else alert(res.message||'提交失败');
       } catch(e) { alert('网络错误'); }
+    }
+
+    function getColorGradient(colorCode) {
+      const gradients = {
+        'black': 'linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%)',
+        'gold': 'linear-gradient(135deg, #d4af37 0%, #c5a028 100%)',
+        'blue': 'linear-gradient(135deg, #4a90e2 0%, #357abd 100%)',
+        'silver': 'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 100%)',
+        'rose': 'linear-gradient(135deg, #e8a0a0 0%, #d88888 100%)'
+      };
+      return gradients[colorCode] || 'linear-gradient(135deg, #888 0%, #666 100%)';
     }
 
     function showMobileTracking() {
