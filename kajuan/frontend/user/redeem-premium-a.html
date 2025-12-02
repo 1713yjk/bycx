@@ -974,6 +974,196 @@
       });
     }
 
+    // ========== PC端专用函数 ==========
+
+    // PC端验证兑换码
+    async function validateCodeA() {
+      const code = document.getElementById('redeemCode').value.trim();
+      if (!code) {
+        alert('请输入兑换码');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/redeem/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ redeem_code: code })
+        });
+
+        const res = await response.json();
+
+        if (res.code === 200) {
+          handleValidationSuccess(res.data, code);
+        } else {
+          alert(res.message || '兑换码验证失败');
+        }
+      } catch (err) {
+        alert('网络错误，请稍后重试');
+        console.error(err);
+      }
+    }
+
+    function handleValidationSuccess(data, code) {
+      currentRedeemCode = code;
+      currentProductId = data.product_id;
+      
+      // 更新Hero区域的产品信息
+      document.getElementById('productNameHero').textContent = data.product_name;
+      document.getElementById('productValueHero').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
+      
+      // 更新表单区域的产品信息
+      document.getElementById('productName').textContent = data.product_name;
+      document.getElementById('productValue').textContent = `¥${parseFloat(data.product_value).toFixed(2)}`;
+
+      // 显示Hero的步骤2
+      document.getElementById('step1').classList.remove('step-visible');
+      document.getElementById('step1').classList.add('step-hidden');
+      document.getElementById('step2Hero').classList.remove('step-hidden');
+      document.getElementById('step2Hero').classList.add('step-visible');
+
+      // 显示定制表单区域
+      document.getElementById('customSection').classList.remove('step-hidden');
+      document.getElementById('customSection').classList.add('step-visible');
+
+      // 判断是否有型号
+      if (data.models && data.models.length > 0) {
+        renderModels(data.models);
+      } else {
+        renderColors(data.colors || []);
+        renderSizes(data.sizes || []);
+      }
+
+      // 平滑滚动到表单
+      setTimeout(() => {
+        document.getElementById('customSection').scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+
+    // 渲染型号选项
+    function renderModels(models) {
+      const modelContainer = document.getElementById('modelOptions');
+      const modelGroup = document.getElementById('modelSelectionGroup');
+      
+      if (!modelContainer) return;
+
+      if (!models || models.length === 0) {
+        modelGroup.classList.add('step-hidden');
+        return;
+      }
+
+      if (models.length === 1) {
+        selectedModelId = models[0].id;
+        modelGroup.classList.add('step-hidden');
+        loadModelOptions(currentProductId, selectedModelId);
+        return;
+      }
+
+      modelGroup.classList.remove('step-hidden');
+      modelGroup.classList.add('step-visible');
+      currentModels = models;
+
+      modelContainer.innerHTML = models.map((model) => {
+        const priceAdj = parseFloat(model.price_adjustment) || 0;
+        let priceText = '';
+        if (priceAdj > 0) priceText = `<span class="text-green-400">+¥${priceAdj.toFixed(2)}</span>`;
+        else if (priceAdj < 0) priceText = `<span class="text-red-400">¥${priceAdj.toFixed(2)}</span>`;
+
+        return `
+          <label class="selection-card border border-white/10 p-4 rounded-lg">
+            <input type="radio" name="product_model_id" value="${model.id}" required onchange="onModelChange(${model.id})">
+            <div class="text-center">
+              ${model.image_url ?
+                `<img src="${model.image_url}" alt="${model.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
+                `<div class="w-full h-48 flex items-center justify-center bg-white/5 rounded mb-3 text-gray-400">${model.name}</div>`
+              }
+              <span class="block text-white font-semibold">${model.name}</span>
+              ${priceText ? `<span class="block text-sm mt-1">${priceText}</span>` : ''}
+            </div>
+            <div class="check-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function onModelChange(modelId) {
+      selectedModelId = modelId;
+      loadModelOptions(currentProductId, modelId);
+    }
+
+    function loadModelOptions(productId, modelId) {
+      fetch(`${API_BASE_URL}/redeem/model-options?product_id=${productId}&model_id=${modelId}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.code === 200) {
+            renderColors(data.data.colors);
+            renderSizes(data.data.sizes);
+          } else {
+            alert(data.message || '获取型号选项失败');
+          }
+        })
+        .catch(error => {
+          console.error('加载型号选项失败:', error);
+          alert('网络错误，请稍后重试');
+        });
+    }
+
+    // 渲染颜色选项
+    function renderColors(colors) {
+      const colorContainer = document.getElementById('colorOptions');
+      const colorGroup = document.getElementById('colorSelectionGroup');
+      if (!colorContainer) return;
+
+      if (!colors || colors.length === 0) {
+        colorGroup.classList.add('step-hidden');
+        return;
+      }
+
+      colorGroup.classList.remove('step-hidden');
+      colorGroup.classList.add('step-visible');
+      colorContainer.innerHTML = colors.map((color, index) => `
+        <label class="selection-card border border-white/10 p-4 rounded-lg">
+          <input type="radio" name="ring_color" value="${color.code}" required>
+          <div class="text-center">
+            ${color.image_url ?
+              `<img src="${color.image_url}" alt="${color.name}" class="w-full h-48 object-contain bg-white/5 rounded mb-3">` :
+              `<div class="w-full h-48 rounded mb-3" style="background: ${getColorGradient(color.code)}"></div>`
+            }
+            <span class="block text-white font-semibold">${color.name}</span>
+            ${index === 0 ? '<span class="inline-block mt-2 px-3 py-1 bg-luxury-gold text-black text-xs rounded-full">热门</span>' : ''}
+          </div>
+          <div class="check-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </label>
+      `).join('');
+    }
+
+    // 渲染尺寸选项
+    function renderSizes(sizes) {
+      const sizeSelect = document.getElementById('sizeSelect');
+      const sizeGroup = document.getElementById('sizeSelectionGroup');
+      if (!sizeSelect) return;
+
+      if (!sizes || sizes.length === 0) {
+        sizeGroup.classList.add('step-hidden');
+        return;
+      }
+
+      sizeGroup.classList.remove('step-hidden');
+      sizeGroup.classList.add('step-visible');
+      sizeSelect.innerHTML = '<option value="" class="bg-black">请选择圈号</option>' +
+        sizes.map(size => `<option value="${size.code}" class="bg-black">${size.name}</option>`).join('');
+    }
+
+    // ========== 移动端专用函数 ==========
+
     function openMobileSheet() {
       document.getElementById('mobileSheet').classList.add('open');
       document.getElementById('mobile-startBtnContainer').classList.add('translate-y-full', 'opacity-0');
