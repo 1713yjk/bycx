@@ -5176,7 +5176,7 @@ var _hmt = _hmt || [];
                     });
                 }
                 
-                // 5. 图片入场动画
+                // 5. 图片入场动画（缩放效果，透明度由懒加载控制）
                 if (image) {
                     gsap.from(image, {
                         scrollTrigger: {
@@ -5184,7 +5184,6 @@ var _hmt = _hmt || [];
                             start: "top 75%",
                             toggleActions: "play none none reverse"
                         },
-                        opacity: 0,
                         scale: 0.9,
                         duration: 1.2,
                         ease: "cubic-bezier(0.16, 1, 0.3, 1)"
