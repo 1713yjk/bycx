@@ -5068,6 +5068,133 @@ var _hmt = _hmt || [];
             console.log('✓ Apple风格文字动效已激活');
         }
         
+        // 1.3.5 特性展示区域 - Apple Vision Pro 风格（3D视差 + 悬停倾斜）
+        function initFeatureShowcaseAnimations() {
+            const items = document.querySelectorAll('.feature-showcase-item');
+            
+            items.forEach((item, index) => {
+                const imageContainer = item.querySelector('.feature-showcase-image');
+                const image = imageContainer?.querySelector('img');
+                const content = item.querySelector('.feature-showcase-content');
+                const title = content?.querySelector('h3');
+                const description = content?.querySelector('p');
+                
+                if (!imageContainer || !content) return;
+                
+                // 1. 3D 视差滚动效果
+                // 图片容器向上移动（慢于滚动）
+                gsap.to(imageContainer, {
+                    y: -80,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1.5
+                    }
+                });
+                
+                // 文字容器向下移动（快于滚动）
+                gsap.to(content, {
+                    y: 60,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1.5
+                    }
+                });
+                
+                // 2. 鼠标悬停 3D 倾斜效果（桌面端）
+                if (!isMobile) {
+                    item.addEventListener('mousemove', (e) => {
+                        const rect = item.getBoundingClientRect();
+                        const x = (e.clientX - rect.left) / rect.width - 0.5;
+                        const y = (e.clientY - rect.top) / rect.height - 0.5;
+                        
+                        gsap.to(item, {
+                            rotateY: x * 8,
+                            rotateX: -y * 8,
+                            transformPerspective: 1200,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                        
+                        // 图片轻微放大
+                        gsap.to(image, {
+                            scale: 1.05,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                    });
+                    
+                    item.addEventListener('mouseleave', () => {
+                        gsap.to(item, {
+                            rotateY: 0,
+                            rotateX: 0,
+                            duration: 0.8,
+                            ease: "elastic.out(1, 0.5)"
+                        });
+                        
+                        gsap.to(image, {
+                            scale: 1,
+                            duration: 0.8,
+                            ease: "elastic.out(1, 0.5)"
+                        });
+                    });
+                }
+                
+                // 3. 标题淡入上浮
+                if (title) {
+                    gsap.from(title, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 0,
+                        y: 30,
+                        duration: 1,
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)"
+                    });
+                }
+                
+                // 4. 描述文字淡入
+                if (description) {
+                    gsap.from(description, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 80%",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 0,
+                        x: -20,
+                        duration: 0.8,
+                        delay: 0.2,
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)"
+                    });
+                }
+                
+                // 5. 图片入场动画
+                if (image) {
+                    gsap.from(image, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 75%",
+                            toggleActions: "play none none reverse"
+                        },
+                        opacity: 0,
+                        scale: 0.9,
+                        duration: 1.2,
+                        ease: "cubic-bezier(0.16, 1, 0.3, 1)"
+                    });
+                }
+            });
+            
+            console.log('✓ 特性展示区域动效已激活（Apple Vision Pro 风格）');
+        }
+        
         // 1.4 CTA按钮磁性效果 + 光波扩散
         function initCTAButtons() {
             const buttons = document.querySelectorAll('#products a[href*="az-ring-detail"], #products a[href*="3.cn"]');
@@ -5441,13 +5568,14 @@ var _hmt = _hmt || [];
             
             switch(schemeNumber) {
                 case 1:
-                    // 方案一：生命脉动 + Apple风格文字动效
+                    // 方案一：生命脉动 + Apple风格文字动效 + Vision Pro 3D效果
                     initProductImageEffects();
                     initFloatingIcons();
                     initAppleStyleTextAnimations();
+                    initFeatureShowcaseAnimations();
                     initCTAButtons();
                     initStatsAnimation();
-                    console.log('🎉 方案一「生命脉动 + Apple风格」已激活');
+                    console.log('🎉 方案一「生命脉动 + Apple Vision Pro 风格」已激活');
                     break;
                     
                 case 2:
