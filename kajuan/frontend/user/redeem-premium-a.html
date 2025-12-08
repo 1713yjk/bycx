@@ -551,6 +551,9 @@
                   style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
                   <option value="">请选择省份</option>
                 </select>
+                <input type="text" id="provinceInput" name="user_province_other" 
+                  class="hidden peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors"
+                  placeholder="请输入省份" maxlength="20">
                 <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   省份
                 </label>
@@ -562,6 +565,9 @@
                   style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
                   <option value="">请先选择省份</option>
                 </select>
+                <input type="text" id="cityInput" name="user_city_other" 
+                  class="hidden peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors"
+                  placeholder="请输入城市" maxlength="20">
                 <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   城市
                 </label>
@@ -573,6 +579,9 @@
                   style="background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem;">
                   <option value="">请先选择城市</option>
                 </select>
+                <input type="text" id="districtInput" name="user_district_other" 
+                  class="hidden peer w-full bg-black border-b border-white/20 py-4 text-white outline-none focus:border-white transition-colors"
+                  placeholder="请输入区县" maxlength="20">
                 <label class="absolute left-0 -top-3.5 text-gray-500 text-sm">
                   区县
                 </label>
@@ -863,9 +872,19 @@
             <input type="tel" id="mobile-userPhone" class="floating-input" placeholder="联系电话">
             
             <div class="grid grid-cols-3 gap-4">
-              <input type="text" id="mobile-userProvince" class="floating-input text-center" placeholder="省份">
-              <input type="text" id="mobile-userCity" class="floating-input text-center" placeholder="城市">
-              <input type="text" id="mobile-userDistrict" class="floating-input text-center" placeholder="区县">
+              <input type="text" id="mobile-userProvince" class="floating-input text-center" placeholder="省份" readonly onclick="showMobileProvincePicker()">
+              <input type="text" id="mobile-userCity" class="floating-input text-center" placeholder="城市" readonly onclick="showMobileCityPicker()" disabled>
+              <input type="text" id="mobile-userDistrict" class="floating-input text-center" placeholder="区县" readonly onclick="showMobileDistrictPicker()" disabled>
+            </div>
+            <div class="grid grid-cols-3 gap-4 hidden" id="mobile-otherInputs">
+              <input type="text" id="mobile-userProvinceOther" class="floating-input text-center" placeholder="请输入省份" maxlength="20">
+              <input type="text" id="mobile-userCityOther" class="floating-input text-center" placeholder="请输入城市" maxlength="20">
+              <input type="text" id="mobile-userDistrictOther" class="floating-input text-center" placeholder="请输入区县" maxlength="20">
+            </div>
+            <div class="text-center mt-2">
+              <button type="button" onclick="toggleMobileInputMode()" class="text-xs text-gray-400 underline">
+                <span id="mobile-inputModeText">手动输入</span>
+              </button>
             </div>
             
             <input type="text" id="mobile-userAddress" class="floating-input" placeholder="详细地址 (街道/门牌号)">
@@ -1016,6 +1035,9 @@
       const provinceSelect = document.getElementById('provinceSelect');
       const citySelect = document.getElementById('citySelect');
       const districtSelect = document.getElementById('districtSelect');
+      const provinceInput = document.getElementById('provinceInput');
+      const cityInput = document.getElementById('cityInput');
+      const districtInput = document.getElementById('districtInput');
       
       if (!provinceSelect || !CHINA_AREA_DATA) return;
       
@@ -1027,47 +1049,165 @@
         option.textContent = province.name;
         provinceSelect.appendChild(option);
       });
+      // 添加"其他"选项
+      const provinceOtherOption = document.createElement('option');
+      provinceOtherOption.value = '__OTHER__';
+      provinceOtherOption.textContent = '其他';
+      provinceSelect.appendChild(provinceOtherOption);
       
       // 省份改变事件
       provinceSelect.addEventListener('change', function() {
-        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === this.value);
+        const value = this.value;
+        
+        // 重置城市和区县
         citySelect.innerHTML = '<option value="">请先选择省份</option>';
         districtSelect.innerHTML = '<option value="">请先选择城市</option>';
         districtSelect.disabled = true;
+        citySelect.disabled = true;
+        cityInput.classList.add('hidden');
+        districtInput.classList.add('hidden');
+        cityInput.value = '';
+        districtInput.value = '';
         
-        if (selectedProvince) {
-          citySelect.disabled = false;
-          citySelect.innerHTML = '<option value="">请选择城市</option>';
-          selectedProvince.cities.forEach(city => {
-            const option = document.createElement('option');
-            option.value = city.name;
-            option.textContent = city.name;
-            citySelect.appendChild(option);
-          });
+        if (value === '__OTHER__') {
+          // 选择"其他"，显示输入框
+          provinceSelect.style.display = 'none';
+          provinceInput.classList.remove('hidden');
+          provinceInput.required = true;
+          provinceInput.focus();
+        } else if (value) {
+          // 选择正常省份
+          provinceSelect.style.display = 'block';
+          provinceInput.classList.add('hidden');
+          provinceInput.required = false;
+          provinceInput.value = '';
+          
+          const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === value);
+          if (selectedProvince) {
+            citySelect.disabled = false;
+            citySelect.innerHTML = '<option value="">请选择城市</option>';
+            selectedProvince.cities.forEach(city => {
+              const option = document.createElement('option');
+              option.value = city.name;
+              option.textContent = city.name;
+              citySelect.appendChild(option);
+            });
+            // 添加"其他"选项
+            const cityOtherOption = document.createElement('option');
+            cityOtherOption.value = '__OTHER__';
+            cityOtherOption.textContent = '其他';
+            citySelect.appendChild(cityOtherOption);
+          }
         } else {
-          citySelect.disabled = true;
+          // 清空选择
+          provinceSelect.style.display = 'block';
+          provinceInput.classList.add('hidden');
+          provinceInput.required = false;
+          provinceInput.value = '';
         }
       });
       
       // 城市改变事件
       citySelect.addEventListener('change', function() {
-        const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === provinceSelect.value);
-        if (!selectedProvince) return;
+        const value = this.value;
         
-        const selectedCity = selectedProvince.cities.find(c => c.name === this.value);
+        // 重置区县
         districtSelect.innerHTML = '<option value="">请先选择城市</option>';
+        districtSelect.disabled = true;
+        districtInput.classList.add('hidden');
+        districtInput.value = '';
         
-        if (selectedCity && selectedCity.districts) {
-          districtSelect.disabled = false;
-          districtSelect.innerHTML = '<option value="">请选择区县</option>';
-          selectedCity.districts.forEach(district => {
-            const option = document.createElement('option');
-            option.value = district.name;
-            option.textContent = district.name;
-            districtSelect.appendChild(option);
-          });
+        if (value === '__OTHER__') {
+          // 选择"其他"，显示输入框
+          citySelect.style.display = 'none';
+          cityInput.classList.remove('hidden');
+          cityInput.required = true;
+          cityInput.focus();
+        } else if (value) {
+          // 选择正常城市
+          citySelect.style.display = 'block';
+          cityInput.classList.add('hidden');
+          cityInput.required = false;
+          cityInput.value = '';
+          
+          const selectedProvince = CHINA_AREA_DATA.provinces.find(p => p.name === provinceSelect.value);
+          if (!selectedProvince) return;
+          
+          const selectedCity = selectedProvince.cities.find(c => c.name === value);
+          if (selectedCity && selectedCity.districts) {
+            districtSelect.disabled = false;
+            districtSelect.innerHTML = '<option value="">请选择区县</option>';
+            selectedCity.districts.forEach(district => {
+              const option = document.createElement('option');
+              option.value = district.name;
+              option.textContent = district.name;
+              districtSelect.appendChild(option);
+            });
+            // 添加"其他"选项
+            const districtOtherOption = document.createElement('option');
+            districtOtherOption.value = '__OTHER__';
+            districtOtherOption.textContent = '其他';
+            districtSelect.appendChild(districtOtherOption);
+          }
         } else {
-          districtSelect.disabled = true;
+          // 清空选择
+          citySelect.style.display = 'block';
+          cityInput.classList.add('hidden');
+          cityInput.required = false;
+          cityInput.value = '';
+        }
+      });
+      
+      // 区县改变事件
+      districtSelect.addEventListener('change', function() {
+        const value = this.value;
+        
+        if (value === '__OTHER__') {
+          // 选择"其他"，显示输入框
+          districtSelect.style.display = 'none';
+          districtInput.classList.remove('hidden');
+          districtInput.required = true;
+          districtInput.focus();
+        } else if (value) {
+          // 选择正常区县
+          districtSelect.style.display = 'block';
+          districtInput.classList.add('hidden');
+          districtInput.required = false;
+          districtInput.value = '';
+        } else {
+          // 清空选择
+          districtSelect.style.display = 'block';
+          districtInput.classList.add('hidden');
+          districtInput.required = false;
+          districtInput.value = '';
+        }
+      });
+      
+      // 输入框失去焦点时，如果为空则恢复选择框
+      provinceInput.addEventListener('blur', function() {
+        if (!this.value.trim()) {
+          this.classList.add('hidden');
+          this.required = false;
+          provinceSelect.style.display = 'block';
+          provinceSelect.value = '';
+        }
+      });
+      
+      cityInput.addEventListener('blur', function() {
+        if (!this.value.trim()) {
+          this.classList.add('hidden');
+          this.required = false;
+          citySelect.style.display = 'block';
+          citySelect.value = '';
+        }
+      });
+      
+      districtInput.addEventListener('blur', function() {
+        if (!this.value.trim()) {
+          this.classList.add('hidden');
+          this.required = false;
+          districtSelect.style.display = 'block';
+          districtSelect.value = '';
         }
       });
     }
@@ -1302,9 +1442,15 @@
             ring_size: formData.get('ring_size'),
             user_name: formData.get('user_name'),
             user_phone: formData.get('user_phone'),
-            user_province: formData.get('user_province'),
-            user_city: formData.get('user_city'),
-            user_district: formData.get('user_district'),
+            user_province: document.getElementById('provinceInput').classList.contains('hidden') 
+              ? formData.get('user_province') 
+              : formData.get('user_province_other'),
+            user_city: document.getElementById('cityInput').classList.contains('hidden')
+              ? formData.get('user_city')
+              : formData.get('user_city_other'),
+            user_district: document.getElementById('districtInput').classList.contains('hidden')
+              ? formData.get('user_district')
+              : formData.get('user_district_other'),
             user_address: formData.get('user_address')
           };
 
@@ -1491,6 +1637,196 @@
     let mobileSelectedModelId = null;
     let mobileSelectedColorCode = null;
     let mobileSelectedSizeCode = null;
+    let mobileSelectedProvince = null;
+    let mobileSelectedCity = null;
+
+    // 移动端地址选择器
+    function showMobileProvincePicker() {
+      if (!CHINA_AREA_DATA) return;
+      
+      const options = CHINA_AREA_DATA.provinces.map(p => p.name);
+      options.push('其他');
+      
+      const selected = showMobilePicker('请选择省份', options, (value) => {
+        const input = document.getElementById('mobile-userProvince');
+        const otherInput = document.getElementById('mobile-userProvinceOther');
+        
+        if (value === '其他') {
+          // 切换到手动输入模式
+          toggleMobileInputMode();
+          document.getElementById('mobile-userProvinceOther').focus();
+        } else {
+          input.value = value;
+          mobileSelectedProvince = value;
+          // 启用城市选择
+          enableMobileCity();
+        }
+      });
+    }
+
+    function showMobileCityPicker() {
+      if (!CHINA_AREA_DATA || !mobileSelectedProvince) return;
+      
+      const province = CHINA_AREA_DATA.provinces.find(p => p.name === mobileSelectedProvince);
+      if (!province) return;
+      
+      const options = province.cities.map(c => c.name);
+      options.push('其他');
+      
+      showMobilePicker('请选择城市', options, (value) => {
+        const input = document.getElementById('mobile-userCity');
+        const otherInput = document.getElementById('mobile-userCityOther');
+        
+        if (value === '其他') {
+          // 切换到手动输入模式
+          toggleMobileInputMode();
+          document.getElementById('mobile-userCityOther').focus();
+        } else {
+          input.value = value;
+          mobileSelectedCity = value;
+          enableMobileDistrict();
+        }
+      });
+    }
+
+    function showMobileDistrictPicker() {
+      if (!CHINA_AREA_DATA || !mobileSelectedProvince || !mobileSelectedCity) return;
+      
+      const province = CHINA_AREA_DATA.provinces.find(p => p.name === mobileSelectedProvince);
+      if (!province) return;
+      
+      const city = province.cities.find(c => c.name === mobileSelectedCity);
+      if (!city || !city.districts) return;
+      
+      const options = city.districts.map(d => d.name);
+      options.push('其他');
+      
+      showMobilePicker('请选择区县', options, (value) => {
+        const input = document.getElementById('mobile-userDistrict');
+        const otherInput = document.getElementById('mobile-userDistrictOther');
+        
+        if (value === '其他') {
+          // 切换到手动输入模式
+          toggleMobileInputMode();
+          document.getElementById('mobile-userDistrictOther').focus();
+        } else {
+          input.value = value;
+        }
+      });
+    }
+
+    function showMobilePicker(title, options, callback) {
+      // 创建底部弹窗
+      const picker = document.createElement('div');
+      picker.className = 'bottom-sheet open';
+      picker.innerHTML = `
+        <div class="sheet-handle"></div>
+        <div class="sheet-content">
+          <h3 class="text-white text-lg font-semibold mb-4">${title}</h3>
+          <div class="space-y-2 max-h-[60vh] overflow-y-auto">
+            ${options.map(opt => `
+              <button type="button" class="w-full text-left px-4 py-3 bg-white/5 hover:bg-white/10 rounded-lg text-white" onclick="selectMobileOption('${opt}')">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+          <button type="button" onclick="closeMobilePicker()" class="w-full mt-4 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-lg text-white">
+            取消
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(picker);
+      
+      // 存储回调
+      picker._callback = callback;
+      
+      // 点击遮罩关闭
+      picker.addEventListener('click', function(e) {
+        if (e.target === picker) {
+          closeMobilePicker();
+        }
+      });
+    }
+
+    function selectMobileOption(value) {
+      const picker = document.querySelector('.bottom-sheet.open');
+      if (picker && picker._callback) {
+        picker._callback(value);
+      }
+      closeMobilePicker();
+    }
+
+    function closeMobilePicker() {
+      const picker = document.querySelector('.bottom-sheet.open');
+      if (picker) {
+        picker.remove();
+      }
+    }
+
+    let mobileInputMode = 'select'; // 'select' 或 'input'
+    
+    function toggleMobileInputMode() {
+      const selectInputs = document.getElementById('mobile-view3').querySelectorAll('#mobile-userProvince, #mobile-userCity, #mobile-userDistrict');
+      const otherInputs = document.getElementById('mobile-otherInputs');
+      const modeText = document.getElementById('mobile-inputModeText');
+      
+      if (mobileInputMode === 'select') {
+        // 切换到手动输入模式
+        selectInputs.forEach(input => input.classList.add('hidden'));
+        otherInputs.classList.remove('hidden');
+        modeText.textContent = '选择输入';
+        mobileInputMode = 'input';
+        // 清空选择的值
+        selectInputs.forEach(input => input.value = '');
+        // 聚焦第一个输入框
+        document.getElementById('mobile-userProvinceOther').focus();
+      } else {
+        // 切换到选择模式
+        selectInputs.forEach(input => input.classList.remove('hidden'));
+        otherInputs.classList.add('hidden');
+        modeText.textContent = '手动输入';
+        mobileInputMode = 'select';
+        // 清空手动输入的值
+        document.getElementById('mobile-userProvinceOther').value = '';
+        document.getElementById('mobile-userCityOther').value = '';
+        document.getElementById('mobile-userDistrictOther').value = '';
+        // 重置城市和区县
+        resetMobileCity();
+        resetMobileDistrict();
+      }
+    }
+
+    function enableMobileCity() {
+      const cityInput = document.getElementById('mobile-userCity');
+      cityInput.disabled = false;
+      cityInput.onclick = showMobileCityPicker;
+    }
+
+    function enableMobileDistrict() {
+      const districtInput = document.getElementById('mobile-userDistrict');
+      districtInput.disabled = false;
+      districtInput.onclick = showMobileDistrictPicker;
+    }
+
+    function resetMobileCity() {
+      const cityInput = document.getElementById('mobile-userCity');
+      const cityOtherInput = document.getElementById('mobile-userCityOther');
+      cityInput.value = '';
+      cityInput.disabled = true;
+      cityOtherInput.value = '';
+      cityOtherInput.classList.add('hidden');
+      mobileSelectedCity = null;
+    }
+
+    function resetMobileDistrict() {
+      const districtInput = document.getElementById('mobile-userDistrict');
+      const districtOtherInput = document.getElementById('mobile-userDistrictOther');
+      districtInput.value = '';
+      districtInput.disabled = true;
+      districtOtherInput.value = '';
+      districtOtherInput.classList.add('hidden');
+    }
 
     function openMobileSheet() {
       document.getElementById('mobileSheet').classList.add('open');
@@ -1607,9 +1943,21 @@
     async function submitOrderMobile() {
       const name = document.getElementById('mobile-userName').value.trim();
       const phone = document.getElementById('mobile-userPhone').value.trim();
-      const province = document.getElementById('mobile-userProvince').value.trim();
-      const city = document.getElementById('mobile-userCity').value.trim();
-      const district = document.getElementById('mobile-userDistrict').value.trim();
+      // 根据当前模式获取地址信息
+      let province, city, district;
+      
+      if (mobileInputMode === 'input') {
+        // 手动输入模式
+        province = document.getElementById('mobile-userProvinceOther').value.trim();
+        city = document.getElementById('mobile-userCityOther').value.trim();
+        district = document.getElementById('mobile-userDistrictOther').value.trim();
+      } else {
+        // 选择模式
+        province = document.getElementById('mobile-userProvince').value.trim();
+        city = document.getElementById('mobile-userCity').value.trim();
+        district = document.getElementById('mobile-userDistrict').value.trim();
+      }
+      
       const address = document.getElementById('mobile-userAddress').value.trim();
       if (!name||!phone||!province||!city||!district||!address) return alert('请完整填写收货信息');
       if (!/^1[3-9]\d{9}$/.test(phone)) return alert('请输入正确的手机号');
