@@ -353,16 +353,26 @@
         }
         
         .feature-card {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
             background: var(--oura-gray);
             border-radius: 20px;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, transform 0.1s ease;
             position: relative;
             overflow: hidden;
             min-height: 400px;
             display: flex;
             flex-direction: column;
+            transform-style: preserve-3d;
+            /* 聚光灯效果 */
+            background-image: radial-gradient(
+                600px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.08),
+                transparent 40%
+            );
+            background-repeat: no-repeat;
         }
         
         .feature-card::before {
@@ -373,10 +383,30 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%);
+            z-index: 1;
+        }
+        
+        /* 聚光灯边框效果 */
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: radial-gradient(
+                400px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 107, 53, 0.15),
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .feature-card:hover::after {
+            opacity: 1;
         }
         
         .feature-card:hover {
-            transform: translateY(-8px);
             border-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
@@ -1836,23 +1866,8 @@
             });
         }
 
-        // Fade in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+        // 注意：原有的 IntersectionObserver 已被 GSAP ScrollTrigger 替代
+        // 保留 .fade-in 类的基本样式，但动画由 GSAP 控制
 
         // 语言切换功能
         let currentLanguage = 'zh';
@@ -2032,6 +2047,534 @@
                 }
             });
         }
+    </script>
+
+    <!-- GSAP 动画库 (国内 CDN) -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Lenis 平滑滚动库 (国内 CDN) -->
+    <script src="https://cdn.staticfile.net/lenis/1.0.29/lenis.min.js"></script>
+
+    <!-- 页面动效脚本 -->
+    <script>
+    (function() {
+        'use strict';
+        
+        // ==================== 全局配置 ====================
+        const CONFIG = {
+            isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768,
+            smoothScroll: {
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+            }
+        };
+
+        // ==================== 1. 初始化 Lenis 平滑滚动 ====================
+        let lenis = null;
+        
+        function initLenis() {
+            if (typeof Lenis === 'undefined') {
+                console.warn('Lenis not loaded, using native scroll');
+                return;
+            }
+            
+            lenis = new Lenis({
+                duration: CONFIG.smoothScroll.duration,
+                easing: CONFIG.smoothScroll.easing,
+                orientation: 'vertical',
+                smoothWheel: true
+            });
+
+            // 连接 Lenis 与 GSAP ScrollTrigger
+            lenis.on('scroll', ScrollTrigger.update);
+            
+            gsap.ticker.add((time) => {
+                lenis.raf(time * 1000);
+            });
+            
+            gsap.ticker.lagSmoothing(0);
+        }
+
+        // ==================== 2. 注册 GSAP 插件 ====================
+        function initGSAP() {
+            if (typeof gsap === 'undefined') {
+                console.warn('GSAP not loaded, animations disabled');
+                document.body.classList.add('no-gsap');
+                return false;
+            }
+            
+            gsap.registerPlugin(ScrollTrigger);
+            return true;
+        }
+
+        // ==================== 3. Hero 文字入场动画 ====================
+        function initHeroTextAnimation() {
+            const heroTitle = document.querySelector('.hero-text h1');
+            const heroSubtitle = document.querySelector('.hero-text .subtitle');
+            const heroDescription = document.querySelector('.hero-text p:not(.subtitle)');
+            
+            if (!heroTitle) return;
+
+            const heroTl = gsap.timeline({ delay: 0.3 });
+            
+            // 标题动画
+            heroTl.fromTo(heroTitle, 
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
+            );
+            
+            // 副标题动画
+            if (heroSubtitle) {
+                heroTl.fromTo(heroSubtitle,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+                    "-=0.8"
+                );
+            }
+            
+            // 描述文字动画
+            if (heroDescription) {
+                heroTl.fromTo(heroDescription,
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+                    "-=0.6"
+                );
+            }
+        }
+
+        // ==================== 4. Hero 戒指视差效果 ====================
+        function initRingParallax() {
+            const ringShowcase = document.querySelector('.ring-showcase');
+            if (!ringShowcase || CONFIG.isMobile) return;
+
+            // 滚动视差
+            gsap.to(ringShowcase, {
+                yPercent: 20,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // 鼠标跟手 3D 倾斜
+            document.addEventListener("mousemove", (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                
+                // 限制角度在 ±10 度范围内
+                const clampedX = Math.max(-10, Math.min(10, x));
+                const clampedY = Math.max(-10, Math.min(10, y));
+                
+                gsap.to(ringShowcase, {
+                    rotationY: clampedX,
+                    rotationX: -clampedY,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // ==================== 5. Hero 数字滚动计数 ====================
+        function initStatsCounter() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                const match = text.match(/^([\d.]+)(.*)$/);
+                
+                if (match) {
+                    const targetValue = parseFloat(match[1]);
+                    const suffix = match[2] || '';
+                    const isDecimal = match[1].includes('.');
+                    
+                    // 设置初始值
+                    stat.textContent = '0' + suffix;
+                    
+                    // 创建滚动触发动画
+                    gsap.to(stat, {
+                        scrollTrigger: {
+                            trigger: stat,
+                            start: "top 85%",
+                            once: true
+                        },
+                        duration: 1.5,
+                        ease: "power2.out",
+                        onUpdate: function() {
+                            const progress = this.progress();
+                            const currentValue = targetValue * progress;
+                            if (isDecimal) {
+                                stat.textContent = currentValue.toFixed(1) + suffix;
+                            } else {
+                                stat.textContent = Math.round(currentValue) + suffix;
+                            }
+                        },
+                        onComplete: function() {
+                            stat.textContent = text;
+                        }
+                    });
+                }
+            });
+        }
+
+        // ==================== 6. Features 卡片交错入场 ====================
+        function initFeaturesAnimation() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            if (featureCards.length === 0) return;
+
+            // 设置初始状态
+            gsap.set(featureCards, { opacity: 0, y: 30 });
+
+            // 交错入场动画
+            gsap.to(featureCards, {
+                scrollTrigger: {
+                    trigger: ".features-grid",
+                    start: "top 80%",
+                    once: true
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "power3.out"
+            });
+        }
+
+        // ==================== 7. Features 聚光灯效果 ====================
+        function initSpotlightEffect() {
+            if (CONFIG.isMobile) return;
+            
+            const cards = document.querySelectorAll('.feature-card');
+            const gridContainer = document.querySelector('.features-grid');
+            
+            if (!gridContainer || cards.length === 0) return;
+
+            gridContainer.addEventListener('mousemove', (e) => {
+                cards.forEach((card) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        }
+
+        // ==================== 8. Features 卡片 3D 倾斜 ====================
+        function initCardTilt() {
+            if (CONFIG.isMobile) return;
+            
+            const cards = document.querySelectorAll('.feature-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // 计算倾斜角度，限制在 ±15 度
+                    const rotateX = Math.max(-15, Math.min(15, (y - centerY) / centerY * -15));
+                    const rotateY = Math.max(-15, Math.min(15, (x - centerX) / centerX * 15));
+                    
+                    gsap.to(card, {
+                        rotateX: rotateX,
+                        rotateY: rotateY,
+                        transformPerspective: 1000,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        rotateX: 0,
+                        rotateY: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                });
+            });
+        }
+
+        // ==================== 9. Features 图标微动 ====================
+        function initIconBounce() {
+            const cards = document.querySelectorAll('.feature-card');
+            
+            cards.forEach(card => {
+                const icon = card.querySelector('.feature-icon');
+                if (!icon) return;
+                
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(icon, {
+                        y: -5,
+                        duration: 0.15,
+                        ease: "power2.out",
+                        yoyo: true,
+                        repeat: 1
+                    });
+                });
+            });
+        }
+
+        // ==================== 10. Showcase 滚动锁定切换 ====================
+        function initShowcasePinning() {
+            const showcaseSection = document.getElementById('product-showcase');
+            const panels = gsap.utils.toArray('.showcase-panel');
+            const navItems = document.querySelectorAll('.showcase-nav li');
+            
+            if (!showcaseSection || panels.length === 0 || CONFIG.isMobile) return;
+
+            // 设置面板初始状态
+            panels.forEach((panel, i) => {
+                if (i !== 0) {
+                    gsap.set(panel, { opacity: 0, y: 50 });
+                }
+            });
+
+            // 创建滚动锁定时间轴
+            const showcaseTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: showcaseSection,
+                    start: "top top",
+                    end: `+=${panels.length * 600}`,
+                    pin: true,
+                    scrub: 1,
+                    anticipatePin: 1,
+                    onUpdate: (self) => {
+                        // 计算当前应该显示的面板索引
+                        const progress = self.progress;
+                        const currentIndex = Math.min(
+                            Math.floor(progress * panels.length),
+                            panels.length - 1
+                        );
+                        
+                        // 更新 Tab 激活状态
+                        navItems.forEach((nav, i) => {
+                            if (i === currentIndex) {
+                                nav.classList.add('active');
+                            } else {
+                                nav.classList.remove('active');
+                            }
+                        });
+                    }
+                }
+            });
+
+            // 为每个面板创建切换动画
+            panels.forEach((panel, i) => {
+                if (i === 0) return;
+                
+                // 淡出上一个面板
+                showcaseTl.to(panels[i - 1], {
+                    opacity: 0,
+                    y: -30,
+                    duration: 0.5
+                });
+                
+                // 淡入当前面板
+                showcaseTl.to(panel, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5
+                }, "-=0.3");
+            });
+        }
+
+        // ==================== 11. Gallery 弹性切换动效 ====================
+        function initGalleryAnimation() {
+            const colorOptions = document.querySelectorAll('.color-option');
+            const ringImage = document.getElementById('ring-image');
+            const ringContainer = document.querySelector('.ring-container');
+            
+            if (!ringImage || colorOptions.length === 0) return;
+
+            // 移除原有的点击事件，使用 GSAP 动画
+            colorOptions.forEach(option => {
+                // 克隆节点以移除原有事件监听器
+                const newOption = option.cloneNode(true);
+                option.parentNode.replaceChild(newOption, option);
+                
+                newOption.addEventListener('click', function() {
+                    if (this.classList.contains('active')) return;
+                    
+                    // 更新激活状态
+                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const newImage = this.dataset.image;
+                    const colorName = this.dataset.color;
+                    
+                    // GSAP 动画序列
+                    const tl = gsap.timeline();
+                    
+                    // 旧图片向左滑出
+                    tl.to(ringImage, {
+                        x: -50,
+                        opacity: 0,
+                        duration: 0.3,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            ringImage.src = newImage;
+                            ringImage.alt = `AZ Ring ${colorName}`;
+                            
+                            // 处理黑色戒指的缩放效果
+                            if (colorName === 'Stealth Black') {
+                                ringImage.classList.add('stealth-black-scale');
+                            } else {
+                                ringImage.classList.remove('stealth-black-scale');
+                            }
+                        }
+                    })
+                    // 重置位置到右侧
+                    .set(ringImage, { x: 50 })
+                    // 新图片从右侧弹性滑入
+                    .to(ringImage, {
+                        x: 0,
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "back.out(1.7)"
+                    });
+                    
+                    // 背景氛围变化
+                    if (ringContainer) {
+                        const bgColor = colorName === 'Elegant Gold' 
+                            ? 'rgba(245, 230, 163, 0.15)' 
+                            : 'rgba(51, 51, 51, 0.15)';
+                        
+                        gsap.to(ringContainer, {
+                            backgroundColor: colorName === 'Elegant Gold' ? '#f5efe5' : '#e8e8e8',
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+        }
+
+        // ==================== 12. Specs 列表交错入场 ====================
+        function initSpecsAnimation() {
+            const specCategories = document.querySelectorAll('.spec-category');
+            
+            specCategories.forEach(category => {
+                const items = category.querySelectorAll('li');
+                if (items.length === 0) return;
+                
+                // 设置初始状态
+                gsap.set(items, { opacity: 0, y: 20 });
+                
+                // 交错入场动画
+                gsap.to(items, {
+                    scrollTrigger: {
+                        trigger: category,
+                        start: "top 80%",
+                        once: true
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    stagger: 0.1,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // ==================== 13. CTA 磁性按钮 ====================
+        function initMagneticButton() {
+            if (CONFIG.isMobile) return;
+            
+            const ctaBtn = document.querySelector('.cta .btn-primary');
+            if (!ctaBtn) return;
+
+            ctaBtn.addEventListener('mousemove', (e) => {
+                const rect = ctaBtn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // 按钮偏移量为鼠标距中心距离的 50%
+                gsap.to(ctaBtn, {
+                    x: x * 0.5,
+                    y: y * 0.5,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+                
+                // 图标内部视差
+                const icon = ctaBtn.querySelector('i');
+                if (icon) {
+                    gsap.to(icon, {
+                        x: x * 0.25,
+                        y: y * 0.25,
+                        duration: 0.3
+                    });
+                }
+            });
+
+            ctaBtn.addEventListener('mouseleave', () => {
+                gsap.to(ctaBtn, {
+                    x: 0,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "elastic.out(1, 0.3)"
+                });
+                
+                const icon = ctaBtn.querySelector('i');
+                if (icon) {
+                    gsap.to(icon, { x: 0, y: 0, duration: 0.5 });
+                }
+            });
+
+            // 悬停时增强阴影
+            ctaBtn.addEventListener('mouseenter', () => {
+                gsap.to(ctaBtn, {
+                    boxShadow: "0 15px 40px rgba(255, 107, 53, 0.5)",
+                    duration: 0.3
+                });
+            });
+
+            ctaBtn.addEventListener('mouseleave', () => {
+                gsap.to(ctaBtn, {
+                    boxShadow: "0 4px 15px rgba(255, 107, 53, 0.3)",
+                    duration: 0.3
+                });
+            });
+        }
+
+        // ==================== 初始化所有动效 ====================
+        function init() {
+            // 检查 GSAP 是否可用
+            if (!initGSAP()) return;
+            
+            // 初始化平滑滚动
+            initLenis();
+            
+            // 初始化各区域动效
+            initHeroTextAnimation();
+            initRingParallax();
+            initStatsCounter();
+            initFeaturesAnimation();
+            initSpotlightEffect();
+            initCardTilt();
+            initIconBounce();
+            initShowcasePinning();
+            initGalleryAnimation();
+            initSpecsAnimation();
+            initMagneticButton();
+            
+            console.log('AZ Ring page animations initialized');
+        }
+
+        // DOM 加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
     </script>
 </body>
 </html>
