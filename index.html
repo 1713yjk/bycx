@@ -137,8 +137,7 @@ var _hmt = _hmt || [];
     }
     </script>
 
-    <!-- 动效样式 -->
-    <link rel="stylesheet" href="css/animations.css">
+    <!-- 动效样式（已内联） -->
     <!-- Lucide Icons 样式 -->
     <style>
         svg.lucide {
@@ -1488,6 +1487,92 @@ var _hmt = _hmt || [];
                 margin-bottom: 0;
             }
 
+            /* ========== Radaville 3D堆叠滑块样式 ========== */
+            .radaville-container {
+                position: relative;
+                width: 100%;
+                height: 100svh;
+                background-color: var(--oura-black);
+                overflow: hidden;
+            }
+            .radaville-slider {
+                position: absolute;
+                width: 100%;
+                height: 100svh;
+                perspective: 250px;
+                perspective-origin: 50% 100%;
+                overflow: hidden;
+            }
+            .radaville-slide {
+                position: absolute;
+                top: 45%;
+                left: 50%;
+                transform: translate3d(-50%, -50%, 0px);
+                width: 60%;
+                height: 500px;
+                border-radius: 0.25rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                will-change: transform, opacity;
+                overflow: hidden;
+            }
+            .radaville-slide-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .radaville-slide-title {
+                color: rgba(255, 255, 255, 0.95);
+                font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+                font-size: 4rem;
+                font-weight: 300;
+                letter-spacing: 0.1em;
+                position: relative;
+                z-index: 2;
+            }
+            .radaville-slide-title .word {
+                will-change: transform;
+                display: inline-block;
+                position: relative;
+            }
+            .radaville-indicators {
+                display: none;
+            }
+            .radaville-indicator {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.4);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: none;
+            }
+            .radaville-indicator:hover {
+                background: rgba(255,255,255,0.7);
+                transform: scale(1.2);
+            }
+            .radaville-indicator.active {
+                background: var(--oura-accent);
+                box-shadow: 0 0 10px rgba(255,107,53,0.5);
+            }
+            /* 移动端隐藏3D滑块 */
+            @media (max-width: 768px) {
+                .radaville-container { display: none !important; }
+                .feature-showcase-mobile { display: block !important; }
+            }
+            /* 桌面端隐藏移动端布局 */
+            @media (min-width: 769px) {
+                .feature-showcase-mobile { display: none !important; }
+            }
+            @media (max-width: 1000px) {
+                .radaville-slide { width: 70%; }
+                .radaville-slide-title { font-size: 2rem; letter-spacing: 0; }
+            }
+
         /* ========================================
            Video Story Section Styles
            ======================================== */
@@ -2492,58 +2577,53 @@ var _hmt = _hmt || [];
         </div>
     </section>
 
-    <!-- Feature Showcase Section -->
-    <section class="feature-showcase">
+    <!-- Feature Showcase - 3D堆叠滑块（桌面端） -->
+    <section class="radaville-container" id="feature-slider-3d">
+        <div class="radaville-slider"></div>
+        <div class="radaville-indicators"></div>
+    </section>
+
+    <!-- Feature Showcase Section - 原有布局（移动端） -->
+    <section class="feature-showcase feature-showcase-mobile">
         <div class="feature-showcase-container">
             <!-- 终极可穿戴设备 -->
             <div class="feature-showcase-item fade-in">
                 <div class="feature-showcase-image">
-                    <img data-src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示1.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="终极可穿戴设备">
+                    <img src="产品资料与图片/首页与商品详情/功能展示1.jpg" loading="lazy" alt="终极可穿戴设备">
                 </div>
                 <div class="feature-showcase-content">
-                    <h3 data-zh="终极可穿戴设备" data-en="Ultimate Wearable Device" data-tw="終極可穿戴設備">终极可穿戴设备</h3>
-                    <p data-zh="AZ Ring采用先进的传感器技术，实现24小时不间断健康监测。轻量化设计让您几乎感受不到它的存在，却能时刻守护您的健康。" data-en="AZ Ring uses advanced sensor technology for 24-hour continuous health monitoring. The lightweight design makes you barely feel its presence while constantly protecting your health." data-tw="AZ Ring採用先進的傳感器技術，實現24小時不間斷健康監測。輕量化設計讓您幾乎感受不到它的存在，卻能時刻守護您的健康。">
-                        AZ Ring采用先进的传感器技术，实现24小时不间断健康监测。轻量化设计让您几乎感受不到它的存在，却能时刻守护您的健康。
-                    </p>
+                    <h3>终极可穿戴设备</h3>
+                    <p>AZ Ring采用先进的传感器技术，实现24小时不间断健康监测。轻量化设计让您几乎感受不到它的存在，却能时刻守护您的健康。</p>
                 </div>
             </div>
-
             <!-- 量身定制的健康指导 -->
             <div class="feature-showcase-item reverse fade-in">
                 <div class="feature-showcase-image">
-                    <img data-src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示2.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="个性化健康指导">
+                    <img src="产品资料与图片/首页与商品详情/功能展示2.jpg" loading="lazy" alt="个性化健康指导">
                 </div>
                 <div class="feature-showcase-content">
-                    <h3 data-zh="量身定制的健康指导" data-en="Personalized Health Guidance" data-tw="量身定制的健康指導">量身定制的健康指导</h3>
-                    <p data-zh="基于您的个人数据和生活习惯，AZ Ring提供专属的健康建议和改善方案。智能算法持续学习，让建议更加精准有效。" data-en="Based on your personal data and lifestyle habits, AZ Ring provides exclusive health advice and improvement plans. Smart algorithms continuously learn to make recommendations more accurate and effective." data-tw="基於您的個人數據和使用習慣，AZ Ring提供專屬的健康建議和改善方案。智能算法持續學習，讓建議更加精準有效。">
-                        基于您的个人数据和生活习惯，AZ Ring提供专属的健康建议和改善方案。智能算法持续学习，让建议更加精准有效。
-                    </p>
+                    <h3>量身定制的健康指导</h3>
+                    <p>基于您的个人数据和生活习惯，AZ Ring提供专属的健康建议和改善方案。智能算法持续学习，让建议更加精准有效。</p>
                 </div>
             </div>
-
             <!-- 耐用性保障 -->
             <div class="feature-showcase-item fade-in">
                 <div class="feature-showcase-image">
-                    <img data-src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="耐用性保障">
+                    <img src="产品资料与图片/首页与商品详情/功能展示3.jpg" loading="lazy" alt="耐用性保障">
                 </div>
                 <div class="feature-showcase-content">
-                    <h3 data-zh="耐用性保障" data-en="Durability Assurance" data-tw="耐用性保障">耐用性保障</h3>
-                    <p data-zh="采用航空级钛合金材质，具备出色的抗腐蚀性和耐磨性。IP69防水等级，无论运动、洗澡还是游泳，都能安心佩戴。" data-en="Made with aerospace-grade titanium alloy, featuring excellent corrosion resistance and wear resistance. IPX8 waterproof rating allows worry-free wearing during exercise, bathing, or swimming." data-tw="採用航空級鈦合金材質，具備出色的抗腐蝕性和耐磨性。IPX8防水等級，無論運動、洗澡還是游泳，都能安心佩戴。">
-                        采用航空级钛合金材质，具备出色的抗腐蚀性和耐磨性。IP69防水等级，无论运动、洗澡还是游泳，都能安心佩戴。
-                    </p>
+                    <h3>耐用性保障</h3>
+                    <p>采用航空级钛合金材质，具备出色的抗腐蚀性和耐磨性。IP69防水等级，无论运动、洗澡还是游泳，都能安心佩戴。</p>
                 </div>
             </div>
-
             <!-- 完美合适，完美的功能 -->
             <div class="feature-showcase-item reverse fade-in">
                 <div class="feature-showcase-image">
-                    <img data-src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E" class="lazy-image" loading="lazy" alt="完美适配">
+                    <img src="产品资料与图片/首页与商品详情/功能展示4.jpg" loading="lazy" alt="完美适配">
                 </div>
                 <div class="feature-showcase-content">
-                    <h3 data-zh="完美合适，完美的功能" data-en="Perfect Fit, Perfect Function" data-tw="完美合適，完美的功能">完美合适，完美的功能</h3>
-                    <p data-zh="多种尺寸可选，确保每位用户都能找到最适合的佩戴体验。精密的传感器布局和优化的算法，保证数据采集的准确性和可靠性。" data-en="Multiple sizes available to ensure every user finds the perfect wearing experience. Precise sensor layout and optimized algorithms guarantee accuracy and reliability of data collection." data-tw="多種尺寸可選，確保每位用戶都能找到最適合的佩戴體驗。精密的傳感器佈局和優化的算法，保證數據採集的準確性和可靠性。">
-                        多种尺寸可选，确保每位用户都能找到最适合的佩戴体验。精密的传感器布局和优化的算法，保证数据采集的准确性和可靠性。
-                    </p>
+                    <h3>完美合适，完美的功能</h3>
+                    <p>多种尺寸可选，确保每位用户都能找到最适合的佩戴体验。精密的传感器布局和优化的算法，保证数据采集的准确性和可靠性。</p>
                 </div>
             </div>
         </div>
@@ -4931,19 +5011,10 @@ var _hmt = _hmt || [];
 
     <!-- ==================== Advanced Animations System ==================== -->
     <!-- GSAP Core Library + ScrollTrigger Plugin (本地文件) -->
-    <script src="lib/gsap.min.js"></script>
-    <script src="lib/ScrollTrigger.min.js"></script>
+    <script src="js/gsap.min.js"></script>
+    <script src="js/ScrollTrigger.min.js"></script>
 
-    <!-- Advanced Animation Styles -->
-    <!-- 动效库 - 本地化 -->
-    <script src="lib/gsap/gsap.min.js"></script>
-    <script src="lib/gsap/ScrollTrigger.min.js"></script>
-
-    <!-- 动效模块 -->
-    <script src="js/animations.js"></script>
-    <script src="js/counter-animation.js"></script>
-    <script src="js/magnetic-lines.js"></script>
-    <script src="js/particles-background.js"></script>
+    <!-- 动效模块（已内联到页面中） -->
 
     <!-- 初始化动效系统 -->
     <script>
@@ -5009,8 +5080,8 @@ var _hmt = _hmt || [];
 
     <!-- 旧的内联动效系统已完全移除 -->
 
-    <!-- Lucide Icons -->
-    <script src="lib/lucide/lucide.min.js"></script>
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         // Lucide Icons 初始化
         if (typeof lucide !== 'undefined') {
@@ -5036,6 +5107,233 @@ var _hmt = _hmt || [];
         } else {
             console.error('❌ Lucide Icons 未加载');
         }
+    </script>
+
+    <!-- Radaville 3D堆叠滑块 -->
+    <script>
+    (function() {
+        const slideData = [
+            { title: "终极可穿戴设备", image: "产品资料与图片/首页与商品详情/功能展示1.jpg" },
+            { title: "量身定制的健康指导", image: "产品资料与图片/首页与商品详情/功能展示2.jpg" },
+            { title: "耐用性保障", image: "产品资料与图片/首页与商品详情/功能展示3.jpg" },
+            { title: "完美合适，完美的功能", image: "产品资料与图片/首页与商品详情/功能展示4.jpg" }
+        ];
+        let container, slider, indicators;
+        let frontSlideIndex = 0;
+        let isSliderAnimating = false;
+        let isScrollLocked = false;
+        let wasOutOfView = true;
+
+        function splitText(title) {
+            const text = title.textContent;
+            title.innerHTML = '';
+            text.split('').forEach((char) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.textContent = char;
+                title.appendChild(span);
+            });
+            return { words: title.querySelectorAll('.word') };
+        }
+
+        function initRadavilleSlider() {
+            if (window.innerWidth <= 768) return;
+            container = document.querySelector('.radaville-container');
+            slider = document.querySelector('.radaville-slider');
+            indicators = document.querySelector('.radaville-indicators');
+            if (!container || !slider || !indicators) return;
+
+            slider.innerHTML = '';
+            indicators.innerHTML = '';
+
+            slideData.forEach((data, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'radaville-slide';
+                slide.innerHTML = '<img src="' + data.image + '" alt="' + data.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + data.title + '</h1>';
+                slider.appendChild(slide);
+
+                const indicator = document.createElement('button');
+                indicator.className = 'radaville-indicator' + (index === 0 ? ' active' : '');
+                indicator.onclick = function() { goToSlide(index); };
+                indicators.appendChild(indicator);
+            });
+
+            const slides = document.querySelectorAll('.radaville-slide');
+            slides.forEach((slide) => {
+                const title = slide.querySelector('.radaville-slide-title');
+                splitText(title);
+            });
+            slides.forEach((slide, i) => {
+                gsap.set(slide, { y: (-15 + 15 * i) + '%', z: 15 * i, opacity: 1 });
+            });
+
+            setupEventListeners();
+            console.log('✅ Radaville 3D滑块已初始化');
+        }
+
+        function setupEventListeners() {
+            if (!container) return;
+            let wheelAccumulator = 0;
+            const wheelThreshold = 40;
+            let isWheelActive = false;
+
+            container.addEventListener('wheel', function(e) {
+                if (!isScrollLocked) return;
+                e.preventDefault();
+                if (isSliderAnimating || isWheelActive) return;
+                wheelAccumulator += Math.abs(e.deltaY);
+                if (wheelAccumulator >= wheelThreshold) {
+                    isWheelActive = true;
+                    wheelAccumulator = 0;
+                    handleSlideChange(e.deltaY > 0 ? 'down' : 'up');
+                    setTimeout(function() { isWheelActive = false; }, 800);
+                }
+            }, { passive: false });
+
+            let touchStartY = 0;
+            container.addEventListener('touchstart', function(e) {
+                if (isSliderAnimating) return;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            container.addEventListener('touchend', function(e) {
+                if (isSliderAnimating) return;
+                const deltaY = touchStartY - e.changedTouches[0].clientY;
+                if (Math.abs(deltaY) > 35) {
+                    handleSlideChange(deltaY > 0 ? 'down' : 'up');
+                }
+            }, { passive: true });
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    console.log('👁️ IntersectionObserver:', {
+                        isIntersecting: entry.isIntersecting,
+                        intersectionRatio: entry.intersectionRatio.toFixed(2),
+                        wasOutOfView: wasOutOfView,
+                        isScrollLocked: isScrollLocked
+                    });
+                    if (!entry.isIntersecting) {
+                        wasOutOfView = true;
+                        console.log('📤 离开视口，wasOutOfView = true');
+                    } else if (entry.isIntersecting && entry.intersectionRatio > 0.5 && wasOutOfView) {
+                        isScrollLocked = true;
+                        wasOutOfView = false;
+                        container.style.pointerEvents = 'auto';
+                        console.log('🔒 锁定滑块！intersectionRatio:', entry.intersectionRatio.toFixed(2));
+                    }
+                });
+            }, { threshold: [0, 0.5] });
+            observer.observe(container);
+        }
+
+        function handleSlideChange(direction) {
+            if (isSliderAnimating) return;
+            if (direction === 'down' && frontSlideIndex >= 3) {
+                isScrollLocked = false;
+                container.style.pointerEvents = 'none';
+                return;
+            }
+            if (direction === 'up' && frontSlideIndex <= 0) {
+                isScrollLocked = false;
+                container.style.pointerEvents = 'none';
+                return;
+            }
+            isSliderAnimating = true;
+            if (direction === 'down') handleScrollDown();
+            else handleScrollUp();
+        }
+
+        function goToSlide(targetIndex) {
+            if (isSliderAnimating || targetIndex === frontSlideIndex) return;
+            const direction = targetIndex > frontSlideIndex ? 'down' : 'up';
+            const steps = Math.abs(targetIndex - frontSlideIndex);
+            let currentStep = 0;
+            function doStep() {
+                if (currentStep >= steps) return;
+                currentStep++;
+                handleSlideChange(direction);
+                setTimeout(doStep, 850);
+            }
+            doStep();
+        }
+
+        function updateIndicators() {
+            const btns = document.querySelectorAll('.radaville-indicator');
+            btns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === frontSlideIndex);
+            });
+        }
+
+        function handleScrollUp() {
+            const slides = document.querySelectorAll('.radaville-slide');
+            const lastSlide = slides[slides.length - 1];
+            frontSlideIndex = (frontSlideIndex - 1 + slideData.length) % slideData.length;
+            const newBackIndex = (frontSlideIndex - 1 + slideData.length) % slideData.length;
+            const prevSlideData = slideData[newBackIndex];
+
+            const newSlide = document.createElement('div');
+            newSlide.className = 'radaville-slide';
+            newSlide.innerHTML = '<img src="' + prevSlideData.image + '" alt="' + prevSlideData.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + prevSlideData.title + '</h1>';
+            const newTitle = newSlide.querySelector('.radaville-slide-title');
+            const newSplit = splitText(newTitle);
+            gsap.set(newSplit.words, { yPercent: -100 });
+            slider.insertBefore(newSlide, slides[0]);
+            gsap.set(newSlide, { y: '-30%', z: -15, opacity: 0 });
+
+            const allSlides = document.querySelectorAll('.radaville-slide');
+            allSlides.forEach((slide, i) => {
+                gsap.to(slide, {
+                    y: (-15 + 15 * i) + '%', z: 15 * i, opacity: i < 0 ? 0 : 1,
+                    duration: 0.75, ease: 'power3.inOut',
+                    onComplete: function() { if (i === allSlides.length - 1) { lastSlide.remove(); isSliderAnimating = false; } }
+                });
+            });
+            gsap.to(newSplit.words, { yPercent: 0, duration: 0.75, ease: 'power4.out', stagger: 0.08, delay: 0.4 });
+            updateIndicators();
+        }
+
+        function handleScrollDown() {
+            const slides = document.querySelectorAll('.radaville-slide');
+            const firstSlide = slides[0];
+            frontSlideIndex = (frontSlideIndex + 1) % slideData.length;
+            const newBackIndex = (frontSlideIndex + 3) % slideData.length;
+            const nextSlideData = slideData[newBackIndex];
+
+            const newSlide = document.createElement('div');
+            newSlide.className = 'radaville-slide';
+            newSlide.innerHTML = '<img src="' + nextSlideData.image + '" alt="' + nextSlideData.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + nextSlideData.title + '</h1>';
+            const newTitle = newSlide.querySelector('.radaville-slide-title');
+            const newSplit = splitText(newTitle);
+            gsap.set(newSplit.words, { yPercent: 100 });
+            slider.appendChild(newSlide);
+            gsap.set(newSlide, { y: (-15 + 15 * 4) + '%', z: 15 * 4, opacity: 0 });
+
+            const allSlides = document.querySelectorAll('.radaville-slide');
+            allSlides.forEach((slide, i) => {
+                const targetPosition = i - 1;
+                gsap.to(slide, {
+                    y: (-15 + 15 * targetPosition) + '%', z: 15 * targetPosition, opacity: targetPosition < 0 ? 0 : 1,
+                    duration: 0.75, ease: 'power3.inOut',
+                    onComplete: function() { if (i === 0) { firstSlide.remove(); isSliderAnimating = false; } }
+                });
+            });
+            gsap.to(newSplit.words, { yPercent: 0, duration: 0.75, ease: 'power4.out', stagger: 0.08, delay: 0.4 });
+            updateIndicators();
+        }
+
+        function initWhenReady() {
+            if (typeof gsap === 'undefined') { setTimeout(initWhenReady, 100); return; }
+            initRadavilleSlider();
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWhenReady);
+        } else {
+            initWhenReady();
+        }
+        window.addEventListener('resize', function() {
+            const c = document.querySelector('.radaville-container');
+            if (c) c.style.display = window.innerWidth > 768 ? 'block' : 'none';
+        });
+    })();
     </script>
 
 </body>
