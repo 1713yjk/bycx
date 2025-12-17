@@ -4,41 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>售后服务 - AZLG智能健康戒指 | 专业售后，无忧保障</title>
-    <meta name="description" content="AZLG智能健康戒指专业售后服务：100天质量问题只换不修，特权激活延长至1年，24/7全天候技术支持。扫码关注小程序，享受便捷售后服务。">
-    <meta name="keywords" content="AZLG售后服务,智能戒指保修,产品维修,技术支持,小程序售后">
+    <meta name="description" content="AZLG智能健康戒指专业售后服务：100天质量问题只换不修，特权激活延长至1年，24/7全天候技术支持。">
+    
+    <!-- 引入 Inter 字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="售后服务 - AZLG智能健康戒指">
-    <meta property="og:description" content="专业售后服务，100天只换不修，24/7全天候支持">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://azlg.com/after-sales">
-    <meta property="og:image" content="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/logo.png">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="售后服务 - AZLG智能健康戒指">
-    <meta name="twitter:description" content="专业售后服务，100天只换不修，24/7全天候支持">
-
-    <!-- 结构化数据 -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "AZLG",
-        "description": "智能健康戒指专业售后服务",
-        "url": "https://azlg.com",
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer service",
-            "availableLanguage": "Chinese"
-        },
-        "serviceType": "售后服务",
-        "areaServed": "CN"
-    }
-    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        svg.lucide {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
         :root {
+            /* --- 主页色板 --- */
             --oura-black: #0a0a0a;
             --oura-dark: #1a1a1a;
             --oura-gray: #2a2a2a;
@@ -46,708 +31,681 @@
             --oura-white: #ffffff;
             --oura-accent: #ff6b35;
             --oura-accent-light: #ff8a65;
-            --oura-blue: #4a90e2;
-            --oura-green: #7ed321;
-            --oura-success: #10b981;
-            --oura-warning: #f59e0b;
+
+            /* --- 黑曜石色板 --- */
+            --bg-deep: #080808;       /* 比纯黑略浅，更有透气感 */
+            --bg-card: rgba(20, 20, 20, 0.6); /* 深色玻璃基底 */
+            
+            --border-glass: rgba(255, 255, 255, 0.08); /* 玻璃边缘 */
+            --border-highlight: rgba(255, 255, 255, 0.15); /* 顶部受光面 */
+            
+            --text-main: #ECECEC;     /* 灰白，比纯白更护眼高级 */
+            --text-muted: #8F8F8F;    /* 沉稳的灰色 */
+            --accent-glow: 255, 107, 53; /* 品牌橙 RGB 值，用于计算光晕 */
+            --accent-color: #FF6B35;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .oura-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, var(--oura-black) 0%, var(--oura-dark) 100%);
-            color: var(--oura-white);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
         }
 
-        /* 导航栏 */
-        .nav {
+        /* --- 1. 动态噪点层 (The Texture) --- */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.04; /* 噪点强度 */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- 2. 深层弥散光 (Ambient Light) --- */
+        .ambient-light {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(var(--accent-glow), 0.08) 0%, transparent 60%);
+            z-index: -1;
+            filter: blur(80px);
+            animation: breathe 10s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes breathe {
+            0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* --- 导航栏（主页风格） --- */
+        .oura-nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(10, 10, 10, 0.9);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            will-change: background-color, backdrop-filter;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
+        .oura-nav-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
+            padding: 20px 0;
         }
 
-        .nav-logo {
+        .oura-logo {
             font-size: 24px;
-            font-weight: 700;
-            color: var(--oura-accent);
+            font-weight: 600;
+            color: var(--text-main);
             text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: var(--oura-light-gray);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--oura-white);
-        }
-
-        /* 主容器 */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* 英雄区域 */
-        .hero {
-            padding: 120px 0 80px;
-            text-align: center;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
-        }
-
-        .hero-title {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 700;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, var(--oura-white) 0%, var(--oura-accent-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 20px;
-            color: var(--oura-light-gray);
-            margin-bottom: 32px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-features {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-
-        .hero-feature {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: var(--oura-accent);
-            font-weight: 500;
         }
 
-        .hero-feature-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-        /* 服务分类区域 */
-        .services {
-            padding: 80px 0;
-        }
-
-        .services-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .services-subtitle {
-            text-align: center;
-            font-size: 18px;
-            color: var(--oura-light-gray);
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-bottom: 80px;
-        }
-
-        .service-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 28px 20px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
-            min-width: 260px;
-            max-width: 300px;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--oura-accent), var(--oura-accent-light));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255, 107, 53, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .service-icon {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--oura-accent), var(--oura-accent-light));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .service-icon svg {
-            width: 32px;
+        .oura-logo img {
             height: 32px;
-            fill: var(--oura-white);
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
         }
 
-        .service-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .service-description {
-            color: var(--oura-light-gray);
-            margin-bottom: 20px;
-            line-height: 1.5;
-            font-size: 14px;
-        }
-
-        .service-action {
-            color: var(--oura-accent);
-            font-weight: 500;
-            font-size: 13px;
-        }
-        /* 联系方式区域 */
-        .contact {
-            padding: 80px 0;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, transparent 100%);
-        }
-
-        .contact-title {
-            text-align: center;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .contact-subtitle {
-            text-align: center;
-            font-size: 18px;
-            color: var(--oura-light-gray);
-            margin-bottom: 60px;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr;
-            gap: 32px;
-            align-items: start;
-        }
-
-        .miniprogram-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border: 2px solid var(--oura-accent);
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .miniprogram-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, transparent 100%);
-            pointer-events: none;
-        }
-
-        .miniprogram-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--oura-accent);
-            color: var(--oura-white);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .miniprogram-qr {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 24px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .miniprogram-qr img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .miniprogram-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .miniprogram-description {
-            color: var(--oura-light-gray);
-            margin-bottom: 24px;
-        }
-
-        .miniprogram-steps {
-            text-align: left;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .miniprogram-step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        .miniprogram-step:last-child {
-            margin-bottom: 0;
-        }
-
-        .step-number {
-            width: 24px;
-            height: 24px;
-            background: var(--oura-accent);
-            color: var(--oura-white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .contact-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 32px 24px;
-            text-align: center;
-            min-height: 320px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .contact-qr {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 24px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .contact-qr img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .contact-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .contact-description {
-            color: var(--oura-light-gray);
-            font-size: 14px;
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1200px) {
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 32px;
-            }
-
-            .service-card {
-                min-width: auto;
-                max-width: none;
-                padding: 32px;
-            }
+        .oura-logo:hover img {
+            transform: scale(1.05);
         }
 
         @media (max-width: 768px) {
-            .nav-links {
+            .oura-logo img {
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .oura-logo img {
+                height: 24px;
+            }
+        }
+
+        .oura-nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .oura-nav-link {
+            color: #666666;
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .oura-nav-link:hover {
+            color: var(--text-main);
+        }
+
+        .oura-nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--oura-accent);
+            transition: width 0.3s ease;
+        }
+
+        .oura-nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 抽奖活动导航样式 */
+        .lottery-link {
+            position: relative;
+            color: var(--oura-accent) !important;
+        }
+
+        .lottery-badge {
+            position: absolute;
+            top: -8px;
+            right: -16px;
+            background: var(--oura-accent);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 4px rgba(255, 107, 53, 0);
+            }
+        }
+
+        .lottery-link:hover {
+            text-shadow: 0 0 10px rgba(255,107,53,0.5);
+        }
+
+        .oura-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .oura-mobile-menu {
+            display: none;
+            background: var(--bg-deep);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .oura-mobile-menu.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .oura-nav-links {
                 display: none;
             }
 
-            .hero {
-                padding: 100px 0 60px;
+            .oura-mobile-toggle {
+                display: block;
             }
 
-            .hero-features {
-                gap: 20px;
+            .language-switcher {
+                display: none !important;
             }
+        }
 
-            .services {
-                padding: 60px 0;
-            }
+        /* --- 布局容器 --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        .section-padding { padding: 120px 0; }
 
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
+        /* --- 排版 --- */
+        .section-header { margin-bottom: 80px; padding-left: 32px; border-left: 1px solid rgba(255,255,255,0.1); }
+        .section-label { color: var(--accent-color); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; display: block;}
+        .section-title { font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -0.03em; color: var(--text-main); margin-bottom: 16px; }
+        .section-subtitle { color: var(--text-muted); font-size: 16px; font-weight: 300; max-width: 600px; }
 
-            .contact {
-                padding: 60px 0;
-            }
+        /* --- 网格系统 --- */
+        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+        .contact-grid { grid-template-columns: 2fr 1fr 1fr; }
 
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
+        /* --- 3. 黑曜石玻璃卡片 (Obsidian Card) --- */
+        .obsidian-card {
+            background-color: var(--bg-card);
+            /* 关键：双层边框模拟厚度 */
+            border: 1px solid var(--border-glass);
+            box-shadow: 
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.05), /* 顶部内高光 */
+                0 20px 40px -20px rgba(0,0,0,0.6); /* 深邃投影 */
+            backdrop-filter: blur(40px); /* 极深的磨砂 */
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden; /* 为了聚光灯效果 */
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 280px;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
 
-            .miniprogram-card {
-                padding: 32px 24px;
-            }
+        /* 鼠标悬停时的物理反馈 */
+        .obsidian-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.15);
+        }
 
-            .miniprogram-qr {
-                width: 160px;
-                height: 160px;
-            }
+        /* 聚光灯层 (由 JS 控制) */
+        .card-spotlight {
+            pointer-events: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 255, 255, 0.06), 
+                transparent 40%
+            );
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1;
+        }
 
-            .contact-qr {
-                width: 160px;
-                height: 160px;
-            }
+        .obsidian-card:hover .card-spotlight { opacity: 1; }
 
-            .contact-card {
-                min-height: auto;
-                padding: 24px;
-            }
+        /* 内容层 (提升层级以免被聚光灯遮挡) */
+        .card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* 图标 */
+        .card-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+        .card-icon svg { width: 24px; height: 24px; fill: currentColor; }
+
+        .card-title { font-size: 18px; font-weight: 500; color: var(--text-main); margin-bottom: 12px; }
+        .card-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+        
+        .card-action {
+            margin-top: 24px; font-size: 12px; font-weight: 500; color: var(--text-main);
+            display: flex; align-items: center; gap: 8px; opacity: 0.6; transition: 0.3s;
+        }
+        .obsidian-card:hover .card-action { opacity: 1; transform: translateX(4px); color: var(--accent-color); }
+
+        /* --- 联系方式 --- */
+        .miniprogram-content { display: flex; gap: 32px; align-items: center; width: 100%; }
+        
+        .qr-frame {
+            width: 140px; height: 140px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
+            padding: 8px; border-radius: 8px;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .qr-frame:hover {
+            transform: scale(1.3);
+            box-shadow: 0 12px 40px rgba(255, 107, 53, 0.3);
+            z-index: 10;
+        }
+        
+        /* 扫描线动画 */
+        .qr-frame::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+            opacity: 0; animation: scan 3s infinite linear;
+        }
+        .obsidian-card:hover .qr-frame::after { opacity: 0.5; }
+
+        @keyframes scan {
+            0% { top: 10%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 90%; opacity: 0; }
+        }
+
+        .qr-img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; filter: grayscale(100%) contrast(1.2); opacity: 0.7; transition: 0.4s; }
+        .obsidian-card:hover .qr-img { filter: grayscale(0%); opacity: 1; }
+
+        .mini-steps { margin-top: 16px; }
+        .mini-step { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .dot { width: 4px; height: 4px; background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 8px var(--accent-color); }
+
+        /* --- FAQ --- */
+        .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
+        .faq-item { padding: 24px; transition: 0.3s; border-radius: 8px; }
+        .faq-item:hover { background: rgba(255,255,255,0.02); }
+        .faq-title { font-size: 16px; color: var(--text-main); margin-bottom: 12px; font-weight: 500; }
+        .faq-desc { font-size: 14px; color: var(--text-muted); padding-left: 0; }
+
+        /* --- 响应式 --- */
+        @media (max-width: 1024px) {
+            .bento-grid, .contact-grid { grid-template-columns: repeat(2, 1fr); }
+            .miniprogram-card { grid-column: span 2; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .section-header { padding-left: 0; border-left: none; }
+            .bento-grid, .contact-grid, .faq-grid { grid-template-columns: 1fr; }
+            .miniprogram-card { grid-column: span 1; }
+            .miniprogram-content { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">AZLG</a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">首页</a></li>
-                <li><a href="index.html#products" class="nav-link">产品</a></li>
-                <li><a href="blog/index.html" class="nav-link">技术博客</a></li>
-                <li><a href="#" class="nav-link">售后服务</a></li>
-            </ul>
+
+    <!-- 噪点层 (关键质感来源) -->
+    <div class="noise-overlay"></div>
+    
+    <!-- 弥散背景光 -->
+    <div class="ambient-light"></div>
+
+    <nav class="oura-nav">
+        <div class="oura-container">
+            <div class="oura-nav-content">
+                <a href="index copy.html" class="oura-logo">
+                    <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/logo.png" alt="深圳佰屹创新科技有限公司">
+                </a>
+
+                <ul class="oura-nav-links">
+                    <li><a href="index copy.html#home" class="oura-nav-link" data-zh="首页" data-en="Home" data-tw="首頁">首页</a></li>
+                    <li><a href="index copy.html#products" class="oura-nav-link" data-zh="产品" data-en="Products" data-tw="產品">产品</a></li>
+                    <li><a href="blog/index.html" class="oura-nav-link" data-zh="技术博客" data-en="Tech Blog" data-tw="技術博客">技术博客</a></li>
+                    <li><a href="blog/health-assessment.html" class="oura-nav-link" data-zh="健康自测" data-en="Health Assessment" data-tw="健康自測">健康自测</a></li>
+                    <li class="lottery-nav-item"><a href="lottery-v2-luxury.html" class="oura-nav-link lottery-link" data-zh="抽奖活动" data-en="Lucky Draw" data-tw="抽獎活動"><span class="lottery-badge">NEW</span>抽奖活动</a></li>
+                    <li><a href="kajuan/frontend/user/redeem-premium-a.html" class="oura-nav-link" data-zh="兑换礼遇" data-en="Redeem Gift" data-tw="兌換禮遇">兑换礼遇</a></li>
+                    <li><a href="index copy.html#faq" class="oura-nav-link" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a></li>
+                    <li><a href="after-sales.html" class="oura-nav-link" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a></li>
+                </ul>
+
+                <!-- Language Switcher -->
+                <div class="language-switcher" style="display: flex; gap: 4px; margin-left: 20px;">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')" style="padding: 8px 16px; border: 2px solid var(--oura-accent); background: var(--oura-accent); color: var(--oura-dark); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')" style="padding: 8px 16px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">English</button>
+                    <button class="lang-btn" onclick="switchLanguage('tw')" style="padding: 8px 16px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">繁體</button>
+                </div>
+
+                <button class="oura-mobile-toggle" id="mobile-toggle">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+
+            <div class="oura-mobile-menu" id="mobile-menu">
+                <a href="index copy.html#home" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="首页" data-en="Home" data-tw="首頁">首页</a>
+                <a href="index copy.html#products" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="产品" data-en="Products" data-tw="產品">产品</a>
+                <a href="blog/index.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="技术博客" data-en="Tech Blog" data-tw="技術博客">技术博客</a>
+                <a href="blog/health-assessment.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="健康自测" data-en="Health Assessment" data-tw="健康自測">健康自测</a>
+                <a href="lottery-v2-luxury.html" class="oura-nav-link" style="display: block; padding: 12px 0; color: var(--oura-accent);" data-zh="抽奖活动 🎁" data-en="Lucky Draw 🎁" data-tw="抽獎活動 🎁">抽奖活动 🎁</a>
+                <a href="kajuan/frontend/user/redeem-premium-a.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="兑换礼遇" data-en="Redeem Gift" data-tw="兌換禮遇">兑换礼遇</a>
+                <a href="index copy.html#faq" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="常见问题" data-en="FAQ" data-tw="常見問題">常见问题</a>
+                <a href="after-sales.html" class="oura-nav-link" style="display: block; padding: 12px 0;" data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</a>
+                <div class="mobile-lang-switcher" style="padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 12px;">
+                    <button class="lang-btn active" onclick="switchLanguage('zh')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid var(--oura-accent); background: var(--oura-accent); color: var(--oura-dark); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')" style="padding: 8px 16px; margin-right: 8px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">English</button>
+                    <button class="lang-btn" onclick="switchLanguage('tw')" style="padding: 8px 16px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: var(--oura-light-gray); border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500;">繁體</button>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <!-- 英雄区域 -->
-    <section class="hero">
+    <section class="section-padding" style="margin-top: 60px;">
         <div class="container">
-            <h1 class="hero-title">专业售后服务，让您无后顾之忧</h1>
-            <p class="hero-subtitle">100天质量问题只换不修，24/7全天候技术支持，专业团队为您提供贴心服务</p>
+            <div class="section-header">
+                <span class="section-label">01 / Support</span>
+                <h1 class="section-title">全周期守护</h1>
+                <p class="section-subtitle">无论何时何地，AZLG 始终为您的智能戒指提供工业级标准的精密维护与支持。</p>
+            </div>
 
-            <div class="hero-features">
-                <div class="hero-feature">
-                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
-                        <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M12 7C13.4 7 14.8 8.6 14.8 10V11.5C15.4 11.5 16 12.1 16 12.7V16.2C16 16.8 15.4 17.3 14.8 17.3H9.2C8.6 17.3 8 16.8 8 16.2V12.7C8 12.1 8.6 11.5 9.2 11.5V10C9.2 8.6 10.6 7 12 7M12 8.2C11.2 8.2 10.5 8.7 10.5 10V11.5H13.5V10C13.5 8.7 12.8 8.2 12 8.2Z"/>
-                    </svg>
-                    100天只换不修
+            <div class="bento-grid services-grid">
+                <!-- 卡片 1 -->
+                <div class="obsidian-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content">
+                        <div>
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <h3 class="card-title">100天只换不修</h3>
+                            <p class="card-desc">针对非人为质量问题，我们直接为您更换全新设备，消除维修等待的焦虑。</p>
+                        </div>
+                        <div class="card-action">查看保修状态 →</div>
+                    </div>
                 </div>
-                <div class="hero-feature">
-                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z"/>
-                    </svg>
-                    24/7全天候支持
+
+                <!-- 卡片 2 -->
+                <div class="obsidian-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content">
+                        <div>
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C10.1 1 7.1 0.6 4.7 1.7L9 6L6 9L1.6 4.7C0.4 7.1 0.9 10.1 2.9 12.1C4.8 14 7.5 14.5 9.8 13.6L18.9 22.7C19.3 23.1 19.9 23.1 20.3 22.7L22.6 20.4C23.1 20 23.1 19.3 22.7 19Z"/></svg>
+                            </div>
+                            <h3 class="card-title">精密硬件维修</h3>
+                            <p class="card-desc">从传感器校准到电池维护，原厂工程师提供全链路修复服务。</p>
+                        </div>
+                        <div class="card-action">提交维修单 →</div>
+                    </div>
                 </div>
-                <div class="hero-feature">
-                    <svg class="hero-feature-icon" viewBox="0 0 24 24">
-                        <path d="M17 18C15.89 18 15 18.89 15 20C15 21.11 15.89 22 17 22C18.11 22 19 21.11 19 20C19 18.89 18.11 18 17 18M1 2V4H3L6.6 11.59L5.24 14.04C5.09 14.32 5 14.65 5 15C5 16.11 5.89 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.58 17.3 11.97L20.88 5H5.21L4.27 3H1M7 18C5.89 18 5 18.89 5 20C5 21.11 5.89 22 7 22C8.11 22 9 21.11 9 20C9 18.89 8.11 18 7 18Z"/>
-                    </svg>
-                    专业技术团队
+
+                <!-- 卡片 3 -->
+                <div class="obsidian-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content">
+                        <div>
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6M18.76 7.74L17.3 9.2C17.74 10.04 18 11 18 12C18 15.31 15.31 18 12 18V15L8 19L12 23V20C16.42 20 20 16.42 20 12C20 10.43 19.54 8.97 18.76 7.74Z"/></svg>
+                            </div>
+                            <h3 class="card-title">无忧换新计划</h3>
+                            <p class="card-desc">支持先发新、后收旧。在您收到新戒指之前，健康监测服务不间断。</p>
+                        </div>
+                        <div class="card-action">申请更换 →</div>
+                    </div>
+                </div>
+
+                <!-- 卡片 4 -->
+                <div class="obsidian-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content">
+                        <div>
+                            <div class="card-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2M11 17H13V19H11V17M11 5H13V15H11V5Z"/></svg>
+                            </div>
+                            <h3 class="card-title">专家技术支持</h3>
+                            <p class="card-desc">7×24小时在线。无论是连接问题还是数据解读，专家团队随时响应。</p>
+                        </div>
+                        <div class="card-action">联系在线客服 →</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 服务分类区域 -->
-    <section class="services">
+    <section class="section-padding" style="padding-top: 0;">
         <div class="container">
-            <h2 class="services-title">专业售后服务分类</h2>
-            <p class="services-subtitle">四大核心服务，全方位保障您的使用体验</p>
+            <div class="section-header">
+                <span class="section-label">02 / Connect</span>
+                <h1 class="section-title">服务终端</h1>
+                <p class="section-subtitle">请选择最便捷的入口连接至 AZLG 服务中心。</p>
+            </div>
 
-            <div class="services-grid">
-                <!-- 保修服务 -->
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M12 7C13.4 7 14.8 8.6 14.8 10V11.5C15.4 11.5 16 12.1 16 12.7V16.2C16 16.8 15.4 17.3 14.8 17.3H9.2C8.6 17.3 8 16.8 8 16.2V12.7C8 12.1 8.6 11.5 9.2 11.5V10C9.2 8.6 10.6 7 12 7M12 8.2C11.2 8.2 10.5 8.7 10.5 10V11.5H13.5V10C13.5 8.7 12.8 8.2 12 8.2Z"/>
-                        </svg>
+            <div class="bento-grid contact-grid">
+                <!-- 小程序 -->
+                <div class="obsidian-card miniprogram-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content">
+                        <div class="miniprogram-content">
+                            <div class="qr-frame">
+                                <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/小程序二维码.jpg" alt="AZLG小程序" class="qr-img">
+                            </div>
+                            <div class="mini-info">
+                                <div style="color: var(--accent-color); font-size: 12px; font-weight: 600; margin-bottom: 6px;">RECOMMENDED</div>
+                                <h3 style="color: #fff; font-size: 20px; margin-bottom: 8px;">售后服务小程序</h3>
+                                <p class="card-desc">一站式解决所有问题，进度实时可视化。</p>
+                                <div class="mini-steps">
+                                    <div class="mini-step"><span class="dot"></span> 微信扫码接入</div>
+                                    <div class="mini-step"><span class="dot"></span> 自动匹配设备ID</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="service-title">产品保修</h3>
-                    <p class="service-description">100天质量问题只换不修，特权激活延长至1年。让您购买无忧，使用放心。</p>
-                    <p class="service-action">扫码关注小程序查看保修状态</p>
                 </div>
 
-                <!-- 维修服务 -->
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C10.1 1 7.1 0.6 4.7 1.7L9 6L6 9L1.6 4.7C0.4 7.1 0.9 10.1 2.9 12.1C4.8 14 7.5 14.5 9.8 13.6L18.9 22.7C19.3 23.1 19.9 23.1 20.3 22.7L22.6 20.4C23.1 20 23.1 19.3 22.7 19Z"/>
-                        </svg>
+                <!-- 公众号 -->
+                <div class="obsidian-card contact-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content" style="align-items: center; text-align: center; justify-content: center;">
+                        <div class="qr-frame" style="margin-bottom: 20px;">
+                            <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg" alt="AZLG公众号" class="qr-img">
+                        </div>
+                        <h3 class="card-title" style="font-size: 16px;">官方公众号</h3>
+                        <p class="card-desc" style="font-size: 13px;">获取固件更新与资讯</p>
                     </div>
-                    <h3 class="service-title">设备维修</h3>
-                    <p class="service-description">专业技术团队，快速响应维修需求。从诊断到修复，全程专业服务。</p>
-                    <p class="service-action">通过小程序提交维修申请</p>
                 </div>
 
-                <!-- 更换服务 -->
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 6V9L16 5L12 1V4C7.58 4 4 7.58 4 12C4 13.57 4.46 15.03 5.24 16.26L6.7 14.8C6.25 13.97 6 13 6 12C6 8.69 8.69 6 12 6M18.76 7.74L17.3 9.2C17.74 10.04 18 11 18 12C18 15.31 15.31 18 12 18V15L8 19L12 23V20C16.42 20 20 16.42 20 12C20 10.43 19.54 8.97 18.76 7.74Z"/>
-                        </svg>
+                <!-- 企微 -->
+                <div class="obsidian-card contact-card">
+                    <div class="card-spotlight"></div>
+                    <div class="card-content" style="align-items: center; text-align: center; justify-content: center;">
+                        <div class="qr-frame" style="margin-bottom: 20px;">
+                            <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品经理二维码.png" alt="产品经理" class="qr-img">
+                        </div>
+                        <h3 class="card-title" style="font-size: 16px;">产品经理直连</h3>
+                        <p class="card-desc" style="font-size: 13px;">直接反馈使用建议</p>
                     </div>
-                    <h3 class="service-title">产品更换</h3>
-                    <p class="service-description">质量问题直接换新，无需等待维修。先发新品，后收旧品，服务更贴心。</p>
-                    <p class="service-action">小程序一键申请更换服务</p>
-                </div>
-
-                <!-- 技术支持 -->
-                <div class="service-card">
-                    <div class="service-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2M21 9V7L15 1L13.5 2.5L16.17 5.17L10.5 10.84L11.92 12.25L15.92 8.25L18.5 10.84L21 9M7.5 12C8.6 12 9.5 12.9 9.5 14S8.6 16 7.5 16 5.5 15.1 5.5 14 6.4 12 7.5 12M18.5 12C19.6 12 20.5 12.9 20.5 14S19.6 16 18.5 16 16.5 15.1 16.5 14 17.4 12 18.5 12M7.5 18C8.6 18 9.5 18.9 9.5 20S8.6 22 7.5 22 5.5 21.1 5.5 20 6.4 18 7.5 18M18.5 18C19.6 18 20.5 18.9 20.5 20S19.6 22 18.5 22 16.5 21.1 16.5 20 17.4 18 18.5 18Z"/>
-                        </svg>
-                    </div>
-                    <h3 class="service-title">技术支持</h3>
-                    <p class="service-description">24/7全天候技术咨询和使用指导。专业客服团队，随时为您答疑解惑。</p>
-                    <p class="service-action">小程序在线客服即时响应</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 联系方式区域 -->
-    <section class="contact">
+    <section class="section-padding" style="padding-top: 0;">
         <div class="container">
-            <h2 class="contact-title">联系我们</h2>
-            <p class="contact-subtitle">多种联系方式，选择最适合您的服务渠道</p>
-
-            <div class="contact-grid">
-                <!-- 小程序卡片 -->
-                <div class="miniprogram-card">
-                    <div class="miniprogram-badge">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12 15.31 6 12 6M12 16C9.79 16 8 14.21 8 12S9.79 8 12 8 16 9.79 16 12 14.21 16 12 16Z"/>
-                        </svg>
-                        推荐服务
-                    </div>
-                    <div class="miniprogram-qr">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/小程序二维码.jpg" alt="AZLG小程序二维码" />
-                    </div>
-                    <h3 class="miniprogram-title">微信扫一扫，使用小程序</h3>
-                    <p class="miniprogram-description">最便捷的售后服务入口，一站式解决所有问题</p>
-
-                    <div class="miniprogram-steps">
-                        <div class="miniprogram-step">
-                            <div class="step-number">1</div>
-                            <span>微信扫描上方二维码</span>
-                        </div>
-                        <div class="miniprogram-step">
-                            <div class="step-number">2</div>
-                            <span>进入AZLG售后小程序</span>
-                        </div>
-                        <div class="miniprogram-step">
-                            <div class="step-number">3</div>
-                            <span>选择对应的服务类型</span>
-                        </div>
-                        <div class="miniprogram-step">
-                            <div class="step-number">4</div>
-                            <span>享受便捷的售后服务</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 微信公众号 -->
-                <div class="contact-card">
-                    <div class="contact-qr">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg" alt="AZLG微信公众号二维码" />
-                    </div>
-                    <h3 class="contact-title">微信公众号</h3>
-                    <p class="contact-description">关注获取最新资讯与售后进度查询</p>
-                </div>
-
-                <!-- 企业微信 -->
-                <div class="contact-card">
-                    <div class="contact-qr">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/产品经理二维码.png" alt="产品经理企业微信二维码" />
-                    </div>
-                    <h3 class="contact-title">产品经理企业微信</h3>
-                    <p class="contact-description">建立直接沟通，反馈问题与建议</p>
-                </div>
+            <div class="section-header" style="border: none; padding: 0;">
+                <span class="section-label">03 / Q&A</span>
+                <h1 class="section-title">常见疑问</h1>
             </div>
-        </div>
-    </section>
 
-    <!-- FAQ区域 -->
-    <section class="services" style="padding-top: 0;">
-        <div class="container">
-            <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 40px; backdrop-filter: blur(20px);">
-                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 24px; text-align: center;">常见问题</h2>
-
-                <div style="display: grid; gap: 20px;">
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
-                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">保修政策</h3>
-                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">100天内有质量问题只换不修；特权激活用户可享受1年内质量问题换新服务。</p>
-                    </div>
-
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
-                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">服务时间</h3>
-                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">24小时7天全天候服务咨询，工作日优先处理，紧急问题随时响应。</p>
-                    </div>
-
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
-                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">处理时效</h3>
-                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">确认质量问题后，直接安排换新，无需维修等待时间。先发新品，后收旧品。</p>
-                    </div>
-
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px;">
-                        <h3 style="color: var(--oura-accent); margin-bottom: 8px; font-size: 18px;">数据安全</h3>
-                        <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;">换新前请备份重要数据，我们承诺严格保护用户隐私，不会泄露任何个人信息。</p>
-                    </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-title">AZ Ring的保修期限是多久？</div>
+                    <div class="faq-desc">售后服务 100天有质量问题只换不修，特权激活可延长至1年内。有质量问题可换新。</div>
                 </div>
-
-                <div style="text-align: center; margin-top: 32px;">
-                    <a href="index.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: var(--oura-white); border-radius: 24px; text-decoration: none; margin-right: 12px; font-weight: 500;">返回首页</a>
-                    <a href="index.html#products" style="display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; background: var(--oura-accent); color: var(--oura-white); border-radius: 24px; text-decoration: none; font-weight: 500;">查看产品</a>
+                <div class="faq-item">
+                    <div class="faq-title">如果戒指丢失了怎么办？</div>
+                    <div class="faq-desc">遗失不属于保修范围请您保管好您的戒指。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-title">处理的时效是多久？</div>
+                    <div class="faq-desc">确认质量问题后，直接安排换新，无需维修等待时间。先发新品，后收旧品。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-title">数据会因为维修而丢失吗？</div>
+                    <div class="faq-desc">设备本地的数据可能会在维修中清除，请您知晓这一点。</div>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        // 滚动动画
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // 为所有服务卡片添加动画
+        // 1. 简单的卡片入场动画
         document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.service-card, .contact-card, .miniprogram-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-                observer.observe(card);
-            });
-
-            // 平滑滚动
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+            const cards = document.querySelectorAll('.obsidian-card, .faq-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 80);
                     }
                 });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                observer.observe(card);
             });
         });
 
-        // 移动端导航优化
-        if (window.innerWidth <= 768) {
-            const nav = document.querySelector('.nav');
-            let lastScrollY = window.scrollY;
+        // 2. 聚光灯交互效果 (Spotlight Effect)
+        // 这是一个在高端网站(如 Linear/Stripe)非常流行的效果
+        // 它计算鼠标相对于卡片的位置，然后在卡片上绘制一个柔和的径向渐变
+        const handleMouseMove = (e) => {
+            const { currentTarget: target } = e;
+            const rect = target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-            window.addEventListener('scroll', () => {
-                const currentScrollY = window.scrollY;
-                if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                    nav.style.transform = 'translateY(-100%)';
-                } else {
-                    nav.style.transform = 'translateY(0)';
-                }
-                lastScrollY = currentScrollY;
+            target.style.setProperty("--mouse-x", `${x}px`);
+            target.style.setProperty("--mouse-y", `${y}px`);
+        };
+
+        for (const card of document.querySelectorAll(".obsidian-card")) {
+            card.onmousemove = handleMouseMove;
+        }
+
+        // 移动菜单切换
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
             });
         }
-    </script>
 
+        // 点击菜单链接时关闭移动菜单
+        if (mobileMenu) {
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu .oura-nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        }
+
+        // 语言切换功能
+        let currentLanguage = 'zh';
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+
+            // 更新所有带有语言数据属性的元素
+            document.querySelectorAll('[data-zh]').forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = element.getAttribute(`data-${lang}-placeholder`) || text;
+                    } else {
+                        element.innerHTML = text;
+                    }
+                }
+            });
+
+            // 更新表单占位符
+            document.querySelectorAll('[data-zh-placeholder]').forEach(element => {
+                const placeholder = element.getAttribute(`data-${lang}-placeholder`);
+                if (placeholder) {
+                    element.placeholder = placeholder;
+                }
+            });
+
+            // 更新语言按钮状态
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Lucide Icons 初始化
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    </script>
 </body>
 </html>
-
