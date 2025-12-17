@@ -1333,6 +1333,305 @@ var _hmt = _hmt || [];
             line-height: 1.6;
         }
 
+        /* ========== 技术创新卡片悬停展开效果 ========== */
+        .tech-card-container {
+            width: 260px;
+            height: 320px;
+            position: relative;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: border-color 0.3s ease;
+        }
+        .tech-card-container::before {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            inset: 0;
+            transform: translate3d(0, 0, 0) scale(0.95);
+            filter: blur(20px);
+            border-radius: inherit;
+            background: rgba(255,107,53,0.15);
+        }
+        .tech-card-container:hover,
+        .tech-card-container.in-view {
+            border-color: var(--oura-accent);
+        }
+        .tech-card {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+        }
+        .tech-card .img-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            transition: scale 0.6s, rotate 0.6s, filter 1s;
+        }
+        .tech-card .img-content svg {
+            width: 120px !important;
+            height: 120px !important;
+            color: #ffffff;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        .tech-card .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            color: #ffffff;
+            padding: 24px;
+            line-height: 1.5;
+            border-radius: inherit;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        .tech-card .content .heading {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .tech-card .content .para {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .tech-card:hover .content,
+        .tech-card-container.in-view .tech-card .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tech-card:hover .img-content,
+        .tech-card-container.in-view .tech-card .img-content {
+            scale: 2.5;
+            rotate: 30deg;
+            filter: blur(7px);
+        }
+        .tech-card:hover .img-content svg,
+        .tech-card-container.in-view .tech-card .img-content svg {
+            color: transparent;
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 260px);
+            gap: 40px;
+            justify-content: center;
+        }
+
+        /* ========== 核心竞争力展开卡片 ========== */
+        .core-strength-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            margin: 40px auto;
+        }
+        .core-strength-card {
+            position: relative;
+            width: 280px;
+            height: 80px;
+            border-radius: 16px;
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ffffff;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            cursor: default;
+        }
+        .core-strength-card .card-title {
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+        .core-strength-expand {
+            position: absolute;
+            width: 280px;
+            height: 80px;
+            border-radius: 16px;
+            background: #2a2a2a;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 1;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            overflow: hidden;
+        }
+        .core-strength-upper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            position: absolute;
+            width: 100%;
+            top: 20px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1) 0.1s;
+        }
+        .core-strength-lower {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            position: absolute;
+            width: 100%;
+            bottom: 20px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1) 0.2s;
+        }
+        .strength-item {
+            text-align: center;
+            color: #ffffff;
+        }
+        .strength-item .number {
+            font-size: 36px;
+            font-weight: 300;
+            color: var(--oura-accent);
+            margin-bottom: 4px;
+        }
+        .strength-item .label {
+            font-size: 14px;
+            color: var(--oura-light-gray);
+        }
+        /* 展开状态 */
+        .core-strength-container.expanded .core-strength-card {
+            background: #2a2a2a;
+            border-color: rgba(255,107,53,0.5);
+            box-shadow: 0 15px 50px rgba(255,107,53,0.2);
+        }
+        .core-strength-container.expanded .core-strength-expand {
+            width: 420px;
+            height: 380px;
+            border-radius: 20px;
+        }
+        .core-strength-container.expanded .core-strength-upper {
+            opacity: 1;
+            top: 20px;
+        }
+        .core-strength-container.expanded .core-strength-lower {
+            opacity: 1;
+            bottom: 20px;
+            bottom: 30px;
+        }
+
+        /* ========== FAQ 3D 翻转卡片动效（优化版） ========== */
+        .faq-item {
+            background-color: transparent;
+            width: 100%;
+            height: 80px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .faq-item.flipped {
+            height: 200px;
+        }
+
+        .faq-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s ease-in-out, height 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .faq-item.flipped .faq-card-inner {
+            transform: rotateX(180deg);
+        }
+
+        /* 正面和背面通用样式 */
+        .faq-front, .faq-back {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+        }
+
+        /* 正面 - 问题（深色主题） */
+        .faq-front {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1f1f1f 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .faq-front:hover {
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .faq-front h4 {
+            color: var(--oura-white);
+            font-size: 17px;
+            font-weight: 500;
+            margin: 0;
+            text-align: left;
+            flex: 1;
+        }
+
+        .faq-front svg {
+            color: var(--oura-accent);
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        /* 背面 - 答案（纯深色 + 微光） */
+        .faq-back {
+            background: linear-gradient(135deg, #1a1a1a 0%, #252525 50%, #1f1f1f 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: rotateX(180deg);
+            padding: 24px 28px;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .faq-back h4 {
+            color: var(--oura-accent);
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            text-align: left;
+        }
+
+        .faq-back p {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .faq-back .flip-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            font-size: 11px;
+            color: rgba(255, 107, 53, 0.6);
+        }
+
         .oura-mobile-menu {
             display: none;
             background: var(--oura-black);
@@ -1573,14 +1872,245 @@ var _hmt = _hmt || [];
                 .radaville-slide-title { font-size: 2rem; letter-spacing: 0; }
             }
 
+            /* ========== 查看详情按钮 (learn-more 风格) ========== */
+            .learn-more {
+                position: relative;
+                display: inline-block;
+                cursor: pointer;
+                outline: none;
+                border: 0;
+                vertical-align: middle;
+                text-decoration: none;
+                background: transparent;
+                padding: 0;
+                font-size: inherit;
+                font-family: inherit;
+                width: 10rem;
+                height: auto;
+            }
+            .learn-more .circle {
+                transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                position: relative;
+                display: block;
+                margin: 0;
+                width: 3rem;
+                height: 3rem;
+                background: var(--oura-white);
+                border-radius: 1.625rem;
+            }
+            .learn-more .circle .icon {
+                transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                background: var(--oura-black);
+            }
+            .learn-more .circle .icon.arrow {
+                transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                left: 0.625rem;
+                width: 1.125rem;
+                height: 0.125rem;
+                background: none;
+            }
+            .learn-more .circle .icon.arrow::before {
+                position: absolute;
+                content: "";
+                top: -0.29rem;
+                right: 0.0625rem;
+                width: 0.625rem;
+                height: 0.625rem;
+                border-top: 0.125rem solid var(--oura-black);
+                border-right: 0.125rem solid var(--oura-black);
+                transform: rotate(45deg);
+            }
+            .learn-more .button-text {
+                transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                padding: 0.75rem 0;
+                margin: 0 0 0 1.85rem;
+                color: var(--oura-white);
+                font-weight: 600;
+                line-height: 1.6;
+                text-align: center;
+            }
+            .learn-more:hover .circle {
+                width: 100%;
+            }
+            .learn-more:hover .circle .icon.arrow {
+                background: var(--oura-black);
+                transform: translate(1rem, 0);
+            }
+            .learn-more:hover .button-text {
+                color: var(--oura-black);
+            }
+
+            /* ========== 立即购买按钮 (animated-button 风格) ========== */
+            .animated-button {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 12px 36px;
+                border: 4px solid transparent;
+                font-size: 16px;
+                background-color: transparent;
+                border-radius: 100px;
+                font-weight: 600;
+                color: var(--oura-accent);
+                box-shadow: 0 0 0 2px var(--oura-accent);
+                cursor: pointer;
+                overflow: hidden;
+                transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+                text-decoration: none;
+            }
+            .animated-button svg {
+                position: absolute;
+                width: 24px;
+                fill: var(--oura-accent);
+                z-index: 9;
+                transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            .animated-button .arr-1 {
+                right: 16px;
+            }
+            .animated-button .arr-2 {
+                left: -25%;
+            }
+            .animated-button .circle {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 20px;
+                height: 20px;
+                background-color: var(--oura-accent);
+                border-radius: 50%;
+                opacity: 0;
+                transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            .animated-button .text {
+                position: relative;
+                z-index: 1;
+                transform: translateX(-12px);
+                transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            .animated-button:hover {
+                box-shadow: 0 0 0 12px transparent;
+                color: var(--oura-white);
+                border-radius: 12px;
+            }
+            .animated-button:hover .arr-1 {
+                right: -25%;
+            }
+            .animated-button:hover .arr-2 {
+                left: 16px;
+            }
+            .animated-button:hover .text {
+                transform: translateX(12px);
+            }
+            .animated-button:hover svg {
+                fill: var(--oura-white);
+            }
+            .animated-button:active {
+                scale: 0.95;
+                box-shadow: 0 0 0 4px var(--oura-accent);
+            }
+            .animated-button:hover .circle {
+                width: 220px;
+                height: 220px;
+                opacity: 1;
+            }
+
+            /* ========== 产品参数卡片动效 (suleymanlaarabidev 翻转风格) ========== */
+            .flip-card {
+                width: 160px;
+                height: 120px;
+                background: rgba(255,255,255,0.05);
+                transition: all 0.4s;
+                border-radius: 16px;
+                box-shadow: 0px 0px 10px 2px rgba(255,255,255,0.03);
+                cursor: pointer;
+                overflow: hidden;
+                border: 1px solid transparent;
+            }
+            .flip-card:hover {
+                border-radius: 20px;
+                transform: scale(1.1);
+                box-shadow: 0px 0px 15px 3px rgba(255,255,255,0.08);
+                background: rgba(255,255,255,0.08);
+                border: 1px solid var(--oura-accent);
+            }
+            .flip-card .first-content {
+                height: 100%;
+                width: 100%;
+                transition: all 0.4s;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                opacity: 1;
+                border-radius: 16px;
+            }
+            .flip-card:hover .first-content {
+                height: 0px;
+                opacity: 0;
+            }
+            .flip-card .first-content .stat-value {
+                font-size: 32px;
+                font-weight: 200;
+                color: #ffffff;
+                margin-bottom: 8px;
+            }
+            .flip-card .first-content .stat-label {
+                font-size: 14px;
+                color: rgba(255,255,255,0.7);
+            }
+            .flip-card .second-content {
+                height: 0%;
+                width: 100%;
+                opacity: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 16px;
+                transition: all 0.4s;
+                font-size: 0px;
+                transform: rotate(90deg) scale(-1);
+                padding: 0 16px;
+                text-align: center;
+            }
+            .flip-card:hover .second-content {
+                opacity: 1;
+                height: 100%;
+                font-size: 16px;
+                transform: rotate(0deg);
+                color: #ffffff;
+                font-weight: 500;
+            }
+
         /* ========================================
            Video Story Section Styles
            ======================================== */
 
         .video-story-section {
-            padding: 120px 0 80px;
+            padding: 0;
             background: #000000;
             position: relative;
+            height: 200vh;
+        }
+
+        .video-sticky-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
 
@@ -1622,22 +2152,31 @@ var _hmt = _hmt || [];
         }
 
         .video-wrapper {
+            --video-scale: 1;
+            --video-radius: 16px;
             position: relative;
             width: 100%;
             max-width: 1320px;
             margin: 0 auto;
-            border-radius: 16px;
+            border-radius: var(--video-radius);
             overflow: hidden;
             background: #000;
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+            opacity: 1;
+            transform: scale(var(--video-scale));
+            transform-origin: center center;
+            transition: border-radius 0.1s ease-out, box-shadow 0.3s ease-out;
+            will-change: transform, border-radius;
         }
 
-        .video-wrapper.visible {
-            opacity: 1;
-            transform: scale(1);
+        .video-wrapper.fullscreen {
+            max-width: 100vw;
+            box-shadow: none;
+        }
+
+        .video-wrapper.fullscreen .video-overlay-bottom {
+            opacity: 0 !important;
+            pointer-events: none;
         }
 
         /* 视频元素 */
@@ -2461,14 +3000,22 @@ var _hmt = _hmt || [];
                         </div>
 
                         <!-- CTA Button -->
-                        <div style="display: flex; gap: 16px; margin-bottom: 32px;">
-                            <a href="az-ring-detail.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: var(--oura-white); color: var(--oura-black); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,255,255,0.1);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,255,255,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,255,255,0.1)'">
-                                查看详情
-                                <i data-lucide="arrow-right" style="margin-left: 8px; width: 14px; height: 14px;"></i>
+                        <div style="display: flex; gap: 16px; margin-bottom: 32px; align-items: center;">
+                            <a href="az-ring-detail.html" class="learn-more">
+                                <span class="circle">
+                                    <span class="icon arrow"></span>
+                                </span>
+                                <span class="button-text">查看详情</span>
                             </a>
-                            <a href="https://3.cn/2mlZRa-U?jkl=@Q8PbPDKjrGx@" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 32px; font-size: 16px; font-weight: 500; background: linear-gradient(135deg, var(--oura-accent) 0%, var(--oura-accent-light) 100%); color: var(--oura-white); border: none; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,107,53,0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,53,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,53,0.3)'">
-                                <i data-lucide="shopping-cart" style="margin-right: 8px; width: 14px; height: 14px;"></i>
-                                立即购买
+                            <a href="https://3.cn/2mlZRa-U?jkl=@Q8PbPDKjrGx@" target="_blank" class="animated-button">
+                                <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                                </svg>
+                                <span class="text">立即购买</span>
+                                <span class="circle"></span>
+                                <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+                                </svg>
                             </a>
                         </div>
 
@@ -2480,21 +3027,33 @@ var _hmt = _hmt || [];
             <!-- Product Stats -->
             <div class="fade-in">
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; max-width: 800px; margin: 0 auto; text-align: center;">
-                    <div style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 32px; font-weight: 200; margin-bottom: 8px; color: var(--oura-white);">7天</div>
-                        <div style="color: var(--oura-light-gray); font-size: 14px;">续航时间</div>
+                    <div class="flip-card">
+                        <div class="first-content">
+                            <div class="stat-value">7天</div>
+                            <div class="stat-label">续航时间</div>
+                        </div>
+                        <div class="second-content">一次充电，持久陪伴</div>
                     </div>
-                    <div style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 32px; font-weight: 200; margin-bottom: 8px; color: var(--oura-white);">IPX8</div>
-                        <div style="color: var(--oura-light-gray); font-size: 14px;">防水等级</div>
+                    <div class="flip-card">
+                        <div class="first-content">
+                            <div class="stat-value">IP68</div>
+                            <div class="stat-label">防水等级</div>
+                        </div>
+                        <div class="second-content">游泳洗澡，无忧佩戴</div>
                     </div>
-                    <div style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 32px; font-weight: 200; margin-bottom: 8px; color: var(--oura-white);">2.5g</div>
-                        <div style="color: var(--oura-light-gray); font-size: 14px;">轻量设计</div>
+                    <div class="flip-card">
+                        <div class="first-content">
+                            <div class="stat-value">2.5g</div>
+                            <div class="stat-label">轻量设计</div>
+                        </div>
+                        <div class="second-content">轻若无物，舒适无感</div>
                     </div>
-                    <div style="padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 32px; font-weight: 200; margin-bottom: 8px; color: var(--oura-white);">24/7</div>
-                        <div style="color: var(--oura-light-gray); font-size: 14px;">健康监测</div>
+                    <div class="flip-card">
+                        <div class="first-content">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">健康监测</div>
+                        </div>
+                        <div class="second-content">全天候守护您的健康</div>
                     </div>
                 </div>
             </div>
@@ -2503,9 +3062,10 @@ var _hmt = _hmt || [];
 
     <!-- Video Story Section -->
     <section id="video-story" class="video-story-section">
-        <div class="video-story-container">
-            <!-- 视频包装器 -->
-            <div class="video-wrapper">
+        <div class="video-sticky-wrapper">
+            <div class="video-story-container">
+                <!-- 视频包装器 -->
+                <div class="video-wrapper" id="videoWrapper">
                 <!-- 视频播放器 -->
                 <video 
                     id="brand-story-video"
@@ -2516,7 +3076,7 @@ var _hmt = _hmt || [];
                     playsinline
                     muted
                 >
-                    <source src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/视频/视频4.mp4" type="video/mp4">
+                    <source src="视频/视频4.mp4" type="video/mp4">
                     您的浏览器不支持视频播放。
                 </video>
                 
@@ -2572,6 +3132,7 @@ var _hmt = _hmt || [];
                             </svg>
                         </button>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -2637,29 +3198,41 @@ var _hmt = _hmt || [];
                 <p class="oura-section-subtitle" data-zh="前沿科技，引领未来" data-en="Cutting-edge Technology, Leading the Future" data-tw="前沿科技，引領未來">前沿科技，引领未来</p>
             </div>
 
-            <div class="oura-grid oura-grid-3">
-                <div class="oura-feature fade-in">
-                    <div class="oura-feature-icon" style="background: linear-gradient(135deg, var(--oura-blue) 0%, #4fc3f7 100%);">
-                        <i data-lucide="cpu"></i>
+            <div class="tech-grid">
+                <div class="tech-card-container fade-in">
+                    <div class="tech-card">
+                        <div class="img-content">
+                            <i data-lucide="cpu"></i>
+                        </div>
+                        <div class="content">
+                            <p class="heading" data-zh="AI芯片技术" data-en="AI Chip Technology" data-tw="AI芯片技術">AI芯片技术</p>
+                            <p class="para" data-zh="自主研发的AI处理芯片，实现边缘计算和实时数据分析" data-en="Self-developed AI processing chips for edge computing and real-time data analysis" data-tw="自主研發的AI處理芯片，實現邊緣計算和實時數據分析">自主研发的AI处理芯片，实现边缘计算和实时数据分析</p>
+                        </div>
                     </div>
-                    <h3 class="oura-feature-title" data-zh="AI芯片技术" data-en="AI Chip Technology" data-tw="AI芯片技術">AI芯片技术</h3>
-                    <p class="oura-feature-text" data-zh="自主研发的AI处理芯片，实现边缘计算和实时数据分析" data-en="Self-developed AI processing chips for edge computing and real-time data analysis" data-tw="自主研發的AI處理芯片，實現邊緣計算和實時數據分析">自主研发的AI处理芯片，实现边缘计算和实时数据分析</p>
                 </div>
 
-                <div class="oura-feature fade-in">
-                    <div class="oura-feature-icon" style="background: linear-gradient(135deg, var(--oura-green) 0%, #66bb6a 100%);">
-                        <i data-lucide="leaf"></i>
+                <div class="tech-card-container fade-in">
+                    <div class="tech-card">
+                        <div class="img-content">
+                            <i data-lucide="leaf"></i>
+                        </div>
+                        <div class="content">
+                            <p class="heading" data-zh="生物传感器" data-en="Biosensors" data-tw="生物傳感器">生物传感器</p>
+                            <p class="para" data-zh="高精度生物传感器，24小时监测生理指标变化" data-en="High-precision biosensors for 24-hour monitoring of physiological indicators" data-tw="高精度生物傳感器，24小時監測生理指標變化">高精度生物传感器，24小时监测生理指标变化</p>
+                        </div>
                     </div>
-                    <h3 class="oura-feature-title" data-zh="生物传感器" data-en="Biosensors" data-tw="生物傳感器">生物传感器</h3>
-                    <p class="oura-feature-text" data-zh="高精度生物传感器，24小时监测生理指标变化" data-en="High-precision biosensors for 24-hour monitoring of physiological indicators" data-tw="高精度生物傳感器，24小時監測生理指標變化">高精度生物传感器，24小时监测生理指标变化</p>
                 </div>
 
-                <div class="oura-feature fade-in">
-                    <div class="oura-feature-icon" style="background: linear-gradient(135deg, var(--oura-accent) 0%, #ff8a65 100%);">
-                        <i data-lucide="shield"></i>
+                <div class="tech-card-container fade-in">
+                    <div class="tech-card">
+                        <div class="img-content">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="content">
+                            <p class="heading" data-zh="数据安全" data-en="Data Security" data-tw="數據安全">数据安全</p>
+                            <p class="para" data-zh="端到端加密技术，确保用户隐私和数据安全" data-en="End-to-end encryption technology ensuring user privacy and data security" data-tw="端到端加密技術，確保用戶隱私和數據安全">端到端加密技术，确保用户隐私和数据安全</p>
+                        </div>
                     </div>
-                    <h3 class="oura-feature-title" data-zh="数据安全" data-en="Data Security" data-tw="數據安全">数据安全</h3>
-                    <p class="oura-feature-text" data-zh="端到端加密技术，确保用户隐私和数据安全" data-en="End-to-end encryption technology ensuring user privacy and data security" data-tw="端到端加密技術，確保用戶隱私和數據安全">端到端加密技术，确保用户隐私和数据安全</p>
                 </div>
             </div>
         </div>
@@ -2708,23 +3281,34 @@ var _hmt = _hmt || [];
                 </div>
 
                 <div class="fade-in">
-                    <div class="oura-card">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; text-align: center;">
-                            <div>
-                                <div style="font-size: 48px; font-weight: 300; margin-bottom: 8px; color: var(--oura-white);">50+</div>
-                                <div style="color: var(--oura-light-gray); font-size: 14px;" data-zh="专利技术" data-en="Patents" data-tw="專利技術">专利技术</div>
+                    <div class="core-strength-container" id="coreStrengthCard">
+                        <!-- 主卡片 -->
+                        <div class="core-strength-card">
+                            <span class="card-title" data-zh="核心竞争力" data-en="Core Strengths" data-tw="核心競爭力">核心竞争力</span>
+                        </div>
+                        <!-- 展开区域 -->
+                        <div class="core-strength-expand">
+                            <!-- 上方数据 -->
+                            <div class="core-strength-upper">
+                                <div class="strength-item">
+                                    <div class="number">50+</div>
+                                    <div class="label" data-zh="专利技术" data-en="Patents" data-tw="專利技術">专利技术</div>
+                                </div>
+                                <div class="strength-item">
+                                    <div class="number">100K+</div>
+                                    <div class="label" data-zh="用户信赖" data-en="Users Trust" data-tw="用戶信賴">用户信赖</div>
+                                </div>
                             </div>
-                            <div>
-                                <div style="font-size: 48px; font-weight: 300; margin-bottom: 8px; color: var(--oura-white);">100K+</div>
-                                <div style="color: var(--oura-light-gray); font-size: 14px;" data-zh="用户信赖" data-en="Users Trust" data-tw="用戶信賴">用户信赖</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 48px; font-weight: 300; margin-bottom: 8px; color: var(--oura-white);">5年</div>
-                                <div style="color: var(--oura-light-gray); font-size: 14px;" data-zh="行业经验" data-en="Industry Experience" data-tw="行業經驗">行业经验</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 48px; font-weight: 300; margin-bottom: 8px; color: var(--oura-white);">24/7</div>
-                                <div style="color: var(--oura-light-gray); font-size: 14px;" data-zh="技术支持" data-en="Technical Support" data-tw="技術支持">技术支持</div>
+                            <!-- 下方数据 -->
+                            <div class="core-strength-lower">
+                                <div class="strength-item">
+                                    <div class="number">5年</div>
+                                    <div class="label" data-zh="行业经验" data-en="Industry Experience" data-tw="行業經驗">行业经验</div>
+                                </div>
+                                <div class="strength-item">
+                                    <div class="number">24/7</div>
+                                    <div class="label" data-zh="技术支持" data-en="Technical Support" data-tw="技術支持">技术支持</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2744,105 +3328,128 @@ var _hmt = _hmt || [];
             <div style="max-width: 800px; margin: 0 auto;">
 
 
-                <!-- FAQ Items -->
+                <!-- FAQ Items - 3D 翻转卡片 -->
                 <div class="fade-in">
-                                <div style="display: grid; gap: 16px;">
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring的电池续航时间是多久？" data-en="How long does the AZ Ring battery last?" data-tw="AZ Ring的電池續航時間是多久？">AZ Ring的电池续航时间是多久？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                                        </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。" data-en="AZ Ring features an efficient lithium battery that lasts up to 7 days under normal usage. Actual battery life depends on usage frequency and enabled features. Full charge takes approximately 2 hours." data-tw="AZ Ring配備高效鋰電池，正常使用情況下可續航7天。具體續航時間取決於使用頻率和功能開啟情況。充電時間約2小時即可充滿。">AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。</p>
-                                        </div>
-                                    </div>
-                                        </div>
-
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring防水吗？可以游泳时佩戴吗？" data-en="Is AZ Ring waterproof? Can I wear it while swimming?" data-tw="AZ Ring防水嗎？可以游泳時佩戴嗎？">AZ Ring防水吗？可以游泳时佩戴吗？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                                        </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="是的，AZ Ring具有IPX8防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。" data-en="Yes, AZ Ring has IPX8 water resistance rating and can be worn while swimming and showering. However, avoid using it in hot tubs or saunas as high temperatures may affect device performance." data-tw="是的，AZ Ring具有IPX8防水等級，可以在游泳、洗澡時正常佩戴。但請避免在熱水浴缸或桑拿房中使用，高溫可能影響設備性能。">是的，AZ Ring具有IPX8防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。</p>
-                                    </div>
+                    <div style="display: grid; gap: 20px;">
+                        <!-- FAQ 1 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="AZ Ring的电池续航时间是多久？" data-en="How long does the AZ Ring battery last?" data-tw="AZ Ring的電池續航時間是多久？">AZ Ring的电池续航时间是多久？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="电池续航" data-en="Battery Life" data-tw="電池續航">电池续航</h4>
+                                    <p data-zh="AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。" data-en="AZ Ring features an efficient lithium battery that lasts up to 7 days under normal usage. Actual battery life depends on usage frequency and enabled features. Full charge takes approximately 2 hours." data-tw="AZ Ring配備高效鋰電池，正常使用情況下可續航7天。具體續航時間取決於使用頻率和功能開啟情況。充電時間約2小時即可充滿。">AZ Ring配备高效锂电池，正常使用情况下可续航7天。具体续航时间取决于使用频率和功能开启情况。充电时间约2小时即可充满。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
+                        </div>
 
-
-
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="如何清洁和保养AZ Ring？" data-en="How to clean and maintain AZ Ring?" data-tw="如何清潔和保養AZ Ring？">如何清洁和保养AZ Ring？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="建议每周用温水和中性肥皂轻柔清洁，避免使用化学清洁剂。定期检查充电接口，保持干燥。长期不使用时，请充电至50%后存放在干燥环境中。" data-en="We recommend weekly gentle cleaning with warm water and mild soap, avoiding chemical cleaners. Regularly check charging contacts and keep them dry. For long-term storage, charge to 50% and store in a dry environment." data-tw="建議每週用溫水和中性肥皂輕柔清潔，避免使用化學清潔劑。定期檢查充電接口，保持乾燥。長期不使用時，請充電至50%後存放在乾燥環境中。">建议每周用温水和中性肥皂轻柔清洁，避免使用化学清洁剂。定期检查充电接口，保持干燥。长期不使用时，请充电至50%后存放在干燥环境中。</p>
+                        <!-- FAQ 2 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="AZ Ring防水吗？可以游泳时佩戴吗？" data-en="Is AZ Ring waterproof? Can I wear it while swimming?" data-tw="AZ Ring防水嗎？可以游泳時佩戴嗎？">AZ Ring防水吗？可以游泳时佩戴吗？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="防水性能" data-en="Water Resistance" data-tw="防水性能">防水性能</h4>
+                                    <p data-zh="是的，AZ Ring具有IP68防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。" data-en="Yes, AZ Ring has IP68 water resistance rating and can be worn while swimming and showering. However, avoid using it in hot tubs or saunas as high temperatures may affect device performance." data-tw="是的，AZ Ring具有IP68防水等級，可以在游泳、洗澡時正常佩戴。但請避免在熱水浴缸或桑拿房中使用，高溫可能影響設備性能。">是的，AZ Ring具有IP68防水等级，可以在游泳、洗澡时正常佩戴。但请避免在热水浴缸或桑拿房中使用，高温可能影响设备性能。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
                         </div>
 
 
 
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="数据隐私和安全如何保障？" data-en="How is data privacy and security ensured?" data-tw="數據隱私和安全如何保障？">数据隐私和安全如何保障？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。" data-en="We use end-to-end encryption to protect your health data, with all transmissions secured by AES-256 encryption. Data is only stored on your device and our secure servers, and we never share personal health information with third parties." data-tw="我們採用端到端加密技術保護您的健康數據，所有數據傳輸均經過AES-256加密。數據僅存儲在您的設備和我們的安全服務器上，絕不會與第三方共享個人健康信息。">我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。</p>
-                        </div>
-                    </div>
-                </div>
-
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring支持哪些手机系统？" data-en="Which mobile systems does AZ Ring support?" data-tw="AZ Ring支持哪些手機系統？">AZ Ring支持哪些手机系统？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。" data-en="AZ Ring supports iOS 12.0 and above, and Android 8.0 and above. Our app is available on both App Store and Google Play Store, ensuring perfect compatibility with mainstream smartphones." data-tw="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我們的APP在App Store和Google Play商店均可下載，確保與主流智能手機完美兼容。">AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。</p>
+                        <!-- FAQ 3 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="如何清洁和保养AZ Ring？" data-en="How to clean and maintain AZ Ring?" data-tw="如何清潔和保養AZ Ring？">如何清洁和保养AZ Ring？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="清洁保养" data-en="Cleaning & Maintenance" data-tw="清潔保養">清洁保养</h4>
+                                    <p data-zh="建议每周用温水和中性肥皂轻柔清洁，避免使用化学清洁剂。定期检查充电接口，保持干燥。长期不使用时，请充电至50%后存放在干燥环境中。" data-en="We recommend weekly gentle cleaning with warm water and mild soap, avoiding chemical cleaners. Regularly check charging contacts and keep them dry. For long-term storage, charge to 50% and store in a dry environment." data-tw="建議每週用溫水和中性肥皂輕柔清潔，避免使用化學清潔劑。定期檢查充電接口，保持乾燥。長期不使用時，請充電至50%後存放在乾燥環境中。">建议每周用温水和中性肥皂轻柔清洁，避免使用化学清洁剂。定期检查充电接口，保持干燥。长期不使用时，请充电至50%后存放在干燥环境中。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="如何选择适合的戒指尺寸？" data-en="How to choose the right ring size?" data-tw="如何選擇適合的戒指尺寸？">如何选择适合的戒指尺寸？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。" data-en="AZLG brand uses finger mold as the standard for size measurement. We provide professional finger mold measurement services to ensure you get the most accurate size. You can also contact our customer service team for detailed measurement guidance." data-tw="AZLG品牌尺寸測量方式以指模為準。我們提供專業的指模測量服務，確保您獲得最準確的尺寸。您也可以聯繫我們的客服團隊獲取詳細的測量指導。">AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。</p>
+                        <!-- FAQ 4 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="数据隐私和安全如何保障？" data-en="How is data privacy and security ensured?" data-tw="數據隱私和安全如何保障？">数据隐私和安全如何保障？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="数据安全" data-en="Data Security" data-tw="數據安全">数据安全</h4>
+                                    <p data-zh="我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。" data-en="We use end-to-end encryption to protect your health data, with all transmissions secured by AES-256 encryption. Data is only stored on your device and our secure servers, and we never share personal health information with third parties." data-tw="我們採用端到端加密技術保護您的健康數據，所有數據傳輸均經過AES-256加密。數據僅存儲在您的設備和我們的安全服務器上，絕不會與第三方共享個人健康信息。">我们采用端到端加密技术保护您的健康数据，所有数据传输均经过AES-256加密。数据仅存储在您的设备和我们的安全服务器上，绝不会与第三方共享个人健康信息。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="AZ Ring的保修政策是什么？" data-en="What is AZ Ring's warranty policy?" data-tw="AZ Ring的保修政策是什麼？">AZ Ring的保修政策是什么？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
-                            </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="AZ Ring提供12个月标准保修服务，涵盖制造缺陷和功能故障。我们还提供延长保修选项，让您享受更长期的保障。保修期内，我们提供免费维修或更换服务。" data-en="AZ Ring provides 12-month standard warranty covering manufacturing defects and functional failures. We also offer extended warranty options for longer protection. During the warranty period, we provide free repair or replacement services." data-tw="AZ Ring提供12個月標準保修服務，涵蓋製造缺陷和功能故障。我們還提供延長保修選項，讓您享受更長期的保障。保修期內，我們提供免費維修或更換服務。">AZ Ring提供12个月标准保修服务，涵盖制造缺陷和功能故障。我们还提供延长保修选项，让您享受更长期的保障。保修期内，我们提供免费维修或更换服务。</p>
+                        <!-- FAQ 5 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="AZ Ring支持哪些手机系统？" data-en="Which mobile systems does AZ Ring support?" data-tw="AZ Ring支持哪些手機系統？">AZ Ring支持哪些手机系统？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="系统兼容" data-en="System Compatibility" data-tw="系統兼容">系统兼容</h4>
+                                    <p data-zh="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。" data-en="AZ Ring supports iOS 12.0 and above, and Android 8.0 and above. Our app is available on both App Store and Google Play Store, ensuring perfect compatibility with mainstream smartphones." data-tw="AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我們的APP在App Store和Google Play商店均可下載，確保與主流智能手機完美兼容。">AZ Ring支持iOS 12.0及以上版本和Android 8.0及以上版本。我们的APP在App Store和Google Play商店均可下载，确保与主流智能手机完美兼容。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="faq-item" style="background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
-                            <div class="faq-question" style="padding: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;" onclick="toggleFAQ(this)">
-                                <h4 style="color: var(--oura-white); font-size: 18px; margin: 0;" data-zh="如何联系售后服务？" data-en="How to contact after-sales service?" data-tw="如何聯繫售後服務？">如何联系售后服务？</h4>
-                                <i data-lucide="chevron-down" style="color: var(--oura-accent); transition: transform 0.3s ease; width: 20px; height: 20px;"></i>
+                        <!-- FAQ 6 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="如何选择适合的戒指尺寸？" data-en="How to choose the right ring size?" data-tw="如何選擇適合的戒指尺寸？">如何选择适合的戒指尺寸？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="尺寸选择" data-en="Size Selection" data-tw="尺寸選擇">尺寸选择</h4>
+                                    <p data-zh="AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。" data-en="AZLG brand uses finger mold as the standard for size measurement. We provide professional finger mold measurement services to ensure you get the most accurate size. You can also contact our customer service team for detailed measurement guidance." data-tw="AZLG品牌尺寸測量方式以指模為準。我們提供專業的指模測量服務，確保您獲得最準確的尺寸。您也可以聯繫我們的客服團隊獲取詳細的測量指導。">AZLG品牌尺寸测量方式以指模为准。我们提供专业的指模测量服务，确保您获得最准确的尺寸。您也可以联系我们的客服团队获取详细的测量指导。</p>
+                                    <span class="flip-hint">点击翻回</span>
+                                </div>
                             </div>
-                            <div class="faq-answer" style="padding: 0 24px; max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                                <div style="padding-bottom: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                                    <p style="color: var(--oura-light-gray); line-height: 1.6; margin: 0;" data-zh="您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。" data-en="You can contact our after-sales service team through multiple channels: WeChat official account, customer service hotline, online customer service, etc. Our professional team will provide you with timely and professional technical support and solutions." data-tw="您可以通過多種方式聯繫我們的售後服務團隊：微信公眾號、客服熱線、在線客服等。我們的專業團隊將為您提供及時、專業的技術支持和解決方案。">您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。</p>
+                        </div>
+
+                        <!-- FAQ 7 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="AZ Ring的保修政策是什么？" data-en="What is AZ Ring's warranty policy?" data-tw="AZ Ring的保修政策是什麼？">AZ Ring的保修政策是什么？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="保修政策" data-en="Warranty Policy" data-tw="保修政策">保修政策</h4>
+                                    <p data-zh="AZ Ring提供100天的标准保修服务，有质量问题只换不修
+特权激活可延长至1年内。" data-en="AZ Ring provides 12-month standard warranty covering manufacturing defects and functional failures. We also offer extended warranty options for longer protection. During the warranty period, we provide free repair or replacement services." data-tw="AZ Ring提供12個月標準保修服務，涵蓋製造缺陷和功能故障。我們還提供延長保修選項，讓您享受更長期的保障。保修期內，我們提供免費維修或更換服務。">AZ Ring提供12个月标准保修服务，涵盖制造缺陷和功能故障。我们还提供延长保修选项，让您享受更长期的保障。保修期内，我们提供免费维修或更换服务。</p>
+                                    <span class="flip-hint">点击翻回</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FAQ 8 -->
+                        <div class="faq-item" onclick="toggleFAQ(this)">
+                            <div class="faq-card-inner">
+                                <div class="faq-front">
+                                    <h4 data-zh="如何联系售后服务？" data-en="How to contact after-sales service?" data-tw="如何聯繫售後服務？">如何联系售后服务？</h4>
+                                    <i data-lucide="rotate-3d"></i>
+                                </div>
+                                <div class="faq-back">
+                                    <h4 data-zh="售后服务" data-en="After-sales Service" data-tw="售後服務">售后服务</h4>
+                                    <p data-zh="您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。" data-en="You can contact our after-sales service team through multiple channels: WeChat official account, customer service hotline, online customer service, etc. Our professional team will provide you with timely and professional technical support and solutions." data-tw="您可以通過多種方式聯繫我們的售後服務團隊：微信公眾號、客服熱線、在線客服等。我們的專業團隊將為您提供及時、專業的技術支持和解決方案。">您可以通过多种方式联系我们的售后服务团队：微信公众号、客服热线、在线客服等。我们的专业团队将为您提供及时、专业的技术支持和解决方案。</p>
+                                    <span class="flip-hint">点击翻回</span>
                                 </div>
                             </div>
                         </div>
@@ -3918,32 +4525,25 @@ var _hmt = _hmt || [];
             });
         });
 
-        // FAQ Toggle Function
+        // FAQ Toggle Function - 3D 翻转卡片版本
         function toggleFAQ(element) {
-            const faqItem = element.parentElement;
-            const answer = faqItem.querySelector('.faq-answer');
-            const icon = element.querySelector('i');
+            // element 现在是 .faq-item 本身（因为 onclick 在 .faq-item 上）
+            const faqItem = element.classList.contains('faq-item') ? element : element.closest('.faq-item');
+            if (!faqItem) return;
 
-            if (answer.style.maxHeight && answer.style.maxHeight !== '0px') {
-                // Close
-                answer.style.maxHeight = '0px';
-                icon.style.transform = 'rotate(0deg)';
-                element.style.background = 'transparent';
+            const isFlipped = faqItem.classList.contains('flipped');
+
+            if (isFlipped) {
+                // 翻回正面
+                faqItem.classList.remove('flipped');
             } else {
-                // Close all other FAQ items first
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    const otherAnswer = item.querySelector('.faq-answer');
-                    const otherIcon = item.querySelector('.faq-question i');
-                    const otherQuestion = item.querySelector('.faq-question');
-                    otherAnswer.style.maxHeight = '0px';
-                    otherIcon.style.transform = 'rotate(0deg)';
-                    otherQuestion.style.background = 'transparent';
+                // 先关闭其他所有卡片
+                document.querySelectorAll('.faq-item.flipped').forEach(item => {
+                    item.classList.remove('flipped');
                 });
 
-                // Open current
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-                icon.style.transform = 'rotate(180deg)';
-                element.style.background = 'rgba(255,255,255,0.05)';
+                // 翻转当前卡片
+                faqItem.classList.add('flipped');
             }
         }
 
@@ -4537,6 +5137,7 @@ var _hmt = _hmt || [];
                     this.isMuted = true;
                     this.hasStartedPlaying = false;
                     this.isDragging = false;
+                    this.titleHasShown = false;
                     
                     // 标题动画配置
                     this.titleFadeInTime = 1;      // 1秒时淡入
@@ -4818,22 +5419,17 @@ var _hmt = _hmt || [];
                         this.updateTitleAnimation();
                     });
                     
-                    // 视频开始播放时，确保标题显示
+                    // 视频开始播放时，确保标题显示（仅首次）
                     this.video.addEventListener('play', () => {
-                        if (this.video.currentTime < this.titleFadeOutTime) {
+                        if (this.video.currentTime < this.titleFadeOutTime && !this.titleHasShown) {
                             this.showTitle();
                         }
-                    });
-                    
-                    // 视频暂停时，显示标题
-                    this.video.addEventListener('pause', () => {
-                        this.showTitle();
                     });
                 }
                 
                 // 更新标题动画状态
                 updateTitleAnimation() {
-                    if (!this.titleOverlay) return;
+                    if (!this.titleOverlay || this.titleHasShown) return;
                     
                     const currentTime = this.video.currentTime;
                     
@@ -4845,6 +5441,7 @@ var _hmt = _hmt || [];
                     // 淡出阶段（5秒时开始淡出）
                     else if (currentTime >= this.titleFadeOutTime) {
                         this.hideTitle();
+                        this.titleHasShown = true;
                     }
                     // 显示阶段（1-5秒之间保持显示）
                     else if (currentTime >= this.titleFadeInTime && 
@@ -5205,23 +5802,33 @@ var _hmt = _hmt || [];
 
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry) {
+                    // 计算卡片中心点是否在视口中央
+                    const rect = entry.target.getBoundingClientRect();
+                    const cardCenterY = rect.top + rect.height / 2;
+                    const viewportCenterY = window.innerHeight / 2;
+                    const tolerance = 100; // 允许±100px的容差
+                    const isCentered = Math.abs(cardCenterY - viewportCenterY) < tolerance;
+                    
                     console.log('👁️ IntersectionObserver:', {
                         isIntersecting: entry.isIntersecting,
                         intersectionRatio: entry.intersectionRatio.toFixed(2),
+                        cardCenterY: cardCenterY.toFixed(0),
+                        viewportCenterY: viewportCenterY.toFixed(0),
+                        isCentered: isCentered,
                         wasOutOfView: wasOutOfView,
                         isScrollLocked: isScrollLocked
                     });
                     if (!entry.isIntersecting) {
                         wasOutOfView = true;
                         console.log('📤 离开视口，wasOutOfView = true');
-                    } else if (entry.isIntersecting && entry.intersectionRatio > 0.5 && wasOutOfView) {
+                    } else if (entry.isIntersecting && isCentered && wasOutOfView) {
                         isScrollLocked = true;
                         wasOutOfView = false;
                         container.style.pointerEvents = 'auto';
-                        console.log('🔒 锁定滑块！intersectionRatio:', entry.intersectionRatio.toFixed(2));
+                        console.log('🔒 锁定滑块！卡片中心在视口中央');
                     }
                 });
-            }, { threshold: [0, 0.5] });
+            }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] });
             observer.observe(container);
         }
 
@@ -5333,6 +5940,173 @@ var _hmt = _hmt || [];
             const c = document.querySelector('.radaville-container');
             if (c) c.style.display = window.innerWidth > 768 ? 'block' : 'none';
         });
+    })();
+    </script>
+
+    <!-- 视频滚动放大全屏效果 -->
+    <script>
+    (function() {
+        function initVideoScrollZoom() {
+            const section = document.getElementById('video-story');
+            const wrapper = document.getElementById('videoWrapper');
+            const video = document.getElementById('brand-story-video');
+            const titleOverlay = document.getElementById('videoTitleOverlay');
+            
+            if (!section || !wrapper || !video) return;
+            
+            let isFullscreen = false;
+            let hasStartedPlaying = false;
+            
+            function updateVideoScale() {
+                const rect = section.getBoundingClientRect();
+                const sectionHeight = section.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                
+                // 计算滚动进度 (0 到 1)
+                // 当 section 顶部到达视口顶部时开始，滚动 1 屏高度完成
+                const scrollStart = rect.top;
+                const scrollEnd = scrollStart + viewportHeight;
+                
+                let progress = 0;
+                if (scrollStart <= 0 && scrollEnd >= 0) {
+                    progress = Math.min(1, Math.abs(scrollStart) / viewportHeight);
+                } else if (scrollStart > 0) {
+                    progress = 0;
+                } else {
+                    progress = 1;
+                }
+                
+                // 计算缩放值：从 1 到全屏比例
+                const containerWidth = wrapper.parentElement.offsetWidth;
+                const targetScale = window.innerWidth / Math.min(containerWidth, 1320);
+                const scale = 1 + (targetScale - 1) * progress;
+                
+                // 计算圆角：从 16px 到 0px
+                const radius = 16 * (1 - progress);
+                
+                // 应用样式
+                wrapper.style.setProperty('--video-scale', scale);
+                wrapper.style.setProperty('--video-radius', radius + 'px');
+                
+                // 全屏状态处理
+                if (progress >= 0.95 && !isFullscreen) {
+                    isFullscreen = true;
+                    wrapper.classList.add('fullscreen');
+                    // 全屏时自动播放
+                    if (!hasStartedPlaying) {
+                        video.play().catch(() => {});
+                        hasStartedPlaying = true;
+                    }
+                } else if (progress < 0.95 && isFullscreen) {
+                    isFullscreen = false;
+                    wrapper.classList.remove('fullscreen');
+                }
+                
+
+            }
+            
+            // 使用 requestAnimationFrame 优化性能
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        updateVideoScale();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+            
+            // 初始化
+            updateVideoScale();
+        }
+        
+        // DOM 加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initVideoScrollZoom);
+        } else {
+            initVideoScrollZoom();
+        }
+    })();
+    </script>
+
+    <!-- 技术创新卡片滚动触发效果 -->
+    <script>
+    (function() {
+        function initTechCardObserver() {
+            const techCards = document.querySelectorAll('.tech-card-container');
+            if (techCards.length === 0) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        entry.target.classList.remove('in-view');
+                    }
+                });
+            }, {
+                threshold: 0.8,
+                rootMargin: '-150px'
+            });
+
+            techCards.forEach(card => observer.observe(card));
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTechCardObserver);
+        } else {
+            initTechCardObserver();
+        }
+    })();
+    </script>
+
+    <!-- 核心竞争力展开卡片滚动触发 -->
+    <script>
+    (function() {
+        function initCoreStrengthObserver() {
+            const container = document.getElementById('coreStrengthCard');
+            if (!container) return;
+
+            let hasExpanded = false;
+            let ticking = false;
+
+            function checkCenterPosition() {
+                if (hasExpanded) return;
+
+                const rect = container.getBoundingClientRect();
+                const cardCenterY = rect.top + rect.height / 2;
+                const viewportCenterY = window.innerHeight / 2;
+                const tolerance = 150; // 容差范围
+
+                if (Math.abs(cardCenterY - viewportCenterY) < tolerance) {
+                    container.classList.add('expanded');
+                    hasExpanded = true;
+                    // 展开后移除滚动监听
+                    window.removeEventListener('scroll', onScroll);
+                }
+            }
+
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        checkCenterPosition();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            // 初始检查
+            checkCenterPosition();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCoreStrengthObserver);
+        } else {
+            initCoreStrengthObserver();
+        }
     })();
     </script>
 
