@@ -1786,90 +1786,87 @@ var _hmt = _hmt || [];
                 margin-bottom: 0;
             }
 
-            /* ========== Radaville 3D堆叠滑块样式 ========== */
-            .radaville-container {
-                position: relative;
-                width: 100%;
-                height: 100svh;
+            /* ========== Feature Grid 两排网格布局样式 ========== */
+            .feature-grid-section {
                 background-color: var(--oura-black);
-                overflow: hidden;
+                padding: 100px 0;
             }
-            .radaville-slider {
-                position: absolute;
-                width: 100%;
-                height: 100svh;
-                perspective: 250px;
-                perspective-origin: 50% 100%;
-                overflow: hidden;
+            .feature-grid-header {
+                text-align: center;
+                max-width: 800px;
+                margin: 0 auto 60px;
+                padding: 0 20px;
             }
-            .radaville-slide {
-                position: absolute;
-                top: 45%;
-                left: 50%;
-                transform: translate3d(-50%, -50%, 0px);
-                width: 60%;
-                height: 500px;
-                border-radius: 0.25rem;
+            .feature-grid-title {
+                font-size: 42px;
+                font-weight: 500;
+                color: var(--oura-white);
+                margin-bottom: 16px;
+                letter-spacing: -0.02em;
+            }
+            .feature-grid-subtitle {
+                font-size: 18px;
+                color: rgba(255, 255, 255, 0.6);
+                margin-bottom: 8px;
+            }
+            .feature-grid-note {
+                font-size: 13px;
+                color: rgba(255, 255, 255, 0.4);
+            }
+            .feature-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 32px;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 40px;
+            }
+            .feature-grid-item {
                 display: flex;
-                justify-content: center;
-                align-items: center;
-                will-change: transform, opacity;
-                overflow: hidden;
+                flex-direction: column;
             }
-            .radaville-slide-image {
-                position: absolute;
-                top: 0;
-                left: 0;
+            .feature-grid-image {
                 width: 100%;
-                height: 100%;
+                aspect-ratio: 4/3;
                 object-fit: cover;
+                border-radius: 20px;
+                transition: transform 0.4s ease, box-shadow 0.4s ease;
             }
-            .radaville-slide-title {
-                color: rgba(255, 255, 255, 0.95);
-                font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-                font-size: 4rem;
-                font-weight: 300;
-                letter-spacing: 0.1em;
-                position: relative;
-                z-index: 2;
+            .feature-grid-item:hover .feature-grid-image {
+                transform: scale(1.03);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             }
-            .radaville-slide-title .word {
-                will-change: transform;
-                display: inline-block;
-                position: relative;
+            .feature-grid-label {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.8);
+                margin-top: 20px;
+                font-weight: 400;
             }
-            .radaville-indicators {
-                display: none;
-            }
-            .radaville-indicator {
-                width: 10px;
-                height: 10px;
-                border-radius: 50%;
-                background: rgba(255,255,255,0.4);
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: none;
-            }
-            .radaville-indicator:hover {
-                background: rgba(255,255,255,0.7);
-                transform: scale(1.2);
-            }
-            .radaville-indicator.active {
-                background: var(--oura-accent);
-                box-shadow: 0 0 10px rgba(255,107,53,0.5);
-            }
-            /* 移动端隐藏3D滑块 */
+            /* 移动端响应式 */
             @media (max-width: 768px) {
-                .radaville-container { display: none !important; }
-                .feature-showcase-mobile { display: block !important; }
+                .feature-grid-section { padding: 60px 0; }
+                .feature-grid-header { margin-bottom: 40px; }
+                .feature-grid-title { font-size: 28px; }
+                .feature-grid-subtitle { font-size: 16px; }
+                .feature-grid {
+                    grid-template-columns: 1fr;
+                    gap: 24px;
+                    padding: 0 20px;
+                }
+                .feature-showcase-mobile { display: none !important; }
+            }
+            /* 平板响应式 */
+            @media (min-width: 769px) and (max-width: 1024px) {
+                .feature-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 24px;
+                    padding: 0 30px;
+                }
+                .feature-grid-title { font-size: 36px; }
             }
             /* 桌面端隐藏移动端布局 */
             @media (min-width: 769px) {
                 .feature-showcase-mobile { display: none !important; }
-            }
-            @media (max-width: 1000px) {
-                .radaville-slide { width: 70%; }
-                .radaville-slide-title { font-size: 2rem; letter-spacing: 0; }
             }
 
             /* ========== 查看详情按钮 (learn-more 风格) ========== */
@@ -3138,10 +3135,38 @@ var _hmt = _hmt || [];
         </div>
     </section>
 
-    <!-- Feature Showcase - 3D堆叠滑块（桌面端） -->
-    <section class="radaville-container" id="feature-slider-3d">
-        <div class="radaville-slider"></div>
-        <div class="radaville-indicators"></div>
+    <!-- Feature Grid - 两排网格布局 -->
+    <section class="feature-grid-section" id="feature-grid">
+        <div class="feature-grid-header">
+            <h2 class="feature-grid-title" data-zh="智能健康，适合每一个人" data-en="Smart Health for Everyone" data-tw="智能健康，適合每一個人">智能健康，适合每一个人</h2>
+            <p class="feature-grid-subtitle" data-zh="无论您的生活方式如何，AZ Ring 都能完美融入" data-en="No matter your lifestyle, AZ Ring fits perfectly" data-tw="無論您的生活方式如何，AZ Ring 都能完美融入">无论您的生活方式如何，AZ Ring 都能完美融入</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示1.jpg" loading="lazy" alt="运动爱好者">
+                <span class="feature-grid-label" data-zh="运动爱好者" data-en="Fitness Enthusiast" data-tw="運動愛好者">运动爱好者</span>
+            </div>
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示2.jpg" loading="lazy" alt="健康管理者">
+                <span class="feature-grid-label" data-zh="健康管理者" data-en="Health Manager" data-tw="健康管理者">健康管理者</span>
+            </div>
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" loading="lazy" alt="商务人士">
+                <span class="feature-grid-label" data-zh="商务人士" data-en="Business Professional" data-tw="商務人士">商务人士</span>
+            </div>
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" loading="lazy" alt="睡眠优化者">
+                <span class="feature-grid-label" data-zh="睡眠优化者" data-en="Sleep Optimizer" data-tw="睡眠優化者">睡眠优化者</span>
+            </div>
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示7.jpg" loading="lazy" alt="科技尝鲜者">
+                <span class="feature-grid-label" data-zh="科技尝鲜者" data-en="Tech Enthusiast" data-tw="科技嘗鮮者">科技尝鲜者</span>
+            </div>
+            <div class="feature-grid-item fade-in">
+                <img class="feature-grid-image" src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示8.jpg" loading="lazy" alt="时尚达人">
+                <span class="feature-grid-label" data-zh="时尚达人" data-en="Fashion Forward" data-tw="時尚達人">时尚达人</span>
+            </div>
+        </div>
     </section>
 
     <!-- Feature Showcase Section - 原有布局（移动端） -->
@@ -5704,243 +5729,6 @@ var _hmt = _hmt || [];
         } else {
             console.error('❌ Lucide Icons 未加载');
         }
-    </script>
-
-    <!-- Radaville 3D堆叠滑块 -->
-    <script>
-    (function() {
-        const slideData = [
-            { title: "终极可穿戴设备", image: "https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示1.jpg" },
-            { title: "量身定制的健康指导", image: "https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示2.jpg" },
-            { title: "耐用性保障", image: "https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示3.jpg" },
-            { title: "完美合适，完美的功能", image: "https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/首页与商品详情/功能展示4.jpg" }
-        ];
-        let container, slider, indicators;
-        let frontSlideIndex = 0;
-        let isSliderAnimating = false;
-        let isScrollLocked = false;
-        let wasOutOfView = true;
-
-        function splitText(title) {
-            const text = title.textContent;
-            title.innerHTML = '';
-            text.split('').forEach((char) => {
-                const span = document.createElement('span');
-                span.className = 'word';
-                span.textContent = char;
-                title.appendChild(span);
-            });
-            return { words: title.querySelectorAll('.word') };
-        }
-
-        function initRadavilleSlider() {
-            if (window.innerWidth <= 768) return;
-            container = document.querySelector('.radaville-container');
-            slider = document.querySelector('.radaville-slider');
-            indicators = document.querySelector('.radaville-indicators');
-            if (!container || !slider || !indicators) return;
-
-            slider.innerHTML = '';
-            indicators.innerHTML = '';
-
-            slideData.forEach((data, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'radaville-slide';
-                slide.innerHTML = '<img src="' + data.image + '" alt="' + data.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + data.title + '</h1>';
-                slider.appendChild(slide);
-
-                const indicator = document.createElement('button');
-                indicator.className = 'radaville-indicator' + (index === 0 ? ' active' : '');
-                indicator.onclick = function() { goToSlide(index); };
-                indicators.appendChild(indicator);
-            });
-
-            const slides = document.querySelectorAll('.radaville-slide');
-            slides.forEach((slide) => {
-                const title = slide.querySelector('.radaville-slide-title');
-                splitText(title);
-            });
-            slides.forEach((slide, i) => {
-                gsap.set(slide, { y: (-15 + 15 * i) + '%', z: 15 * i, opacity: 1 });
-            });
-
-            setupEventListeners();
-            console.log('✅ Radaville 3D滑块已初始化');
-        }
-
-        function setupEventListeners() {
-            if (!container) return;
-            let wheelAccumulator = 0;
-            const wheelThreshold = 40;
-            let isWheelActive = false;
-
-            container.addEventListener('wheel', function(e) {
-                if (!isScrollLocked) return;
-                e.preventDefault();
-                if (isSliderAnimating || isWheelActive) return;
-                wheelAccumulator += Math.abs(e.deltaY);
-                if (wheelAccumulator >= wheelThreshold) {
-                    isWheelActive = true;
-                    wheelAccumulator = 0;
-                    handleSlideChange(e.deltaY > 0 ? 'down' : 'up');
-                    setTimeout(function() { isWheelActive = false; }, 800);
-                }
-            }, { passive: false });
-
-            let touchStartY = 0;
-            container.addEventListener('touchstart', function(e) {
-                if (isSliderAnimating) return;
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-            container.addEventListener('touchend', function(e) {
-                if (isSliderAnimating) return;
-                const deltaY = touchStartY - e.changedTouches[0].clientY;
-                if (Math.abs(deltaY) > 35) {
-                    handleSlideChange(deltaY > 0 ? 'down' : 'up');
-                }
-            }, { passive: true });
-
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    // 计算卡片中心点是否在视口中央
-                    const rect = entry.target.getBoundingClientRect();
-                    const cardCenterY = rect.top + rect.height / 2;
-                    const viewportCenterY = window.innerHeight / 2;
-                    const tolerance = 100; // 允许±100px的容差
-                    const isCentered = Math.abs(cardCenterY - viewportCenterY) < tolerance;
-                    
-                    console.log('👁️ IntersectionObserver:', {
-                        isIntersecting: entry.isIntersecting,
-                        intersectionRatio: entry.intersectionRatio.toFixed(2),
-                        cardCenterY: cardCenterY.toFixed(0),
-                        viewportCenterY: viewportCenterY.toFixed(0),
-                        isCentered: isCentered,
-                        wasOutOfView: wasOutOfView,
-                        isScrollLocked: isScrollLocked
-                    });
-                    if (!entry.isIntersecting) {
-                        wasOutOfView = true;
-                        console.log('📤 离开视口，wasOutOfView = true');
-                    } else if (entry.isIntersecting && isCentered && wasOutOfView) {
-                        isScrollLocked = true;
-                        wasOutOfView = false;
-                        container.style.pointerEvents = 'auto';
-                        console.log('🔒 锁定滑块！卡片中心在视口中央');
-                    }
-                });
-            }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] });
-            observer.observe(container);
-        }
-
-        function handleSlideChange(direction) {
-            if (isSliderAnimating) return;
-            if (direction === 'down' && frontSlideIndex >= 3) {
-                isScrollLocked = false;
-                container.style.pointerEvents = 'none';
-                return;
-            }
-            if (direction === 'up' && frontSlideIndex <= 0) {
-                isScrollLocked = false;
-                container.style.pointerEvents = 'none';
-                return;
-            }
-            isSliderAnimating = true;
-            if (direction === 'down') handleScrollDown();
-            else handleScrollUp();
-        }
-
-        function goToSlide(targetIndex) {
-            if (isSliderAnimating || targetIndex === frontSlideIndex) return;
-            const direction = targetIndex > frontSlideIndex ? 'down' : 'up';
-            const steps = Math.abs(targetIndex - frontSlideIndex);
-            let currentStep = 0;
-            function doStep() {
-                if (currentStep >= steps) return;
-                currentStep++;
-                handleSlideChange(direction);
-                setTimeout(doStep, 850);
-            }
-            doStep();
-        }
-
-        function updateIndicators() {
-            const btns = document.querySelectorAll('.radaville-indicator');
-            btns.forEach((btn, i) => {
-                btn.classList.toggle('active', i === frontSlideIndex);
-            });
-        }
-
-        function handleScrollUp() {
-            const slides = document.querySelectorAll('.radaville-slide');
-            const lastSlide = slides[slides.length - 1];
-            frontSlideIndex = (frontSlideIndex - 1 + slideData.length) % slideData.length;
-            const newBackIndex = (frontSlideIndex - 1 + slideData.length) % slideData.length;
-            const prevSlideData = slideData[newBackIndex];
-
-            const newSlide = document.createElement('div');
-            newSlide.className = 'radaville-slide';
-            newSlide.innerHTML = '<img src="' + prevSlideData.image + '" alt="' + prevSlideData.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + prevSlideData.title + '</h1>';
-            const newTitle = newSlide.querySelector('.radaville-slide-title');
-            const newSplit = splitText(newTitle);
-            gsap.set(newSplit.words, { yPercent: -100 });
-            slider.insertBefore(newSlide, slides[0]);
-            gsap.set(newSlide, { y: '-30%', z: -15, opacity: 0 });
-
-            const allSlides = document.querySelectorAll('.radaville-slide');
-            allSlides.forEach((slide, i) => {
-                gsap.to(slide, {
-                    y: (-15 + 15 * i) + '%', z: 15 * i, opacity: i < 0 ? 0 : 1,
-                    duration: 0.75, ease: 'power3.inOut',
-                    onComplete: function() { if (i === allSlides.length - 1) { lastSlide.remove(); isSliderAnimating = false; } }
-                });
-            });
-            gsap.to(newSplit.words, { yPercent: 0, duration: 0.75, ease: 'power4.out', stagger: 0.08, delay: 0.4 });
-            updateIndicators();
-        }
-
-        function handleScrollDown() {
-            const slides = document.querySelectorAll('.radaville-slide');
-            const firstSlide = slides[0];
-            frontSlideIndex = (frontSlideIndex + 1) % slideData.length;
-            const newBackIndex = (frontSlideIndex + 3) % slideData.length;
-            const nextSlideData = slideData[newBackIndex];
-
-            const newSlide = document.createElement('div');
-            newSlide.className = 'radaville-slide';
-            newSlide.innerHTML = '<img src="' + nextSlideData.image + '" alt="' + nextSlideData.title + '" class="radaville-slide-image"><h1 class="radaville-slide-title">' + nextSlideData.title + '</h1>';
-            const newTitle = newSlide.querySelector('.radaville-slide-title');
-            const newSplit = splitText(newTitle);
-            gsap.set(newSplit.words, { yPercent: 100 });
-            slider.appendChild(newSlide);
-            gsap.set(newSlide, { y: (-15 + 15 * 4) + '%', z: 15 * 4, opacity: 0 });
-
-            const allSlides = document.querySelectorAll('.radaville-slide');
-            allSlides.forEach((slide, i) => {
-                const targetPosition = i - 1;
-                gsap.to(slide, {
-                    y: (-15 + 15 * targetPosition) + '%', z: 15 * targetPosition, opacity: targetPosition < 0 ? 0 : 1,
-                    duration: 0.75, ease: 'power3.inOut',
-                    onComplete: function() { if (i === 0) { firstSlide.remove(); isSliderAnimating = false; } }
-                });
-            });
-            gsap.to(newSplit.words, { yPercent: 0, duration: 0.75, ease: 'power4.out', stagger: 0.08, delay: 0.4 });
-            updateIndicators();
-        }
-
-        function initWhenReady() {
-            if (typeof gsap === 'undefined') { setTimeout(initWhenReady, 100); return; }
-            initRadavilleSlider();
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initWhenReady);
-        } else {
-            initWhenReady();
-        }
-        window.addEventListener('resize', function() {
-            const c = document.querySelector('.radaville-container');
-            if (c) c.style.display = window.innerWidth > 768 ? 'block' : 'none';
-        });
-    })();
     </script>
 
     <!-- 视频滚动放大全屏效果 -->
