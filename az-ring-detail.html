@@ -1043,79 +1043,124 @@
             opacity: 1;
         }
 
+        /* =========================================
+           方案五：CSS 3D 拟态手机 (The CSS Phone Ultimate)
+           ========================================= */
+
+        /* 1. 舞台容器：改为左右分栏布局 */
         .showcase-panel-images {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 20px;
-            align-items: start;
-            max-width: 1200px;
+            display: grid !important;
+            grid-template-columns: 1fr 1.1fr;
+            grid-template-rows: repeat(3, auto);
+            gap: 24px 60px;
+            align-items: center;
+            padding: 40px 20px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        .image-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        /* 2. 左侧主角：手搓 CSS 手机壳 */
         .image-item:first-child {
-            grid-column: 1;
+            grid-column: 1 / 2;
+            grid-row: 1 / 4;
+            position: relative;
+            z-index: 10;
+            justify-self: center;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .image-item:not(:first-child) {
-            grid-column: span 1;
-        }
-
-        .image-item {
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-            margin-bottom: 12px;
-        }
-        
+        /* 手机壳核心代码 */
         .image-item:first-child img {
-            width: 100%;
-            aspect-ratio: 3 / 4;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-            margin-bottom: 12px;
-        }
-        .image-item:not(:first-child) img {
-            width: 300px;
-            height: 225px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
-            margin-bottom: 12px;
-        }
-        .image-item img {
+            display: block;
+            width: 300px !important;
             height: auto !important;
+            border-radius: 50px !important;
+            border: 10px solid #252525 !important;
+            box-shadow:
+                inset 0 0 0 2px #000,
+                inset 0 4px 6px rgba(255,255,255,0.15),
+                30px 40px 60px -10px rgba(0,0,0,0.6),
+                0 0 100px -30px rgba(255, 107, 53, 0.25) !important;
+            transform: rotate(-3deg) translateY(0);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            object-fit: cover;
+            margin-bottom: 0 !important;
         }
 
-        .image-description {
-            color: var(--oura-light-gray);
-            font-size: 12px;
-            text-align: left;
-            line-height: 1.5;
-            margin: 0;
-            padding: 8px 0;
+        /* 交互：鼠标悬停时，手机"扶正"并浮起 */
+        .image-item:first-child:hover img {
+            transform: rotate(0deg) translateY(-15px) scale(1.02);
+            border-color: #333 !important;
+            box-shadow:
+                inset 0 0 0 2px #000,
+                inset 0 4px 6px rgba(255,255,255,0.2),
+                40px 50px 80px -10px rgba(0,0,0,0.7),
+                0 0 120px -20px rgba(255, 107, 53, 0.4) !important;
         }
 
-        .image-item:not(:first-child) .image-description {
+        /* 3. 右侧列表：磨砂玻璃卡片 */
+        .image-item:not(:first-child) {
+            grid-column: 2 / 3;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            border-radius: 20px !important;
+            padding: 20px !important;
+            transition: all 0.3s ease;
+            cursor: default;
+            margin-bottom: 0 !important;
         }
 
+        /* 卡片悬停效果 */
+        .image-item:not(:first-child):hover {
+            background: rgba(255,255,255,0.08) !important;
+            border-color: var(--oura-accent) !important;
+            transform: translateX(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+        }
+
+        /* 右侧小图：变成圆角图标 */
+        .image-item:not(:first-child) img {
+            width: 70px !important;
+            height: 70px !important;
+            border-radius: 16px !important;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+            flex-shrink: 0;
+            margin-bottom: 0 !important;
+        }
+
+        /* 4. 文字排版优化 */
+        .image-item:not(:first-child) .image-description {
+            text-align: left !important;
+            display: flex !important;
+            flex-direction: column;
+            padding: 0 !important;
+            gap: 6px;
+        }
+
+        /* 伪元素技巧：把 data-title 变成醒目的标题 */
         .image-item:not(:first-child) .image-description::before {
-            content: attr(data-title);
-            font-size: 18px;
+            font-size: 18px !important;
+            color: var(--oura-white) !important;
+            margin-bottom: 0;
             font-weight: 600;
-            color: var(--oura-white);
-            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 描述文字变淡 */
+        .image-item:not(:first-child) .image-description {
+            font-size: 13px !important;
+            color: var(--oura-light-gray) !important;
+            line-height: 1.5;
         }
 
         .image-item:first-child .image-description {
@@ -1127,23 +1172,2388 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        @media (max-width: 768px) {
-            .showcase-panel-images {
-                grid-template-columns: 1fr;
-                gap: 15px;
-                align-items: center;
+        /* =========================================
+           方案二优化版：图片推挤 + 深度渐变 (Ultimate Accordion)
+           ========================================= */
+
+        /* 布局容器 */
+        .accordion-layout {
+            display: flex !important;
+            gap: 50px;
+            align-items: stretch;
+            height: 750px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* 左侧手机 (保持不变) */
+        .phone-mockup {
+            flex: 0 0 320px;
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .phone-mockup img {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 45px !important;
+            border: 10px solid #252525 !important;
+            box-shadow: inset 0 0 0 2px #000, 30px 40px 60px -10px rgba(0,0,0,0.6) !important;
+            transform: rotate(-3deg);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .phone-mockup:hover img {
+            transform: rotate(0deg) scale(1.02) translateY(-10px);
+        }
+
+        /* 右侧手风琴容器 */
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
+        }
+
+        /* 单个卡片 */
+        .accordion-card {
+            position: relative;
+            flex: 1;
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* 激活状态 */
+        .accordion-card.active,
+        .accordion-card:hover {
+            flex: 2;
+            border-color: var(--oura-accent);
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+        }
+
+        /* 卡片内部布局 */
+        .card-content {
+            display: flex;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+
+        /* --- 文字区域 (深度渐变层) --- */
+        .text-group {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 35%;
+            padding: 24px 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(90deg,
+                #0a0a0a 0%,
+                #0a0a0a 40%,
+                rgba(10, 10, 10, 0.8) 70%,
+                transparent 100%);
+            transition: width 0.5s ease;
+        }
+
+        /* 序号 */
+        .step-num {
+            font-size: 13px;
+            color: var(--oura-accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* 标题 */
+        .text-group h3 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 0;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.4s ease;
+        }
+
+        /* 描述文字 - 隐藏 */
+        .text-group p {
+            display: none !important;
+        }
+
+        /* =========================================
+           放松引导UI组件样式
+           ========================================= */
+        .relax-ui {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 24px 20px 30%;
+            box-sizing: border-box;
+        }
+        .relax-ui .relax-card {
+            flex: 1;
+            height: 120px;
+            background: linear-gradient(to bottom right, #18181b, #09090b);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(63, 63, 70, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .relax-ui .relax-card:hover {
+            transform: scale(1.05);
+        }
+        .relax-ui .relax-card.cyan:hover {
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+        .relax-ui .relax-card.purple:hover {
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .relax-ui .relax-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .relax-ui .relax-card.cyan .relax-icon {
+            background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.1), rgba(45, 212, 191, 0.1));
+        }
+        .relax-ui .relax-card.cyan:hover .relax-icon {
+            background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.2), rgba(45, 212, 191, 0.2));
+        }
+        .relax-ui .relax-card.purple .relax-icon {
+            background: linear-gradient(to bottom right, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+        }
+        .relax-ui .relax-card.purple:hover .relax-icon {
+            background: linear-gradient(to bottom right, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+        }
+        .relax-ui .relax-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        .relax-ui .relax-card.cyan .relax-icon svg {
+            color: #22d3ee;
+        }
+        .relax-ui .relax-card.purple .relax-icon svg {
+            color: #a855f7;
+        }
+        .relax-ui .relax-text {
+            text-align: center;
+        }
+        .relax-ui .relax-text h4 {
+            color: #fff;
+            font-size: 14px;
+            margin: 0 0 4px 0;
+        }
+        .relax-ui .relax-text span {
+            color: #71717a;
+            font-size: 12px;
+        }
+
+        /* =========================================
+           睡眠仪表盘UI组件样式
+           ========================================= */
+        .sleep-dashboard {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 24px 20px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sleep-dashboard .sleep-header {
+            text-align: center;
+        }
+        .sleep-dashboard .main-time {
+            font-size: 42px;
+            font-weight: 200;
+            letter-spacing: -1px;
+            line-height: 1;
+            background: linear-gradient(180deg, #fff 20%, #a5a5a5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        .sleep-dashboard .main-time span {
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 2px;
+            color: #888;
+            -webkit-text-fill-color: #888;
+        }
+        .sleep-dashboard .date-info {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.5px;
+        }
+        .sleep-dashboard .sub-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 8px;
+        }
+        .sleep-dashboard .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+        .sleep-dashboard .stat-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sleep-dashboard .stat-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+        }
+        .sleep-dashboard .chart-container {
+            position: relative;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: flex-end;
+            background: radial-gradient(ellipse at bottom, rgba(122, 90, 245, 0.08) 0%, transparent 70%);
+        }
+        .sleep-dashboard .legend {
+            position: absolute;
+            top: -16px;
+            right: 0;
+            display: flex;
+            gap: 8px;
+        }
+        .sleep-dashboard .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .sleep-dashboard .l-deep { background: #5E5CE6; box-shadow: 0 0 6px rgba(94, 92, 230, 0.6); }
+        .sleep-dashboard .l-light { background: #BF5AF2; }
+        .sleep-dashboard .l-rem { background: #FF9F0A; }
+        .sleep-dashboard .l-awake { background: #FFD60A; }
+        .sleep-dashboard .chart-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0px 2px 6px rgba(0,0,0,0.3));
+        }
+        .sleep-dashboard .axis-text {
+            position: absolute;
+            bottom: -16px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.2);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* =========================================
+           睡眠活动UI组件样式
+           ========================================= */
+        .sleep-activity {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 20px 20px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sleep-activity .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sleep-activity .activity-header h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .sleep-activity .activity-legend {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        .sleep-activity .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+        }
+        .sleep-activity .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        .sleep-activity .bg-low { background-color: #FFD60A; }
+        .sleep-activity .bg-mid { background-color: #FF9F0A; }
+        .sleep-activity .bg-high { background-color: #BF5AF2; }
+        .sleep-activity .chart-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 12px 0;
+        }
+        .sleep-activity .chart-wrapper svg {
+            width: 100%;
+            height: 80px;
+            overflow: visible;
+        }
+        .sleep-activity .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+        }
+        .sleep-activity .time-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .sleep-activity .time-label {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+        }
+        .sleep-activity .time-desc {
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        /* =========================================
+           睡眠评分UI组件样式
+           ========================================= */
+        .sleep-score {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 20px 20px 15%;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sleep-score .score-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .sleep-score .score-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .sleep-score circle {
+            fill: none;
+            stroke-linecap: round;
+        }
+        .sleep-score .ring-bg {
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 10;
+        }
+        .sleep-score .ring-progress {
+            stroke: url(#scoreGradient2);
+            stroke-width: 10;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 90;
+        }
+        .sleep-score .score-text {
+            position: absolute;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sleep-score .score-val {
+            font-size: 42px;
+            font-weight: 200;
+            line-height: 1;
+            color: #fff;
+        }
+        .sleep-score .score-label {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #A995FF;
+            font-weight: 500;
+            background: rgba(169, 149, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+        .sleep-score .metrics-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px 20px;
+            padding-left: 20px;
+            border-left: 1px solid rgba(255,255,255,0.05);
+            height: 80%;
+        }
+        .sleep-score .metric-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .sleep-score .m-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+        .sleep-score .m-icon {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+        .sleep-score .m-value {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+        .sleep-score .m-unit {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.4);
+            margin-left: 2px;
+        }
+
+        /* 激活时的文字状态 */
+        .accordion-card.active .text-group h3 {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        /* --- 图片区域 (推挤动画层) --- */
+        .visual-crop {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 70%;
+            height: 100%;
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateX(0);
+        }
+
+        .visual-crop img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: right center;
+            transform: scale(1.1);
+            transition: transform 0.8s ease;
+            opacity: 0.4;
+            filter: grayscale(100%);
+        }
+
+        /* 激活时的图片状态 */
+        .accordion-card.active .visual-crop {
+            transform: translateX(10px);
+        }
+
+        .accordion-card.active .visual-crop img,
+        .accordion-card:hover .visual-crop img {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1);
+        }
+
+        /* =========================================
+           压力UI组件样式
+           ========================================= */
+        .pressure-ui {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px 24px;
+            box-sizing: border-box;
+        }
+        .pressure-ui .pressure-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .pressure-ui .pressure-icon {
+            width: 28px;
+            height: 28px;
+            color: #a3a3a3;
+        }
+        .pressure-ui .pressure-title {
+            font-size: 22px;
+            font-weight: 300;
+            color: #f5f5f5;
+            letter-spacing: 0.5px;
+        }
+        .pressure-ui .pressure-bar {
+            position: relative;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(to right, #fb923c, #f97316, #ea580c, #fb923c, #fbbf24);
+            margin-bottom: 8px;
+        }
+        .pressure-ui .pressure-marks {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pressure-ui .pressure-mark {
+            width: 1px;
+            height: 50px;
+            background: rgba(0,0,0,0.3);
+        }
+        .pressure-ui .pressure-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a3a3a3;
+            padding: 0 2px;
+        }
+        .pressure-ui .pressure-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pressure-ui .pressure-label:first-child {
+            align-items: flex-start;
+        }
+        .pressure-ui .pressure-label:last-child {
+            align-items: flex-end;
+        }
+        .pressure-ui .pressure-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 24px;
+            border-radius: 20px;
+            background: #f97316;
+            color: #fff;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        /* =========================================
+           呼吸冥想动画UI组件样式
+           ========================================= */
+        .breath-container {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a0f0a 0%, #0a0a0a 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        .breath-ambient-light {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 94, 0, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: breathAmbientPulse 8s ease-in-out infinite;
+        }
+        .breath-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .breath-ring-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 140, 66, 0.2);
+            animation: breatheScale 4s ease-in-out infinite;
+            opacity: 0;
+        }
+        .breath-ring-inner {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 140, 66, 0.1) 0%, rgba(255, 140, 66, 0.05) 60%, transparent 100%);
+            border: 1px solid rgba(255, 140, 66, 0.4);
+            box-shadow: 0 0 30px rgba(255, 94, 0, 0.1);
+            animation: breatheScale 4s ease-in-out infinite;
+        }
+        .breath-text-content {
+            z-index: 10;
+            text-align: center;
+            animation: breathTextFade 4s ease-in-out infinite;
+        }
+        .breath-main-action {
+            font-size: 20px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(255, 140, 66, 0.5);
+        }
+        .breath-timer-pill {
+            margin-top: 10px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4px 12px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            display: inline-block;
+        }
+        @keyframes breatheScale {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.3;
+                border-color: rgba(255, 140, 66, 0.2);
             }
-            
-            .image-item:first-child img {
-                height: 300px;
+            50% {
+                transform: scale(1.3);
+                opacity: 1;
+                border-color: rgba(255, 140, 66, 0.8);
+                box-shadow: 0 0 50px rgba(255, 94, 0, 0.3);
             }
-            
-            .image-item:not(:first-child) img {
-                height: 220px;
+            100% {
+                transform: scale(0.8);
+                opacity: 0.3;
+                border-color: rgba(255, 140, 66, 0.2);
             }
-            
-            .image-item {
-                max-width: 100%;
+        }
+        @keyframes breathAmbientPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        @keyframes breathTextFade {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* =========================================
+           AI Dashboard 组件样式
+           ========================================= */
+        .ai-dashboard {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            box-sizing: border-box;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .ai-dashboard .card {
+            background: linear-gradient(145deg, #1A1A1C 0%, #0D0D0F 100%);
+            border-radius: 16px;
+            padding: 12px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+        .ai-dashboard .row-primary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+        }
+        .ai-dashboard .card-primary {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ai-dashboard .row-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+        }
+        .ai-dashboard .label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 2px;
+        }
+        .ai-dashboard .label svg {
+            width: 10px;
+            height: 10px;
+        }
+        .ai-dashboard .value-main {
+            font-size: 24px;
+            font-weight: 400;
+            color: #fff;
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+        .ai-dashboard .unit {
+            font-size: 10px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.4);
+            margin-left: 2px;
+        }
+        .ai-dashboard .sub-info {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+        .ai-dashboard .glow-bg {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.15;
+            top: -10px;
+            right: -10px;
+            pointer-events: none;
+        }
+        .ai-dashboard .bg-blue { background: #0A84FF; }
+        .ai-dashboard .bg-purple { background: #BF5AF2; }
+        .ai-dashboard .c-blue { color: #0A84FF; }
+        .ai-dashboard .c-purple { color: #BF5AF2; }
+        .ai-dashboard .c-red { color: #FF453A; }
+        .ai-dashboard .c-green { color: #30D158; }
+        .ai-dashboard .c-teal { color: #64D2FF; }
+        .ai-dashboard .sparkline-container {
+            height: 20px;
+            width: 100%;
+            margin-top: auto;
+            opacity: 0.8;
+        }
+        .ai-dashboard .spark-path {
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .ai-dashboard .ring-wrapper {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+        }
+        .ai-dashboard .pill-score {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(191, 90, 242, 0.15);
+            border: 1px solid rgba(191, 90, 242, 0.2);
+            color: #BF5AF2;
+            font-size: 10px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* =========================================
+           Health Dashboard 组件样式
+           ========================================= */
+        .health-dashboard {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 8px;
+            box-sizing: border-box;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .health-dashboard .hd-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            flex: 1.2;
+        }
+        .health-dashboard .hd-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            flex: 0.8;
+        }
+        .health-dashboard .hd-grid-2-short {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            flex: 0.9;
+        }
+        .health-dashboard .hd-card {
+            background-color: #161618;
+            border-radius: 12px;
+            padding: 8px 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .health-dashboard .hd-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .health-dashboard .hd-label {
+            font-size: 9px;
+            color: #ccc;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .health-dashboard .hd-btn-measure {
+            font-size: 8px;
+            color: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.15);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        .health-dashboard .hd-value-large {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1;
+        }
+        .health-dashboard .hd-unit {
+            font-size: 8px;
+            color: rgba(255,255,255,0.5);
+            margin-left: 2px;
+        }
+        .health-dashboard .hd-sub-text {
+            font-size: 8px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+        .health-dashboard .hd-activity-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        .health-dashboard .hd-ring-legend {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .health-dashboard .hd-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 7px;
+            color: #888;
+        }
+        .health-dashboard .hd-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+        }
+        .health-dashboard .hd-sleep-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 35px;
+            width: 100%;
+            margin-top: auto;
+        }
+        .health-dashboard .hd-bar {
+            flex: 1;
+            background: #2C2C2E;
+            border-radius: 1px;
+        }
+        .health-dashboard .hd-bar.fill { background: #4D8AF0; }
+        .health-dashboard .hd-bar.deep { background: #2D58E8; opacity: 0.8; }
+        .health-dashboard .hd-spark-wrapper {
+            height: 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+        .health-dashboard .hd-orange-line {
+            stroke: #FF6B00;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+        }
+        .health-dashboard .hd-marker-line {
+            stroke: #FF6B00;
+            stroke-width: 1;
+            opacity: 0.3;
+        }
+        .health-dashboard .hd-period-pill {
+            width: 20px;
+            height: 28px;
+            background: #252525;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #666;
+        }
+        .health-dashboard .hd-period-pill.active {
+            background: #FF526F;
+            color: #fff;
+            box-shadow: 0 1px 4px rgba(255, 82, 111, 0.4);
+        }
+
+        /* =========================================
+           Mood Card 情绪压力组件样式
+           ========================================= */
+        .mood-card {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #1A1A1C 0%, #101012 100%);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .mood-card .mc-section-top {
+            padding: 12px 14px 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .mood-card .mc-mood-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .mood-card .mc-mood-icon-wrapper {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(77, 138, 240, 0.2) 0%, rgba(20, 20, 24, 0) 70%);
+            box-shadow: 0 0 12px rgba(77, 138, 240, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mood-card .mc-icon-face {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #5B9BFF;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+        }
+        .mood-card .mc-mood-text h2 {
+            margin: 0;
+            font-size: 12px;
+            color: #fff;
+            font-weight: 500;
+        }
+        .mood-card .mc-link-text {
+            font-size: 8px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+        }
+        .mood-card .mc-slider-area {
+            margin-top: 10px;
+            display: flex;
+            gap: 3px;
+            height: 4px;
+            align-items: center;
+            position: relative;
+        }
+        .mood-card .mc-slider-segment {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+        .mood-card .mc-slider-segment.active {
+            background: linear-gradient(90deg, #4D8AF0 0%, #70A9FF 100%);
+            box-shadow: 0 0 6px rgba(77, 138, 240, 0.4);
+        }
+        .mood-card .mc-slider-thumb {
+            position: absolute;
+            left: 10%;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            transform: translateX(-50%);
+        }
+        .mood-card .mc-section-bottom {
+            padding: 10px 14px 12px 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .mood-card .mc-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+        .mood-card .mc-chart-title-group h3 {
+            font-size: 10px;
+            color: rgba(255,255,255,0.9);
+            margin: 0;
+            font-weight: 400;
+        }
+        .mood-card .mc-chart-date {
+            font-size: 7px;
+            color: rgba(255,255,255,0.3);
+            margin-top: 2px;
+        }
+        .mood-card .mc-val-num {
+            font-size: 20px;
+            color: #fff;
+            line-height: 1;
+            font-weight: 500;
+        }
+        .mood-card .mc-val-status {
+            font-size: 9px;
+            color: rgba(255,255,255,0.5);
+            margin-left: 2px;
+        }
+        .mood-card .mc-chart-wrapper {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            min-height: 60px;
+        }
+        .mood-card .mc-tooltip-marker {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .mood-card .mc-tooltip-box {
+            background: rgba(40, 40, 45, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2px 6px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        .mood-card .mc-tooltip-text {
+            font-size: 8px;
+            color: #ccc;
+        }
+        .mood-card .mc-dot-orange {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border: 2px solid #FF6B00;
+            border-radius: 50%;
+        }
+        .mood-card .mc-vertical-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255, 107, 0, 0.5), transparent);
+        }
+
+        /* =========================================
+           Energy Chart 能量摄入柱状图组件样式
+           ========================================= */
+        .energy-chart {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 16px 16px 16px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .energy-chart .ec-header {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+        }
+        .energy-chart .ec-header .ec-value {
+            color: #3EE69F;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .energy-chart .ec-header .ec-sub {
+            color: rgba(255,255,255,0.5);
+            font-size: 11px;
+        }
+        .energy-chart .ec-chart-wrap {
+            flex: 1;
+            display: flex;
+            position: relative;
+            min-height: 0;
+        }
+        .energy-chart .ec-y-axis {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            padding-right: 8px;
+            text-align: right;
+        }
+        .energy-chart .ec-chart-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .energy-chart .ec-baseline {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+        }
+        .energy-chart .ec-bars {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+        }
+        .energy-chart .ec-group {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+        }
+        .energy-chart .ec-bar {
+            width: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            border-radius: 0 0 4px 4px;
+            overflow: hidden;
+        }
+        .energy-chart .ec-seg {
+            width: 100%;
+        }
+        .energy-chart .ec-orange { background: #EF5831; }
+        .energy-chart .ec-green { background: #3EE69F; }
+        .energy-chart .ec-pat-orange {
+            background: repeating-linear-gradient(-45deg, #EF5831, #EF5831 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+        }
+        .energy-chart .ec-pat-green {
+            background: repeating-linear-gradient(-45deg, #3EE69F, #3EE69F 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px);
+        }
+        .energy-chart .ec-x-axis {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+        .energy-chart .ec-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .energy-chart .ec-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+        }
+        .energy-chart .ec-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        /* =========================================
+           Stress Period 压力时段组件样式
+           ========================================= */
+        .stress-period {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 20px 20px 15%;
+            box-sizing: border-box;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .stress-period .sp-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .stress-period .sp-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .stress-period .sp-row:last-child {
+            margin-bottom: 0;
+        }
+        .stress-period .sp-time-label {
+            width: 75px;
+            font-size: 8px;
+            color: #999;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+        .stress-period .sp-blocks-wrapper {
+            display: flex;
+            gap: 3px;
+        }
+        .stress-period .sp-block {
+            width: 12px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        .stress-period .sp-b-light {
+            background-color: #8CCAF9;
+            box-shadow: 0 0 3px rgba(140, 202, 249, 0.2);
+        }
+        .stress-period .sp-b-dark {
+            background-color: #5685F5;
+            box-shadow: 0 0 3px rgba(86, 133, 245, 0.2);
+        }
+
+        /* =========================================
+           AI Chat Card 智能对话卡片组件样式
+           ========================================= */
+        .ai-chat-card {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 20px 20px 20px 15%;
+            display: flex;
+            overflow: hidden;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .ai-chat-card .acc-chat-section {
+            width: 40%;
+            padding: 12px;
+            background: #18181A;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ai-chat-card .acc-chat-history {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .ai-chat-card .acc-bubble-user {
+            align-self: flex-start;
+            background: linear-gradient(135deg, #2E3338 0%, #1F2124 100%);
+            color: rgba(255,255,255,0.9);
+            padding: 8px 10px;
+            border-radius: 10px 10px 10px 2px;
+            font-size: 9px;
+            line-height: 1.4;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .ai-chat-card .acc-bubble-ai-text {
+            align-self: flex-start;
+            color: rgba(255,255,255,0.5);
+            font-size: 8px;
+            margin-left: 2px;
+        }
+        .ai-chat-card .acc-input-bar {
+            height: 24px;
+            background: #000;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 4px;
+        }
+        .ai-chat-card .acc-input-placeholder {
+            font-size: 8px;
+            color: #444;
+        }
+        .ai-chat-card .acc-card-section {
+            flex: 1;
+            padding: 12px;
+            background: radial-gradient(circle at top right, rgba(102, 217, 184, 0.08) 0%, #121212 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .ai-chat-card .acc-plan-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 10px;
+        }
+        .ai-chat-card .acc-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .ai-chat-card .acc-card-title {
+            font-size: 10px;
+            color: #fff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .ai-chat-card .acc-icon-leaf {
+            color: #66D9B8;
+            width: 12px;
+            height: 12px;
+        }
+        .ai-chat-card .acc-status-tag {
+            font-size: 8px;
+            background: rgba(102, 217, 184, 0.15);
+            color: #66D9B8;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .ai-chat-card .acc-metric-row {
+            margin-bottom: 10px;
+        }
+        .ai-chat-card .acc-metric-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 4px;
+        }
+        .ai-chat-card .acc-progress-track {
+            height: 4px;
+            background: #2C2C2E;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-chat-card .acc-progress-fill {
+            height: 100%;
+            width: 30%;
+            background: #66D9B8;
+            border-radius: 2px;
+        }
+        .ai-chat-card .acc-progress-ghost {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 80%;
+            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 2px, transparent 2px, transparent 4px);
+            z-index: 0;
+        }
+        .ai-chat-card .acc-schedule-change {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .ai-chat-card .acc-change-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.2);
+            padding: 6px 8px;
+            border-radius: 8px;
+        }
+        .ai-chat-card .acc-change-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        .ai-chat-card .acc-icon-run {
+            background: rgba(255, 107, 0, 0.1);
+            color: #FF6B00;
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        .ai-chat-card .acc-icon-yoga {
+            background: rgba(102, 217, 184, 0.1);
+            color: #66D9B8;
+        }
+        .ai-chat-card .acc-c-title {
+            font-size: 9px;
+            color: #fff;
+            margin-bottom: 1px;
+        }
+        .ai-chat-card .acc-c-sub {
+            font-size: 7px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* =========================================
+           Family Energy 家庭能量平衡组件样式
+           ========================================= */
+        .family-energy {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 16px 16px 16px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .family-energy .fe-tab-bar {
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 3px;
+            margin-bottom: 8px;
+        }
+        .family-energy .fe-tab {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            border-radius: 18px;
+        }
+        .family-energy .fe-tab.active {
+            background: rgba(74, 51, 42, 0.8);
+            color: #fff;
+        }
+        .family-energy .fe-date {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+        .family-energy .fe-chart {
+            flex: 1;
+            position: relative;
+            display: flex;
+            min-height: 0;
+        }
+        .family-energy .fe-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            padding-right: 8px;
+        }
+        .family-energy .fe-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .family-energy .fe-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .family-energy .fe-dot-green {
+            background: #8AE6B1;
+            box-shadow: 0 0 4px rgba(138, 230, 177, 0.4);
+        }
+        .family-energy .fe-dot-orange {
+            background: #FF9F5A;
+            box-shadow: 0 0 4px rgba(255, 159, 90, 0.4);
+        }
+        .family-energy .fe-chart-main {
+            flex: 1;
+            position: relative;
+        }
+        .family-energy .fe-zero-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+        .family-energy .fe-bars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .family-energy .fe-bar-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            position: relative;
+        }
+        .family-energy .fe-bar {
+            width: 16px;
+            position: absolute;
+            border-radius: 8px;
+        }
+        .family-energy .fe-bar-up {
+            bottom: 50%;
+            background: linear-gradient(to top, #6ACCA0, #8AE6B1);
+            box-shadow: 0 -2px 8px rgba(138, 230, 177, 0.2);
+        }
+        .family-energy .fe-bar-down {
+            top: 50%;
+            background: linear-gradient(to bottom, #E67E42, #FF9F5A);
+            box-shadow: 0 2px 8px rgba(255, 159, 90, 0.2);
+        }
+        .family-energy .fe-bar-value {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .family-energy .fe-bar-name {
+            position: absolute;
+            bottom: 4px;
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* =========================================
+           Health Plan 健康计划进度组件样式
+           ========================================= */
+        .health-plan {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 16px 16px 16px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .health-plan .hp-meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .health-plan .hp-source-tag {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .health-plan .hp-source-tag svg {
+            width: 10px;
+            height: 10px;
+            opacity: 0.6;
+            fill: currentColor;
+        }
+        .health-plan .hp-loop-tag {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .health-plan .hp-title-row {
+            margin-bottom: 8px;
+        }
+        .health-plan .hp-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .health-plan .hp-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            background: rgba(255, 107, 0, 0.15);
+            border-radius: 12px;
+            color: #FF8C69;
+            font-size: 10px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 107, 0, 0.2);
+        }
+        .health-plan .hp-status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #FF8C69;
+            box-shadow: 0 0 4px rgba(255, 140, 105, 0.6);
+            animation: hpPulse 2s infinite;
+        }
+        @keyframes hpPulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+        .health-plan .hp-progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+        .health-plan .hp-day-counter {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+        .health-plan .hp-current-day {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-right: 2px;
+        }
+        .health-plan .hp-reward {
+            font-size: 11px;
+            color: #FFD700;
+            font-weight: 500;
+        }
+        .health-plan .hp-progress-track {
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+        }
+        .health-plan .hp-progress-fill {
+            width: 10%;
+            height: 6px;
+            background: linear-gradient(90deg, #FF6B00 0%, #FF9F5A 100%);
+            border-radius: 3px;
+            box-shadow: 0 0 6px rgba(255, 107, 0, 0.4);
+        }
+        .health-plan .hp-coin {
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #FFEB3B, #FFC107, #FF9800);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #B7791F;
+        }
+
+        /* =========================================
+           Activity List 活动记录列表组件样式
+           ========================================= */
+        .activity-list {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 12px 12px 12px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .activity-list .al-date-header {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding-left: 2px;
+        }
+        .activity-list .al-date-dot {
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+        .activity-list .al-list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+        .activity-list .al-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .activity-list .al-icon-box svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .activity-list .al-item-auto .al-icon-box {
+            background: rgba(100, 210, 255, 0.15);
+            color: #64D2FF;
+        }
+        .activity-list .al-item-auto .al-tag {
+            color: #64D2FF;
+            background: rgba(100, 210, 255, 0.1);
+        }
+        .activity-list .al-item-manual .al-icon-box {
+            background: rgba(255, 107, 0, 0.15);
+            color: #FF6B00;
+        }
+        .activity-list .al-item-manual .al-tag {
+            color: #FF6B00;
+            background: rgba(255, 107, 0, 0.1);
+        }
+        .activity-list .al-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .activity-list .al-title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .activity-list .al-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .activity-list .al-tag {
+            font-size: 8px;
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+        .activity-list .al-data-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+        }
+        .activity-list .al-divider {
+            width: 1px;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+        .activity-list .al-heart-val {
+            color: #FF453A;
+        }
+        .activity-list .al-right-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .activity-list .al-time {
+            font-size: 11px;
+            color: rgba(255,255,255,0.8);
+        }
+        .activity-list .al-arrow {
+            color: rgba(255,255,255,0.2);
+            font-size: 14px;
+        }
+
+        /* =========================================
+           Points Task 积分任务组件样式
+           ========================================= */
+        .points-task {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 12px 12px 12px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .points-task .pt-wallet {
+            background: linear-gradient(135deg, #2C1E16 0%, #1A1A1C 100%);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid rgba(255, 160, 0, 0.15);
+        }
+        .points-task .pt-wallet-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .points-task .pt-wallet-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+        }
+        .points-task .pt-wallet-num {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .points-task .pt-coin {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA000, #B87333);
+            box-shadow: inset 0 0 0 2px #FDB931;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #B87333;
+        }
+        .points-task .pt-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2px;
+        }
+        .points-task .pt-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .points-task .pt-section-more {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+        }
+        .points-task .pt-task-item {
+            background-color: rgba(28, 28, 30, 0.8);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .points-task .pt-icon-box {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .points-task .pt-icon-box svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+        .points-task .pt-icon-wear {
+            background: rgba(255, 159, 10, 0.15);
+            color: #FF9F0A;
+        }
+        .points-task .pt-icon-plan {
+            background: rgba(100, 210, 255, 0.15);
+            color: #64D2FF;
+        }
+        .points-task .pt-task-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .points-task .pt-task-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: #fff;
+        }
+        .points-task .pt-task-desc {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+        }
+        .points-task .pt-progress-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 2px;
+        }
+        .points-task .pt-progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #FF9F0A, #FFD60A);
+        }
+        .points-task .pt-progress-text {
+            font-size: 9px;
+            color: #FFD60A;
+            margin-top: 2px;
+        }
+        .points-task .pt-btn {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 9px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .points-task .pt-btn-collect {
+            background: linear-gradient(135deg, #333 0%, #444 100%);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .points-task .pt-btn-processing {
+            background: transparent;
+            color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* =========================================
+           Vitality Wallet 活力值钱包组件样式
+           ========================================= */
+        .vitality-wallet {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 12px 12px 12px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .vitality-wallet .vw-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0 8px 0;
+            position: relative;
+        }
+        .vitality-wallet .vw-glow {
+            position: absolute;
+            top: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .vitality-wallet .vw-label {
+            font-size: 10px;
+            color: rgba(255, 160, 60, 0.9);
+            background: rgba(255, 140, 0, 0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .vitality-wallet .vw-amount {
+            font-size: 32px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(255, 140, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        .vitality-wallet .vw-tabs {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 3px;
+            display: flex;
+        }
+        .vitality-wallet .vw-tab {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            border-radius: 6px;
+        }
+        .vitality-wallet .vw-tab.active {
+            background: #2C2C2E;
+            color: #fff;
+        }
+        .vitality-wallet .vw-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .vitality-wallet .vw-list-title {
+            font-size: 9px;
+            color: rgba(255,255,255,0.3);
+            padding-left: 2px;
+        }
+        .vitality-wallet .vw-item {
+            background-color: rgba(28, 28, 30, 0.8);
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .vitality-wallet .vw-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .vitality-wallet .vw-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .vitality-wallet .vw-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+        .vitality-wallet .vw-icon-income {
+            background: rgba(255, 149, 0, 0.15);
+            color: #FF9F0A;
+        }
+        .vitality-wallet .vw-icon-expense {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+        }
+        .vitality-wallet .vw-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .vitality-wallet .vw-title {
+            font-size: 12px;
+            color: #fff;
+            font-weight: 500;
+        }
+        .vitality-wallet .vw-desc {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+        }
+        .vitality-wallet .vw-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .vitality-wallet .vw-plus {
+            color: #FF9F0A;
+            text-shadow: 0 0 10px rgba(255, 159, 10, 0.2);
+        }
+        .vitality-wallet .vw-minus {
+            color: #fff;
+        }
+
+        /* =========================================
+           Order Card Widget 订单卡片组件样式
+           ========================================= */
+        .order-card-widget {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
+            padding: 12px 12px 12px 15%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .order-card-widget .ocw-tabs {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 3px;
+            display: flex;
+        }
+        .order-card-widget .ocw-tab {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            border-radius: 6px;
+        }
+        .order-card-widget .ocw-tab.active {
+            background: #2C2C2E;
+            color: #fff;
+            font-weight: 500;
+        }
+        .order-card-widget .ocw-card {
+            background-color: rgba(28, 28, 30, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        .order-card-widget .ocw-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+        }
+        .order-card-widget .ocw-date {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            font-family: monospace;
+        }
+        .order-card-widget .ocw-status {
+            font-size: 9px;
+            color: #FF9F0A;
+            font-weight: 500;
+            background: rgba(255, 159, 10, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .order-card-widget .ocw-body {
+            display: flex;
+            gap: 10px;
+        }
+        .order-card-widget .ocw-img {
+            width: 48px;
+            height: 48px;
+            background: #2C2C2E;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .order-card-widget .ocw-img svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+            opacity: 0.2;
+        }
+        .order-card-widget .ocw-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+        }
+        .order-card-widget .ocw-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .order-card-widget .ocw-meta {
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+        .order-card-widget .ocw-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-card-widget .ocw-price {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        .order-card-widget .ocw-price-label {
+            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+        }
+        .order-card-widget .ocw-price-num {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .order-card-widget .ocw-price-unit {
+            font-size: 9px;
+            color: #FF9F0A;
+            font-weight: 500;
+        }
+        .order-card-widget .ocw-btn {
+            font-size: 9px;
+            color: rgba(255,255,255,0.9);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+        }
+
+        /* =========================================
+           修复洞察和行动模块卡片拉伸问题
+           ========================================= */
+        /* 修复能量图表被拉长 */
+        .energy-chart {
+            justify-content: center !important;
+            gap: 20px;
+        }
+        .energy-chart .ec-chart-wrap {
+            flex: none !important;
+            height: 180px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* 修复压力时段被拉长 */
+        .stress-period {
+            justify-content: center !important;
+            gap: 15px;
+        }
+
+        /* 修复AI对话卡片 */
+        .ai-chat-card {
+            align-items: center;
+        }
+
+        /* 修复家庭能量平衡图表被拉长 */
+        .family-energy {
+            justify-content: center !important;
+            gap: 20px;
+        }
+        .family-energy .fe-chart {
+            flex: none !important;
+            height: 180px;
+            width: 100%;
+        }
+
+        /* 修复健康计划进度条被拉开 */
+        .health-plan {
+            justify-content: center !important;
+            gap: 20px;
+        }
+
+        /* 修复活动列表被拉开 */
+        .activity-list {
+            justify-content: center !important;
+            gap: 12px;
+        }
+
+        /* =========================================
+           移动端适配优化
+           ========================================= */
+        @media (max-width: 900px) {
+            .accordion-layout {
+                flex-direction: column;
+                height: auto;
+                gap: 30px;
+            }
+
+            .phone-mockup img {
+                width: 260px !important;
+                margin: 0 auto;
+            }
+
+            .accordion-card {
+                flex: none;
+                height: 140px;
+                margin-bottom: 10px;
+            }
+
+            .accordion-card.active {
+                flex: none;
+                height: 140px;
+            }
+
+            .text-group {
+                width: 100%;
+                background: linear-gradient(90deg, #0a0a0a 40%, transparent 100%);
+            }
+
+            .text-group p {
+                display: none !important;
+            }
+
+            .visual-crop {
+                width: 50%;
+                opacity: 1;
+            }
+
+            .visual-crop img {
+                opacity: 1;
+                filter: grayscale(0%);
+                object-fit: cover;
             }
 
             .showcase-nav li {
@@ -1452,116 +3862,1045 @@
     <section id="product-showcase" class="container">
         <nav class="showcase-nav">
             <ul>
-                <li class="active" data-target="sleep"><i class="fas fa-moon"></i>睡眠监测</li>
-                <li data-target="activity"><i class="fas fa-robot"></i>人工智能</li>
-                <li data-target="readiness"><i class="fas fa-spa"></i>减压助眠</li>
-                <li data-target="heart"><i class="fas fa-star"></i>健康积分系统</li>
-                <li data-target="women-health"><i class="fas fa-venus"></i>女性健康</li>
+                <li class="active" data-target="sleep"><i class="fas fa-moon"></i>睡眠</li>
+                <li data-target="activity"><i class="fas fa-robot"></i>状态</li>
+                <li data-target="readiness"><i class="fas fa-spa"></i>洞察</li>
+                <li data-target="heart"><i class="fas fa-star"></i>行动</li>
+                <li data-target="women-health"><i class="fas fa-venus"></i>积分商城</li>
           </ul>
         </nav>
         <div class="showcase-content">
             <div id="sleep" class="showcase-panel active">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/睡眠/睡眠.png" alt="睡眠数据1">
-                        <p class="image-description">深度睡眠监测，精准识别睡眠阶段</p>
+                <div class="showcase-panel-images accordion-layout">
+                    <div class="image-item phone-mockup">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/睡眠/睡眠.png" alt="深度睡眠监测">
                     </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/睡眠/睡觉.jpg" alt="睡眠数据2">
-                        <p class="image-description" data-title="睡眠质量评分">基于深度睡眠、REM睡眠和睡眠效率的综合评分，提供个性化睡眠改善建议</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/睡眠/睡眠活动状态.jpg" alt="睡眠数据3">
-                        <p class="image-description" data-title="睡眠分析">在最佳睡眠周期结束时机唤醒，避免睡眠惯性，让您精神饱满地开始新的一天</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/睡眠/睡眠质量评分.jpg" alt="睡眠数据4">
-                        <p class="image-description" data-title="睡眠趋势分析">长期监测睡眠模式变化，识别健康趋势，为您的睡眠健康提供科学指导</p>
+                    <div class="right-column">
+                        <div class="accordion-card active">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">01</span>
+                                    <h3>全天候睡眠监测</h3>
+                                    <p>基于深度睡眠、REM睡眠和睡眠效率的综合评分，提供个性化睡眠改善建议。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="sleep-dashboard">
+                                        <div class="sleep-header">
+                                            <div class="main-time">8<span>h</span> 34<span>m</span></div>
+                                            <div class="date-info">7月31日，周四</div>
+                                        </div>
+                                        <div class="sub-stats">
+                                            <div class="stat-item">
+                                                <span class="stat-label">睡眠</span>
+                                                <span class="stat-value">7h 58m</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-label">小睡</span>
+                                                <span class="stat-value">0h 36m</span>
+                                            </div>
+                                        </div>
+                                        <div class="chart-container">
+                                            <div class="legend">
+                                                <div class="dot l-deep"></div>
+                                                <div class="dot l-light"></div>
+                                                <div class="dot l-rem"></div>
+                                                <div class="dot l-awake"></div>
+                                            </div>
+                                            <svg viewBox="0 0 540 100" preserveAspectRatio="none">
+                                                <defs>
+                                                    <mask id="barMask">
+                                                        <rect x="0" y="0" width="18" height="100" rx="4" fill="white" />
+                                                        <rect x="22" y="20" width="28" height="100" rx="4" fill="white" />
+                                                        <rect x="54" y="40" width="40" height="100" rx="4" fill="white" />
+                                                        <rect x="98" y="30" width="30" height="100" rx="4" fill="white" />
+                                                        <rect x="132" y="10" width="20" height="100" rx="4" fill="white" />
+                                                        <rect x="156" y="50" width="50" height="100" rx="4" fill="white" />
+                                                        <rect x="210" y="35" width="25" height="100" rx="4" fill="white" />
+                                                        <rect x="239" y="15" width="40" height="100" rx="4" fill="white" />
+                                                        <rect x="283" y="45" width="35" height="100" rx="4" fill="white" />
+                                                        <rect x="322" y="25" width="45" height="100" rx="4" fill="white" />
+                                                        <rect x="371" y="5" width="20" height="100" rx="4" fill="white" />
+                                                        <rect x="395" y="30" width="30" height="100" rx="4" fill="white" />
+                                                        <rect x="429" y="55" width="40" height="100" rx="4" fill="white" />
+                                                        <rect x="473" y="20" width="30" height="100" rx="4" fill="white" />
+                                                        <rect x="507" y="0" width="33" height="100" rx="4" fill="white" />
+                                                    </mask>
+                                                </defs>
+                                                <rect x="0" y="0" width="540" height="100" fill="#5E5CE6" mask="url(#barMask)" opacity="0.3" />
+                                                <g mask="url(#barMask)">
+                                                    <rect x="0" y="0" width="540" height="100" fill="#FFD60A" opacity="0.9" />
+                                                    <rect x="0" y="15" width="540" height="100" fill="#FF9F0A" />
+                                                    <rect x="0" y="40" width="540" height="100" fill="#BF5AF2" />
+                                                    <rect x="0" y="70" width="540" height="100" fill="#5E5CE6" />
+                                                </g>
+                                            </svg>
+                                            <div class="axis-text">
+                                                <span>00:02</span>
+                                                <span>08:08</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">02</span>
+                                    <h3>睡眠活动追踪</h3>
+                                    <p>在最佳睡眠周期结束时机唤醒，避免睡眠惯性，让您精神饱满地开始新的一天。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="sleep-activity">
+                                        <div class="activity-header">
+                                            <h4>睡眠活动</h4>
+                                            <div class="activity-legend">
+                                                <div class="legend-item"><div class="dot bg-low"></div>微动</div>
+                                                <div class="legend-item"><div class="dot bg-mid"></div>翻身</div>
+                                                <div class="legend-item"><div class="dot bg-high"></div>清醒</div>
+                                            </div>
+                                        </div>
+                                        <div class="chart-wrapper">
+                                            <svg viewBox="0 0 540 100" preserveAspectRatio="none">
+                                                <defs>
+                                                    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                                                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                                        <feMerge>
+                                                            <feMergeNode in="coloredBlur"/>
+                                                            <feMergeNode in="SourceGraphic"/>
+                                                        </feMerge>
+                                                    </filter>
+                                                </defs>
+                                                <line x1="0" y1="50" x2="540" y2="50" stroke="rgba(255,255,255,0.1)" stroke-width="2" stroke-dasharray="4 6" stroke-linecap="round" />
+                                                <g>
+                                                    <rect x="10" y="20" width="4" height="60" rx="2" fill="#BF5AF2" filter="url(#glow-purple)" />
+                                                    <rect x="18" y="30" width="4" height="40" rx="2" fill="#BF5AF2" opacity="0.8" />
+                                                    <rect x="26" y="42" width="4" height="16" rx="2" fill="#FF9F0A" />
+                                                    <rect x="80" y="40" width="4" height="20" rx="2" fill="#FF9F0A" />
+                                                    <rect x="88" y="45" width="4" height="10" rx="2" fill="#FFD60A" />
+                                                    <rect x="130" y="15" width="4" height="70" rx="2" fill="#BF5AF2" filter="url(#glow-purple)" />
+                                                    <rect x="160" y="45" width="4" height="10" rx="2" fill="#FFD60A" />
+                                                    <rect x="168" y="40" width="4" height="20" rx="2" fill="#FF9F0A" />
+                                                    <rect x="176" y="35" width="4" height="30" rx="2" fill="#FF9F0A" />
+                                                    <rect x="184" y="42" width="4" height="16" rx="2" fill="#FFD60A" />
+                                                    <rect x="192" y="38" width="4" height="24" rx="2" fill="#FF9F0A" />
+                                                    <rect x="220" y="40" width="4" height="20" rx="2" fill="#FF9F0A" />
+                                                    <rect x="228" y="30" width="4" height="40" rx="2" fill="#FF9F0A" />
+                                                    <rect x="236" y="45" width="4" height="10" rx="2" fill="#FFD60A" />
+                                                    <rect x="300" y="35" width="4" height="30" rx="2" fill="#FF9F0A" />
+                                                    <rect x="308" y="25" width="4" height="50" rx="2" fill="#FF9F0A" />
+                                                    <rect x="340" y="42" width="4" height="16" rx="2" fill="#FFD60A" />
+                                                    <rect x="348" y="30" width="4" height="40" rx="2" fill="#FF9F0A" />
+                                                    <rect x="390" y="40" width="4" height="20" rx="2" fill="#FFD60A" />
+                                                    <rect x="398" y="35" width="4" height="30" rx="2" fill="#FFD60A" />
+                                                    <rect x="406" y="28" width="4" height="44" rx="2" fill="#FF9F0A" />
+                                                    <rect x="440" y="45" width="4" height="10" rx="2" fill="#FFD60A" />
+                                                    <rect x="448" y="45" width="4" height="10" rx="2" fill="#FFD60A" />
+                                                    <rect x="490" y="30" width="4" height="40" rx="2" fill="#FF9F0A" />
+                                                    <rect x="498" y="25" width="4" height="50" rx="2" fill="#FF9F0A" />
+                                                    <rect x="506" y="35" width="4" height="30" rx="2" fill="#FF9F0A" />
+                                                    <rect x="514" y="20" width="4" height="60" rx="2" fill="#FF9F0A" />
+                                                    <rect x="522" y="30" width="4" height="40" rx="2" fill="#FF9F0A" />
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="timeline-labels">
+                                            <div class="time-group" style="text-align: left;">
+                                                <span class="time-label">12:21</span>
+                                                <span class="time-desc">入睡</span>
+                                            </div>
+                                            <div class="time-group" style="text-align: right;">
+                                                <span class="time-label">08:11</span>
+                                                <span class="time-desc">醒来</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">03</span>
+                                    <h3>睡眠综合评分</h3>
+                                    <p>长期监测睡眠模式变化，识别健康趋势，为您的睡眠健康提供科学指导。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="sleep-score">
+                                        <div class="score-container">
+                                            <svg class="score-ring">
+                                                <defs>
+                                                    <linearGradient id="scoreGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" stop-color="#7F5EFF" />
+                                                        <stop offset="100%" stop-color="#FF9F0A" />
+                                                    </linearGradient>
+                                                </defs>
+                                                <circle cx="70" cy="70" r="60" class="ring-bg" />
+                                                <circle cx="70" cy="70" r="60" class="ring-progress" />
+                                            </svg>
+                                            <div class="score-text">
+                                                <div class="score-val">76</div>
+                                                <div class="score-label">良</div>
+                                            </div>
+                                        </div>
+                                        <div class="metrics-grid">
+                                            <div class="metric-item">
+                                                <div class="m-header">
+                                                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M2 14h20v2H2zM4 9h16v3H4zM3 17h2v2H3zM19 17h2v2h-2z" fill="#9F85FF"/></svg>
+                                                    卧床时间
+                                                </div>
+                                                <div class="m-value">7<span class="m-unit">h</span> 27<span class="m-unit">m</span></div>
+                                            </div>
+                                            <div class="metric-item">
+                                                <div class="m-header">
+                                                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="#FF9F0A"/></svg>
+                                                    入睡用时
+                                                </div>
+                                                <div class="m-value">8<span class="m-unit">min</span></div>
+                                            </div>
+                                            <div class="metric-item">
+                                                <div class="m-header">
+                                                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z" fill="#66D9B8"/></svg>
+                                                    睡眠效率
+                                                </div>
+                                                <div class="m-value">87<span class="m-unit">%</span></div>
+                                            </div>
+                                            <div class="metric-item">
+                                                <div class="m-header">
+                                                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z" fill="#FFD60A"/></svg>
+                                                    规律性
+                                                </div>
+                                                <div class="m-value">差</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="activity" class="showcase-panel">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/人工智能/人工智能.png" alt="人工智能数据1">
-                        <p class="image-description" data-title="AI智能分析">采用先进的深度学习算法，实时分析您的健康数据，提供精准的健康洞察</p>
+                <div class="showcase-panel-images accordion-layout">
+                    <div class="image-item phone-mockup">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/人工智能/人工智能.png" alt="AI智能分析">
                     </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/人工智能/本周运动.jpg" alt="人工智能数据2">
-                        <p class="image-description" data-title="智能预测">基于历史数据和机器学习模型，预测健康趋势，提前发现潜在健康风险</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/人工智能/步数.jpg" alt="人工智能数据3">
-                        <p class="image-description" data-title="机器学习">系统持续学习您的健康模式，不断优化算法，提供越来越精准的个性化建议</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/人工智能/身体评分.jpg" alt="人工智能数据4">
-                        <p class="image-description" data-title="智能算法">结合多种健康指标，运用智能算法进行综合分析，为您提供全面的健康评估</p>
+                    <div class="right-column">
+                        <div class="accordion-card active">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">01</span>
+                                    <h3>健康数据总览</h3>
+                                    <p>采用先进的深度学习算法，实时分析您的健康数据，提供精准的健康洞察。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="ai-dashboard">
+                                        <div class="row-primary">
+                                            <div class="card card-primary">
+                                                <div class="glow-bg bg-blue"></div>
+                                                <div>
+                                                    <div class="label">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" class="c-blue"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+                                                        活动
+                                                    </div>
+                                                    <div class="value-main">4,500<span class="unit">步</span></div>
+                                                    <div class="sub-info">目标 5,000</div>
+                                                </div>
+                                                <div class="ring-wrapper">
+                                                    <svg width="36" height="36" viewBox="0 0 36 36" style="transform: rotate(-90deg);">
+                                                        <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                                                        <circle cx="18" cy="18" r="15" fill="none" stroke="#0A84FF" stroke-width="3" stroke-dasharray="94" stroke-dashoffset="9" stroke-linecap="round"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="card card-primary">
+                                                <div class="glow-bg bg-purple"></div>
+                                                <div>
+                                                    <div class="label">
+                                                        <svg viewBox="0 0 24 24" fill="currentColor" class="c-purple"><path d="M9 21c-4.97 0-9-4.03-9-9s4.03-9 9-9c.83 0 1.5.67 1.5 1.5 0 .39-.11.75-.29 1.06C9.34 4.1 8.68 4 8 4c-3.31 0-6 2.69-6 6s2.69 6 6 6c.68 0 1.34-.1 1.97-.27-.18.31-.29.66-.29 1.03 0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5c0-.37-.11-.72-.29-1.03.63.17 1.29.27 1.97.27 3.31 0 6-2.69 6-6 0-.68-.1-1.34-.27-1.97.31.18.66.29 1.03.29.83 0 1.5-.67 1.5-1.5S22.83 5 22 5c-.37 0-.72.11-1.03.29C20.1 2.34 17.31 0 14 0c-4.97 0-9 4.03-9 9 0 4.97 4.03 9 9 9z"/></svg>
+                                                        睡眠
+                                                    </div>
+                                                    <div class="value-main">82<span class="unit">分</span></div>
+                                                    <div class="pill-score">优良</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-secondary">
+                                            <div class="card">
+                                                <div class="label">
+                                                    <svg viewBox="0 0 24 24" fill="currentColor" class="c-red"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                    心率
+                                                </div>
+                                                <div class="value-main">69<span class="unit">bpm</span></div>
+                                                <div class="sparkline-container">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                                        <defs><linearGradient id="gradRed" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF453A" stop-opacity="0.3"/><stop offset="100%" stop-color="#FF453A" stop-opacity="1"/></linearGradient></defs>
+                                                        <path class="spark-path" stroke="url(#gradRed)" d="M0,10 L10,10 L20,5 L30,15 L40,8 L50,12 L60,3 L70,10 L80,9 L100,10"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="label">
+                                                    <svg viewBox="0 0 24 24" fill="currentColor" class="c-green"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                                                    HRV
+                                                </div>
+                                                <div class="value-main">56<span class="unit">ms</span></div>
+                                                <div class="sparkline-container">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                                        <defs><linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#30D158" stop-opacity="0.3"/><stop offset="100%" stop-color="#30D158" stop-opacity="1"/></linearGradient></defs>
+                                                        <path class="spark-path" stroke="url(#gradGreen)" d="M0,12 L15,12 L25,8 L35,17 L50,5 L65,15 L80,12 L100,8"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="label">
+                                                    <svg viewBox="0 0 24 24" fill="currentColor" class="c-teal"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/></svg>
+                                                    血氧
+                                                </div>
+                                                <div class="value-main">98<span class="unit">%</span></div>
+                                                <div class="sparkline-container">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                                        <defs><linearGradient id="gradTeal" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#64D2FF" stop-opacity="0.3"/><stop offset="100%" stop-color="#64D2FF" stop-opacity="1"/></linearGradient></defs>
+                                                        <path class="spark-path" stroke="url(#gradTeal)" d="M0,10 L20,10 L30,9 L40,11 L60,10 L80,10 L90,9.5 L100,10"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">02</span>
+                                    <h3>全面健康仪表盘</h3>
+                                    <p>基于历史数据和机器学习模型，预测健康趋势，提前发现潜在健康风险。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="health-dashboard">
+                                        <div class="hd-grid-2">
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">👣 活动</div>
+                                                </div>
+                                                <div class="hd-activity-box">
+                                                    <svg width="70" height="70" viewBox="0 0 130 130">
+                                                        <circle cx="65" cy="65" r="58" fill="none" stroke="#222" stroke-width="8"/>
+                                                        <circle cx="65" cy="65" r="58" fill="none" stroke="#00E0C6" stroke-width="8" stroke-dasharray="364" stroke-dashoffset="80" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+                                                        <circle cx="65" cy="65" r="44" fill="none" stroke="#222" stroke-width="8"/>
+                                                        <circle cx="65" cy="65" r="44" fill="none" stroke="#FF6B00" stroke-width="8" stroke-dasharray="276" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+                                                        <circle cx="65" cy="65" r="30" fill="none" stroke="#222" stroke-width="8"/>
+                                                        <circle cx="65" cy="65" r="30" fill="none" stroke="#3E82F7" stroke-width="8" stroke-dasharray="188" stroke-dashoffset="40" stroke-linecap="round" transform="rotate(-90 65 65)"/>
+                                                    </svg>
+                                                    <div class="hd-ring-legend">
+                                                        <div class="hd-legend-item"><div class="hd-dot" style="background:#00E0C6"></div>步数</div>
+                                                        <div class="hd-legend-item"><div class="hd-dot" style="background:#FF6B00"></div>卡路里</div>
+                                                        <div class="hd-legend-item"><div class="hd-dot" style="background:#3E82F7"></div>锻炼</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">☾ 睡眠</div>
+                                                </div>
+                                                <div style="margin-top:4px;">
+                                                    <div class="hd-value-large">6<span class="hd-unit">小时</span> 6<span class="hd-unit">分</span></div>
+                                                    <div class="hd-sub-text">小睡 35分钟</div>
+                                                </div>
+                                                <div class="hd-sleep-chart">
+                                                    <div class="hd-bar" style="height:20%"></div>
+                                                    <div class="hd-bar fill" style="height:40%"></div>
+                                                    <div class="hd-bar deep" style="height:60%"></div>
+                                                    <div class="hd-bar fill" style="height:50%"></div>
+                                                    <div class="hd-bar" style="height:0%"></div>
+                                                    <div class="hd-bar deep" style="height:70%"></div>
+                                                    <div class="hd-bar deep" style="height:65%"></div>
+                                                    <div class="hd-bar fill" style="height:40%"></div>
+                                                    <div class="hd-bar" style="height:10%"></div>
+                                                    <div class="hd-bar fill" style="height:55%"></div>
+                                                    <div class="hd-bar deep" style="height:60%"></div>
+                                                    <div class="hd-bar fill" style="height:30%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hd-grid-3">
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">❤ 心率</div>
+                                                    <div class="hd-btn-measure">测量</div>
+                                                </div>
+                                                <div class="hd-value-large">69<span class="hd-unit">bpm</span></div>
+                                                <div class="hd-spark-wrapper">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                                        <line x1="20" y1="20" x2="20" y2="35" class="hd-marker-line"/>
+                                                        <line x1="60" y1="10" x2="60" y2="25" class="hd-marker-line"/>
+                                                        <path class="hd-orange-line" d="M0,40 Q25,10 50,30 T100,25"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">⚡ HRV</div>
+                                                    <div class="hd-btn-measure">测量</div>
+                                                </div>
+                                                <div class="hd-value-large">55<span class="hd-unit">ms</span></div>
+                                                <div class="hd-spark-wrapper">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                                        <line x1="30" y1="15" x2="30" y2="30" class="hd-marker-line"/>
+                                                        <path class="hd-orange-line" d="M0,35 Q20,35 35,15 T70,30 T100,20"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">◎ 血氧</div>
+                                                    <div class="hd-btn-measure">测量</div>
+                                                </div>
+                                                <div class="hd-value-large">98<span class="hd-unit">%</span></div>
+                                                <div class="hd-spark-wrapper">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                                        <line x1="80" y1="20" x2="80" y2="35" class="hd-marker-line"/>
+                                                        <path class="hd-orange-line" d="M0,30 Q30,10 60,35 T100,25"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hd-grid-2-short">
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">🏋️ 锻炼记录</div>
+                                                </div>
+                                                <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+                                                    <div style="display:flex; justify-content:space-between;"><span class="hd-sub-text">总次数</span><span style="font-size:10px; color:#fff">2 次</span></div>
+                                                    <div style="display:flex; justify-content:space-between;"><span class="hd-sub-text">总时长</span><span style="font-size:10px; color:#fff">180 分</span></div>
+                                                    <div style="display:flex; justify-content:space-between;"><span class="hd-sub-text">消耗</span><span style="font-size:10px; color:#fff">2000 千卡</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="hd-card">
+                                                <div class="hd-card-top">
+                                                    <div class="hd-label">❀ 生理周期</div>
+                                                </div>
+                                                <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                                                    <div style="text-align:center"><div style="font-size:7px; color:#666; margin-bottom:2px;">日</div><div class="hd-period-pill">17</div></div>
+                                                    <div style="text-align:center"><div style="font-size:7px; color:#666; margin-bottom:2px;">一</div><div class="hd-period-pill active">18</div></div>
+                                                    <div style="text-align:center"><div style="font-size:7px; color:#666; margin-bottom:2px;">二</div><div class="hd-period-pill active">19</div></div>
+                                                    <div style="text-align:center"><div style="font-size:7px; color:#666; margin-bottom:2px;">三</div><div class="hd-period-pill active">20</div></div>
+                                                    <div style="text-align:center"><div style="font-size:7px; color:#666; margin-bottom:2px;">四</div><div class="hd-period-pill active">21</div></div>
+                                                </div>
+                                                <div style="text-align:center; margin-top:auto; font-size:8px; color:#FF526F;">经期第 1 天</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">03</span>
+                                    <h3>情绪与压力分析</h3>
+                                    <p>系统持续学习您的健康模式，不断优化算法，提供越来越精准的个性化建议。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="mood-card">
+                                        <div class="mc-section-top">
+                                            <div class="mc-mood-header">
+                                                <div class="mc-mood-icon-wrapper">
+                                                    <svg class="mc-icon-face" viewBox="0 0 24 24">
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <path d="M8 9h.01"></path>
+                                                        <path d="M16 9h.01"></path>
+                                                        <path d="M7 16c1.5-1.5 3.5-2 5-2s3.5.5 5 2"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="mc-mood-text">
+                                                    <h2>非常不愉快</h2>
+                                                    <div class="mc-link-text">状态不好，尝试调节一下</div>
+                                                </div>
+                                            </div>
+                                            <div class="mc-slider-area">
+                                                <div class="mc-slider-segment active"></div>
+                                                <div class="mc-slider-segment"></div>
+                                                <div class="mc-slider-segment"></div>
+                                                <div class="mc-slider-segment"></div>
+                                                <div class="mc-slider-segment"></div>
+                                                <div class="mc-slider-thumb"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mc-section-bottom">
+                                            <div class="mc-chart-header">
+                                                <div class="mc-chart-title-group">
+                                                    <h3>压力</h3>
+                                                    <div class="mc-chart-date">2025/8/4, 周一</div>
+                                                </div>
+                                                <div>
+                                                    <span class="mc-val-num">23</span>
+                                                    <span class="mc-val-status">放松</span>
+                                                </div>
+                                            </div>
+                                            <div class="mc-chart-wrapper">
+                                                <svg width="100%" height="100%" viewBox="0 0 560 80" preserveAspectRatio="none">
+                                                    <defs>
+                                                        <linearGradient id="mcOrangeFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                            <stop offset="0%" style="stop-color:#FF6B00;stop-opacity:0.25"/>
+                                                            <stop offset="100%" style="stop-color:#FF6B00;stop-opacity:0"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <path fill="url(#mcOrangeFill)" d="M0,70 Q40,65 70,55 T140,50 T210,60 T280,30 T350,50 T420,40 T490,45 T560,35 V80 H0 Z"/>
+                                                    <path fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" d="M0,70 Q40,65 70,55 T140,50 T210,60 T280,30 T350,50 T420,40 T490,45 T560,35"/>
+                                                </svg>
+                                                <div class="mc-tooltip-marker">
+                                                    <div class="mc-tooltip-box">
+                                                        <span class="mc-tooltip-text">不悦</span>
+                                                    </div>
+                                                    <div class="mc-dot-orange"></div>
+                                                    <div class="mc-vertical-line"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="readiness" class="showcase-panel">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/减压助眠/减压冥想.png" alt="减压助眠数据1">
-                        <p class="image-description" data-title="放松引导">通过专业的放松技巧指导，帮助您缓解日常压力，恢复身心平衡</p>
+                <div class="showcase-panel-images accordion-layout">
+                    <div class="image-item phone-mockup">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/减压助眠/减压冥想.png" alt="放松引导">
                     </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/减压助眠/冥想.jpg" alt="减压助眠数据2">
-                        <p class="image-description" data-title="助眠功能">结合睡眠科学，提供个性化的助眠方案，帮助您快速入睡并提高睡眠质量</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/减压助眠/压力.jpg" alt="减压助眠数据3">
-                        <p class="image-description" data-title="呼吸练习">科学的呼吸练习指导，帮助您调节呼吸节奏，促进深度放松和冥想状态</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/减压助眠/血氧.jpg" alt="减压助眠数据4">
-                        <p class="image-description" data-title="冥想指导">提供专业的冥想指导，帮助您培养正念意识，提升心理健康和情绪管理能力</p>
+                    <div class="right-column">
+                        <div class="accordion-card active">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">01</span>
+                                    <h3>能量平衡分析</h3>
+                                    <p>通过专业的放松技巧指导，帮助您缓解日常压力，恢复身心平衡。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="energy-chart">
+                                        <div class="ec-header">月平均能量摄入为: <span class="ec-value">-200</span> <span class="ec-sub">(达成减重目标)</span></div>
+                                        <div class="ec-chart-wrap">
+                                            <div class="ec-y-axis">
+                                                <span>kcal</span>
+                                                <span>100</span>
+                                                <span>0</span>
+                                            </div>
+                                            <div class="ec-chart-main">
+                                                <div class="ec-baseline"></div>
+                                                <div class="ec-bars">
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:15px"></div><div class="ec-seg ec-green" style="height:25px"></div><div class="ec-seg ec-orange" style="height:40px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:10px"></div><div class="ec-seg ec-green" style="height:30px"></div><div class="ec-seg ec-orange" style="height:35px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:12px"></div><div class="ec-seg ec-green" style="height:20px"></div><div class="ec-seg ec-orange" style="height:45px"></div></div>
+                                                    </div>
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:8px"></div><div class="ec-seg ec-green" style="height:28px"></div><div class="ec-seg ec-orange" style="height:38px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:14px"></div><div class="ec-seg ec-green" style="height:22px"></div><div class="ec-seg ec-orange" style="height:42px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:10px"></div><div class="ec-seg ec-green" style="height:26px"></div><div class="ec-seg ec-orange" style="height:36px"></div></div>
+                                                    </div>
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:16px"></div><div class="ec-seg ec-green" style="height:24px"></div><div class="ec-seg ec-orange" style="height:44px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:12px"></div><div class="ec-seg ec-green" style="height:32px"></div><div class="ec-seg ec-orange" style="height:30px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:10px"></div><div class="ec-seg ec-green" style="height:18px"></div><div class="ec-seg ec-orange" style="height:48px"></div></div>
+                                                    </div>
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:14px"></div><div class="ec-seg ec-green" style="height:28px"></div><div class="ec-seg ec-orange" style="height:34px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:8px"></div><div class="ec-seg ec-green" style="height:20px"></div><div class="ec-seg ec-orange" style="height:50px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:12px"></div><div class="ec-seg ec-green" style="height:30px"></div><div class="ec-seg ec-orange" style="height:32px"></div></div>
+                                                    </div>
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:10px"></div><div class="ec-seg ec-green" style="height:26px"></div><div class="ec-seg ec-orange" style="height:40px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:16px"></div><div class="ec-seg ec-green" style="height:22px"></div><div class="ec-seg ec-orange" style="height:38px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:12px"></div><div class="ec-seg ec-green" style="height:28px"></div><div class="ec-seg ec-orange" style="height:36px"></div></div>
+                                                    </div>
+                                                    <div class="ec-group">
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:14px"></div><div class="ec-seg ec-green" style="height:24px"></div><div class="ec-seg ec-orange" style="height:42px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-orange" style="height:10px"></div><div class="ec-seg ec-green" style="height:32px"></div><div class="ec-seg ec-orange" style="height:30px"></div></div>
+                                                        <div class="ec-bar"><div class="ec-seg ec-pat-green" style="height:8px"></div><div class="ec-seg ec-green" style="height:20px"></div><div class="ec-seg ec-orange" style="height:46px"></div></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ec-x-axis">
+                                                    <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ec-legend">
+                                            <div class="ec-legend-item"><div class="ec-dot ec-green"></div>饮食摄入</div>
+                                            <div class="ec-legend-item"><div class="ec-dot ec-orange"></div>活动消耗</div>
+                                            <div class="ec-legend-item"><div class="ec-dot ec-pat-green"></div>热量盈余</div>
+                                            <div class="ec-legend-item"><div class="ec-dot ec-pat-orange"></div>热量缺口</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">02</span>
+                                    <h3>压力时段分布</h3>
+                                    <p>结合睡眠科学，提供个性化的助眠方案，帮助您快速入睡并提高睡眠质量。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="stress-period">
+                                        <div class="sp-title">压力时段</div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">凌晨(0-6点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">早晨(6-9点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">上午(9-12点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">中午(12-14点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">下午(14-18点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">傍晚(18-21点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                        <div class="sp-row">
+                                            <div class="sp-time-label">深夜(21-24点)</div>
+                                            <div class="sp-blocks-wrapper">
+                                                <div class="sp-block sp-b-light"></div>
+                                                <div class="sp-block sp-b-dark"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">03</span>
+                                    <h3>AI健康助手</h3>
+                                    <p>提供专业的冥想指导，帮助您培养正念意识，提升心理健康和情绪管理能力。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="ai-chat-card">
+                                        <div class="acc-chat-section">
+                                            <div class="acc-chat-history">
+                                                <div class="acc-bubble-user">最近心率有点高，感觉很累。帮我把下周的高强度训练取消，换成放松的。</div>
+                                                <div class="acc-bubble-ai-text">已检测到疲劳体征。为您生成「舒缓恢复」方案：</div>
+                                            </div>
+                                            <div class="acc-input-bar">
+                                                <span class="acc-input-placeholder">输入指令...</span>
+                                            </div>
+                                        </div>
+                                        <div class="acc-card-section">
+                                            <div class="acc-plan-card">
+                                                <div class="acc-card-header">
+                                                    <div class="acc-card-title">
+                                                        <svg class="acc-icon-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>
+                                                        计划调整
+                                                    </div>
+                                                    <div class="acc-status-tag">舒缓模式</div>
+                                                </div>
+                                                <div class="acc-metric-row">
+                                                    <div class="acc-metric-label">
+                                                        <span>运动强度</span>
+                                                        <span style="color:#66D9B8">↓ 降至 30%</span>
+                                                    </div>
+                                                    <div class="acc-progress-track">
+                                                        <div class="acc-progress-ghost"></div>
+                                                        <div class="acc-progress-fill"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="acc-schedule-change">
+                                                    <div class="acc-change-item" style="opacity: 0.6;">
+                                                        <div class="acc-change-icon acc-icon-run">🏃</div>
+                                                        <div>
+                                                            <div class="acc-c-title" style="text-decoration: line-through; color: #888;">HIIT 核心训练</div>
+                                                            <div class="acc-c-sub">原定：周一/周三 19:00</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="acc-change-item" style="border: 1px solid rgba(102, 217, 184, 0.3);">
+                                                        <div class="acc-change-icon acc-icon-yoga">🧘</div>
+                                                        <div>
+                                                            <div class="acc-c-title" style="color: #66D9B8;">冥想与拉伸</div>
+                                                            <div class="acc-c-sub">建议：睡前 20 分钟</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="heart" class="showcase-panel">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/健康积分系统/健康积分系统.png" alt="健康积分系统数据1">
-                        <p class="image-description" data-title="积分奖励机制">通过科学的积分系统，激励您保持健康的生活方式，让健康管理变得更有趣</p>
+                <div class="showcase-panel-images accordion-layout">
+                    <div class="image-item phone-mockup">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/健康积分系统/健康积分系统.png" alt="积分奖励机制">
                     </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/健康积分系统/平均心率变异性.jpg" alt="健康积分系统数据2">
-                        <p class="image-description" data-title="成就系统">记录您的健康里程碑，通过成就徽章和等级系统，让健康进步可视化</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/健康积分系统/心率.jpg" alt="健康积分系统数据3">
-                        <p class="image-description" data-title="排行榜功能">与朋友和家人进行健康竞赛，通过排行榜激发竞争意识，共同追求健康目标</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/健康积分系统/评价睡眠心率.jpg" alt="健康积分系统数据4">
-                        <p class="image-description" data-title="兑换奖励">使用健康积分兑换各种奖励，让您的健康努力得到实实在在的回报</p>
+                    <div class="right-column">
+                        <div class="accordion-card active">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">01</span>
+                                    <h3>家庭健康对比</h3>
+                                    <p>通过科学的积分系统，激励您保持健康的生活方式，让健康管理变得更有趣。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="family-energy">
+                                        <div class="fe-tab-bar">
+                                            <div class="fe-tab">身体活力</div>
+                                            <div class="fe-tab">睡眠</div>
+                                            <div class="fe-tab active">能量平衡</div>
+                                        </div>
+                                        <div class="fe-date">2025/10/13</div>
+                                        <div class="fe-chart">
+                                            <div class="fe-legend">
+                                                <div class="fe-legend-item"><div class="fe-dot fe-dot-green"></div>盈余</div>
+                                                <div class="fe-legend-item"><div class="fe-dot fe-dot-orange"></div>缺口</div>
+                                            </div>
+                                            <div class="fe-chart-main">
+                                                <div class="fe-zero-line"></div>
+                                                <div class="fe-bars">
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar fe-bar-down" style="height:20px;"></div>
+                                                        <div class="fe-bar-value" style="top:calc(50% + 28px);">60</div>
+                                                        <div class="fe-bar-name">我</div>
+                                                    </div>
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar-name">爷爷</div>
+                                                    </div>
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar fe-bar-up" style="height:40px;"></div>
+                                                        <div class="fe-bar-value" style="bottom:calc(50% + 48px);">120</div>
+                                                        <div class="fe-bar-name">丽丽</div>
+                                                    </div>
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar fe-bar-down" style="height:40px;"></div>
+                                                        <div class="fe-bar-value" style="top:calc(50% + 48px);">120</div>
+                                                        <div class="fe-bar-name">爸爸</div>
+                                                    </div>
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar fe-bar-down" style="height:34px;"></div>
+                                                        <div class="fe-bar-value" style="top:calc(50% + 42px);">102</div>
+                                                        <div class="fe-bar-name">妈妈</div>
+                                                    </div>
+                                                    <div class="fe-bar-col">
+                                                        <div class="fe-bar fe-bar-up" style="height:20px;"></div>
+                                                        <div class="fe-bar-value" style="bottom:calc(50% + 28px);">60</div>
+                                                        <div class="fe-bar-name">奶奶</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">02</span>
+                                    <h3>健康计划进度</h3>
+                                    <p>记录您的健康里程碑，通过成就徽章和等级系统，让健康进步可视化。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="health-plan">
+                                        <div class="hp-meta-row">
+                                            <div class="hp-source-tag">
+                                                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                                由问卷生成计划
+                                            </div>
+                                            <div class="hp-loop-tag">默认循环</div>
+                                        </div>
+                                        <div class="hp-title-row">
+                                            <div class="hp-title">轻度 · 身体健康计划</div>
+                                            <div class="hp-status-badge">
+                                                <div class="hp-status-dot"></div>
+                                                进行中
+                                            </div>
+                                        </div>
+                                        <div class="hp-progress-info">
+                                            <div class="hp-day-counter">
+                                                <span class="hp-current-day">1</span>/ 30 天
+                                            </div>
+                                            <div class="hp-reward">+45 积分</div>
+                                        </div>
+                                        <div class="hp-progress-track">
+                                            <div class="hp-progress-fill"></div>
+                                            <div class="hp-coin">★</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">03</span>
+                                    <h3>活动记录</h3>
+                                    <p>与朋友竞赛激发动力，使用积分兑换奖励，让健康努力得到实实在在的回报。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="activity-list">
+                                        <div class="al-date-header">
+                                            <div class="al-date-dot"></div>
+                                            2020年9月15日，周一
+                                        </div>
+                                        <div class="al-list-item al-item-auto">
+                                            <div class="al-icon-box">
+                                                <svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+                                            </div>
+                                            <div class="al-content">
+                                                <div class="al-title-row">
+                                                    <span class="al-title">户外散步</span>
+                                                    <span class="al-tag">自动检测</span>
+                                                </div>
+                                                <div class="al-data-row">
+                                                    <span>⏱ 16分钟</span>
+                                                    <div class="al-divider"></div>
+                                                    <span>🔥 30千卡</span>
+                                                </div>
+                                            </div>
+                                            <div class="al-right-info">
+                                                <div class="al-time">09:20</div>
+                                                <div class="al-arrow">›</div>
+                                            </div>
+                                        </div>
+                                        <div class="al-list-item al-item-manual">
+                                            <div class="al-icon-box">
+                                                <svg viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+                                            </div>
+                                            <div class="al-content">
+                                                <div class="al-title-row">
+                                                    <span class="al-title">户外散步</span>
+                                                    <span class="al-tag">手动记录</span>
+                                                </div>
+                                                <div class="al-data-row">
+                                                    <span>⏱ 16分钟</span>
+                                                    <div class="al-divider"></div>
+                                                    <span>🔥 30千卡</span>
+                                                    <div class="al-divider"></div>
+                                                    <span class="al-heart-val">❤ 77</span>
+                                                </div>
+                                            </div>
+                                            <div class="al-right-info">
+                                                <div class="al-time">09:20</div>
+                                                <div class="al-arrow">›</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="women-health" class="showcase-panel">
-                <div class="showcase-panel-images">
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/女性健康/女性健康.png" alt="女性健康数据1">
-                        <p class="image-description" data-title="生理周期跟踪">智能记录和预测月经周期，提供个性化的生理期健康管理建议</p>
+                <div class="showcase-panel-images accordion-layout">
+                    <div class="image-item phone-mockup">
+                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/女性健康/女性健康.png" alt="生理周期跟踪">
                     </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/女性健康/生理周期.jpg" alt="女性健康数据2">
-                        <p class="image-description" data-title="体温监测">精准监测基础体温变化，帮助识别排卵期和生理周期规律</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/女性健康/生理期预测.jpg" alt="女性健康数据3">
-                        <p class="image-description" data-title="健康指标分析">综合分析心率变异性、睡眠质量等指标，提供女性专属健康洞察</p>
-                    </div>
-                    <div class="image-item">
-                        <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/app图片/女性健康/生理周期.jpg" alt="女性健康数据4">
-                        <p class="image-description" data-title="隐私保护">采用端到端加密技术，确保女性健康数据的绝对隐私和安全</p>
+                    <div class="right-column">
+                        <div class="accordion-card active">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">01</span>
+                                    <h3>积分任务中心</h3>
+                                    <p>智能记录和预测月经周期，提供个性化的生理期健康管理建议。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="points-task">
+                                        <div class="pt-wallet">
+                                            <div class="pt-wallet-left">
+                                                <div class="pt-wallet-label">当前活力值</div>
+                                                <div class="pt-wallet-num">20,000</div>
+                                            </div>
+                                            <div class="pt-coin">￥</div>
+                                        </div>
+                                        <div class="pt-section-header">
+                                            <div class="pt-section-title">积分任务</div>
+                                            <div class="pt-section-more">查看更多 ></div>
+                                        </div>
+                                        <div class="pt-task-item">
+                                            <div class="pt-icon-box pt-icon-wear">
+                                                <svg viewBox="0 0 24 24"><path d="M12 2c-1.1 0-2 .9-2 2v2h4V4c0-1.1-.9-2-2-2zm0 18c1.1 0 2-.9 2-2v-2h-4v2c0 1.1.9 2 2 2z"/><path d="M16 8H8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm-4 5c-.83 0-1.5-.67-1.5-1.5S11.17 10 12 10s1.5.67 1.5 1.5S12.83 13 12 13z"/></svg>
+                                            </div>
+                                            <div class="pt-task-content">
+                                                <div class="pt-task-title">每日佩戴</div>
+                                                <div class="pt-task-desc">奖励昨日身体活力值</div>
+                                                <div class="pt-progress-bar">
+                                                    <div class="pt-progress-fill" style="width:40%"></div>
+                                                </div>
+                                                <div class="pt-progress-text">80</div>
+                                            </div>
+                                            <div class="pt-btn pt-btn-collect">去收集</div>
+                                        </div>
+                                        <div class="pt-task-item">
+                                            <div class="pt-icon-box pt-icon-plan">
+                                                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                                            </div>
+                                            <div class="pt-task-content">
+                                                <div class="pt-task-title">完成健康计划</div>
+                                                <div class="pt-task-desc">完成计划奖励活力值</div>
+                                                <div class="pt-progress-bar">
+                                                    <div class="pt-progress-fill" style="width:75%"></div>
+                                                </div>
+                                                <div class="pt-progress-text">5000</div>
+                                            </div>
+                                            <div class="pt-btn pt-btn-processing">收集中</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">02</span>
+                                    <h3>活力值钱包</h3>
+                                    <p>精准监测基础体温变化，帮助识别排卵期和生理周期规律。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="vitality-wallet">
+                                        <div class="vw-header">
+                                            <div class="vw-glow"></div>
+                                            <div class="vw-label">当前活力值</div>
+                                            <div class="vw-amount">2,000</div>
+                                        </div>
+                                        <div class="vw-tabs">
+                                            <div class="vw-tab active">全部</div>
+                                            <div class="vw-tab">收入</div>
+                                            <div class="vw-tab">支出</div>
+                                        </div>
+                                        <div class="vw-list">
+                                            <div class="vw-list-title">今天</div>
+                                            <div class="vw-item">
+                                                <div class="vw-item-left">
+                                                    <div class="vw-icon vw-icon-income">
+                                                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg>
+                                                    </div>
+                                                    <div class="vw-text">
+                                                        <div class="vw-title">每日健康活力值</div>
+                                                        <div class="vw-desc">10:45 · 完成任务</div>
+                                                    </div>
+                                                </div>
+                                                <div class="vw-value vw-plus">+86</div>
+                                            </div>
+                                            <div class="vw-item">
+                                                <div class="vw-item-left">
+                                                    <div class="vw-icon vw-icon-expense">
+                                                        <svg viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm0 17H5V8h14v12h-7z"/></svg>
+                                                    </div>
+                                                    <div class="vw-text">
+                                                        <div class="vw-title">兑换优惠券</div>
+                                                        <div class="vw-desc">09:12 · 商城消费</div>
+                                                    </div>
+                                                </div>
+                                                <div class="vw-value vw-minus">-200</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-card">
+                            <div class="card-content">
+                                <div class="text-group">
+                                    <span class="step-num">03</span>
+                                    <h3>积分商城订单</div>h3>
+                                    <p>采用端到端加密技术，确保女性健康数据的绝对隐私和安全。</p>
+                                </div>
+                                <div class="visual-crop">
+                                    <div class="order-card-widget">
+                                        <div class="ocw-tabs">
+                                            <div class="ocw-tab">待付款</div>
+                                            <div class="ocw-tab">待发货</div>
+                                            <div class="ocw-tab">待收货</div>
+                                            <div class="ocw-tab active">已完成</div>
+                                        </div>
+                                        <div class="ocw-card">
+                                            <div class="ocw-header">
+                                                <div class="ocw-date">2025-11-11 10:45</div>
+                                                <div class="ocw-status">已完成</div>
+                                            </div>
+                                            <div class="ocw-body">
+                                                <div class="ocw-img">
+                                                    <svg viewBox="0 0 24 24"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18s-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18s.41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15zM5 15.91l6 3.38v-6.71L5 9.21v6.7zM13 19.29l6-3.38v-6.7l-6 3.38v6.7z"/></svg>
+                                                </div>
+                                                <div class="ocw-info">
+                                                    <div class="ocw-name">高级健康监测服务包</div>
+                                                    <div class="ocw-meta">数量: x1</div>
+                                                </div>
+                                            </div>
+                                            <div class="ocw-footer">
+                                                <div class="ocw-price">
+                                                    <span class="ocw-price-label">实付:</span>
+                                                    <span class="ocw-price-num">3000</span>
+                                                    <span class="ocw-price-unit">积分</span>
+                                                </div>
+                                                <div class="ocw-btn">查看物流</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div>""
 
         </div>
     </section>
@@ -2032,6 +5371,20 @@
                 }
             });
         }
+
+        // 手风琴交互逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.accordion-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    // 移除其他卡片的 active 类
+                    cards.forEach(c => c.classList.remove('active'));
+                    // 给当前卡片添加 active 类
+                    this.classList.add('active');
+                });
+            });
+        });
     </script>
 </body>
 </html>
