@@ -395,6 +395,57 @@
             .miniprogram-card { grid-column: span 1; }
             .miniprogram-content { flex-direction: column; text-align: center; }
         }
+
+        /* Toast 提示框样式 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .toast-message {
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .toast-show {
+            animation: toastSlideIn 0.3s ease-out forwards;
+        }
+
+        .toast-hide {
+            animation: toastFadeOut 0.3s ease-out forwards;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes toastFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -539,12 +590,12 @@
                     <div class="card-spotlight"></div>
                     <div class="card-content">
                         <div class="miniprogram-content">
-                            <div class="qr-frame">
+                            <div class="qr-frame" onclick="handleMiniprogramClick()" style="cursor: pointer;"></div>
                                 <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/小程序二维码.jpg" alt="AZLG小程序" class="qr-img">
                             </div>
                             <div class="mini-info">
                                 <div style="color: var(--accent-color); font-size: 12px; font-weight: 600; margin-bottom: 6px;">RECOMMENDED</div>
-                                <h3 style="color: #fff; font-size: 20px; margin-bottom: 8px;">售后服务小程序</h3>
+                                <h3 style="color: #fff; font-size: 20px; margin-bottom: 8px; cursor: pointer;" onclick="handleMiniprogramClick()">售后服务小程序</h3>
                                 <p class="card-desc">一站式解决所有问题，进度实时可视化。</p>
                                 <div class="mini-steps">
                                     <div class="mini-step"><span class="dot"></span> 微信扫码接入</div>
@@ -559,10 +610,10 @@
                 <div class="obsidian-card contact-card">
                     <div class="card-spotlight"></div>
                     <div class="card-content" style="align-items: center; text-align: center; justify-content: center;">
-                        <div class="qr-frame" style="margin-bottom: 20px;">
+                        <div class="qr-frame" style="margin-bottom: 20px; cursor: pointer;" onclick="handleOfficialAccountClick()">
                             <img src="https://azlg-website1.oss-cn-hangzhou.aliyuncs.com/产品资料与图片/公众号.jpg" alt="AZLG公众号" class="qr-img">
                         </div>
-                        <h3 class="card-title" style="font-size: 16px;">官方公众号</h3>
+                        <h3 class="card-title" style="font-size: 16px; cursor: pointer;" onclick="handleOfficialAccountClick()">官方公众号</h3>
                         <p class="card-desc" style="font-size: 13px;">获取固件更新与资讯</p>
                     </div>
                 </div>
@@ -705,6 +756,68 @@
         // Lucide Icons 初始化
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
+        }
+
+        // 环境检测函数
+        function detectEnvironment() {
+            const ua = navigator.userAgent.toLowerCase();
+            return {
+                isWeChat: /micromessenger/.test(ua),
+                isMobile: /mobile|android|iphone|ipad|phone/.test(ua),
+                isPC: !(/mobile|android|iphone|ipad|phone/.test(ua))
+            };
+        }
+
+        // 显示 Toast 提示
+        function showToast(message, duration = 3000) {
+            const existingToast = document.querySelector('.toast-container');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-container toast-show';
+            toast.innerHTML = `<div class="toast-message">${message}</div>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-show');
+                toast.classList.add('toast-hide');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // 处理小程序点击
+        function handleMiniprogramClick() {
+            const env = detectEnvironment();
+            
+            if (env.isWeChat) {
+                showToast('请长按识别二维码进入售后服务小程序');
+            } else if (env.isMobile) {
+                showToast('请在微信中打开以使用小程序');
+            } else {
+                showToast('请使用微信扫描二维码');
+            }
+        }
+
+        // 处理公众号点击
+        function handleOfficialAccountClick() {
+            const env = detectEnvironment();
+            
+            if (env.isWeChat) {
+                // 尝试跳转公众号
+                const publicAccountUrl = 'weixin://mp/profile/gh_4435e8bb226a';
+                window.location.href = publicAccountUrl;
+                
+                // 备用提示
+                setTimeout(() => {
+                    showToast('如未自动跳转，请长按识别二维码关注公众号');
+                }, 500);
+            } else if (env.isMobile) {
+                showToast('请在微信中打开以关注公众号');
+            } else {
+                showToast('请使用微信扫描二维码');
+            }
         }
     </script>
 </body>
