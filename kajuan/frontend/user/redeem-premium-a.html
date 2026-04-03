@@ -401,7 +401,7 @@
               <div class="input-group">
                 <input type="text" id="redeemCode" required 
                   class="w-full bg-transparent border-b border-white/20 py-4 text-xl text-white outline-none placeholder-gray-700 font-light rounded-none"
-                  placeholder="输入兑换码">
+                  placeholder="输入16位兑换码" maxlength="19">
                 <div class="input-underline"></div>
               </div>
 
@@ -699,7 +699,7 @@
       <div class="max-w-2xl mx-auto px-6">
         <div class="text-center mb-12">
           <h2 class="text-3xl font-light text-white mb-4 tracking-tight">物流追踪</h2>
-          <p class="text-gray-400 text-sm">输入您的兑换码查询订单物流信息</p>
+          <p class="text-gray-400 text-sm">输入您的16位兑换码或8位卡号查询订单物流信息</p>
         </div>
 
         <div class="border border-white/10 rounded-lg overflow-hidden bg-black/50">
@@ -813,7 +813,7 @@
           </div>
 
           <div class="relative">
-            <input type="text" id="mobile-redeemCode" class="floating-input text-center text-2xl font-mono tracking-widest uppercase" placeholder="XXXX-XXXX-XXXX">
+            <input type="text" id="mobile-redeemCode" class="floating-input text-center text-2xl font-mono tracking-widest uppercase" placeholder="0001-0001-ABCD-EFGH" maxlength="19">
           </div>
 
           <button onclick="validateCodeMobile()" class="w-full bg-luxury-gold text-black font-bold py-4 rounded-xl shadow-lg mt-8">
@@ -970,7 +970,7 @@
     async function validateCodeA() {
       const code = document.getElementById('redeemCode').value.trim();
       if (!code) {
-        alert('请输入兑换码');
+        alert('请输入16位兑换码');
         return;
       }
 
@@ -1365,7 +1365,7 @@
     async function validateCodeA() {
       const code = document.getElementById('redeemCode').value.trim();
       if (!code) {
-        alert('请输入兑换码');
+        alert('请输入16位兑换码');
         return;
       }
 
@@ -1515,7 +1515,7 @@
     async function queryTracking() {
       const code = document.getElementById('trackingCode').value.trim();
       if (!code) {
-        alert('请输入兑换码或追溯码');
+        alert('请输入16位兑换码或8位卡号');
         return;
       }
       
@@ -1546,7 +1546,7 @@
         <div class="mb-6 p-4 bg-white/5 rounded-lg">
           <h4 class="text-white font-semibold mb-3">订单信息</h4>
           <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">订单状态：</strong>${data.orderInfo.statusText}</p>
-          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">商品名称：</strong>${data.orderInfo.batchName || '-'}</p>
+          <p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">商品名称：</strong>${data.orderInfo.productName || '-'}</p>
           ${data.orderInfo.shippedAt ? `<p class="text-sm text-gray-400 mb-2"><strong class="text-gray-300">发货时间：</strong>${formatDateTime(data.orderInfo.shippedAt)}</p>` : ''}
       `;
       
@@ -1849,7 +1849,7 @@
 
     async function validateCodeMobile() {
       const code = document.getElementById('mobile-redeemCode').value.trim();
-      if (!code) return alert('请输入兑换码');
+      if (!code) return alert('请输入16位兑换码');
 
       if (code === '123456') {
         currentRedeemCode = code;
@@ -1985,7 +1985,7 @@
 
     async function queryLogisticsMobile() {
       const code = document.getElementById('mobile-trackingCodeInput').value.trim();
-      if (!code) return alert('请输入兑换码');
+      if (!code) return alert('请输入16位兑换码或8位卡号');
       const r = document.getElementById('mobile-logisticsResult');
       r.innerHTML = '<p class="text-center py-4 text-gray-400">查询中...</p>';
       r.classList.remove('hidden');
@@ -2006,4 +2006,3 @@
 
 </body>
 </html>
-
